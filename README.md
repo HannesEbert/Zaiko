@@ -1,8 +1,8 @@
-# 🍱 Saiko — Smart Food Inventory Tracker
+# 🍱 Zaiko — Smart Food Inventory Tracker
 
 > **在庫 (Zaiko)** — Japanese for "inventory". Track what you have, waste less, shop smarter.
 
-Zaiko is an iOS app built with Flutter for managing your household food inventory. Keep track of everything in your fridge and pantry, get notified before food expires, and coordinate shopping lists with your household — all in one place.
+Zaiko is a mobile app built with Flutter for managing your household food inventory. Keep track of everything in your fridge and pantry, get notified before food expires, and coordinate shopping lists with your household — all in one place.
 
 ---
 
@@ -20,19 +20,32 @@ Zaiko is an iOS app built with Flutter for managing your household food inventor
 - 🍳 **Recipe Integration** — Add recipes and push missing ingredients straight to your shopping list
 - 🤝 **Inventory Export API** — Share your fridge contents with AI assistants for recipe suggestions
 
+_Screenshots follow as soon as there is UI worth showing._
+
 ---
 
 ## 🏗️ Architecture
 
-| Layer | Technology |
-|---|---|
-| **Frontend** | Flutter 3.x (iOS — Android planned) |
-| **State Management** | _TBD — evaluating [Riverpod](https://riverpod.dev) (recommended), Provider, or Bloc_ |
-| **Local Database** | _TBD — evaluating [Isar](https://isar.dev) (recommended), Drift, or Hive_ |
-| **Sync & Backend** | [Supabase](https://supabase.com) _(alternative: Firebase)_ |
-| **Notifications** | flutter_local_notifications |
+Feature-first structure, layered inside each feature, with Riverpod as the backbone for state and dependency injection:
 
-> **Why Supabase?** Open-source, PostgreSQL-based, great Flutter SDK, and built-in auth + realtime sync — a strong fit for collaborative shopping lists.
+| Concern | Decision |
+|---|---|
+| **Structure** | Feature-first (`lib/features/<feature>/`), plus `lib/core/` & `lib/shared/` |
+| **State Management & DI** | [Riverpod](https://riverpod.dev) |
+| **Navigation** | [go_router](https://pub.dev/packages/go_router) — deep-link ready |
+| **Backend & Sync** | [Supabase](https://supabase.com) (planned, added with the first backend feature) |
+| **Local Database** | Deferred until offline support — see ADR-0007 |
+
+Every decision is documented with alternatives and reasoning in [docs/architecture.md](docs/architecture.md) and the [ADRs](docs/adr/README.md).
+
+```
+lib/
+├── main.dart        # Entry point
+├── app.dart         # Root widget: theming + routing
+├── core/            # Theme, router, constants — feature-agnostic
+├── shared/          # Reusable widgets
+└── features/        # One folder per feature (inventory, shopping list, …)
+```
 
 ---
 
@@ -40,46 +53,60 @@ Zaiko is an iOS app built with Flutter for managing your household food inventor
 
 ### Prerequisites
 
-- [Flutter](https://docs.flutter.dev/get-started/install) 3.13+
-- Xcode 15+ (for iOS builds)
-- iOS 13+ device or simulator
-- VS Code with the Flutter extension (recommended)
+- [FVM](https://fvm.app) (Flutter Version Management) — the Flutter version is pinned in [.fvmrc](.fvmrc)
+- For iOS builds: macOS with Xcode 15+
+- For Android builds: Android SDK (e.g. via Android Studio)
 
 ### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/hannesebert/zaiko.git
-cd zaiko
+git clone https://github.com/HannesEbert/Zaiko.git
+cd Zaiko
+
+# Install the pinned Flutter version
+fvm install
 
 # Install dependencies
-flutter pub get
+fvm flutter pub get
 
-# Run on iOS simulator or connected device
-flutter run
+# Run on a simulator or connected device
+fvm flutter run
 ```
 
-### Running Tests
+> No FVM? A system-wide Flutter matching the version in `.fvmrc` works too — just drop the `fvm` prefix.
+
+No environment variables are needed yet. Once Supabase lands, configuration will come from `--dart-define` / `.env` (never committed) and be documented here.
+
+### Quality checks
 
 ```bash
-flutter test
+fvm dart format .          # Format
+fvm flutter analyze        # Static analysis
+fvm flutter test           # Run all tests
+fvm flutter test --coverage  # ...with coverage (coverage/lcov.info)
 ```
+
+CI runs the same checks plus a debug Android build on every pull request — see [.github/workflows/ci.yml](.github/workflows/ci.yml).
 
 ---
 
 ## 📚 Documentation
 
 - [Architecture Overview](docs/architecture.md)
-- [Database Schema](docs/database-schema.md)
-- [Design System](docs/design-system.md)
+- [Architecture Decision Records](docs/adr/README.md)
 
-_Documentation is a work in progress and grows alongside the project._
+Database schema and design system docs are added once those parts are designed.
 
 ---
 
 ## 🤝 Contributing
 
-This is currently a personal portfolio project. Feedback and suggestions are welcome — feel free to [open an issue](../../issues).
+This is currently a personal portfolio project — feedback and suggestions are welcome via [issues](../../issues). The workflow, also for my future self:
+
+- **Branches:** `feature/<topic>`, `fix/<topic>`, `chore/<topic>` — branched off `main`
+- **Commits:** short, imperative subject line ("Add expiry sorting"), body explains *why* when it isn't obvious
+- **PRs:** `main` is protected — every change goes through a pull request with green CI (format, analyze, test, build)
 
 ## 👨‍💻 Author
 
