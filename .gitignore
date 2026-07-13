@@ -47,8 +47,14 @@ coverage/
 # Personal Obsidian vault — kept outside the repo, never committed
 Vault/
 
+# Local runtime configuration — real values live here and are never committed.
+# The *.example.json template IS committed as documentation.
+config/*.json
+!config/*.example.json
+
 # dotenv environment variables
 .env*
+!.env.example
 
 # Generated JavaScript (web builds)
 *.dart.js

@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+# Pre-commit hook: block commits that contain secrets.
+#
+# Enable once per clone:
+#   git config core.hooksPath .githooks
+#   chmod +x .githooks/pre-commit   # macOS/Linux
+#
+# Requires gitleaks (https://github.com/gitleaks/gitleaks). If it isn't
+# installed the hook fails loudly rather than silently letting secrets through.
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "✗ gitleaks is not installed — cannot scan staged changes for secrets."
+  echo "  Install it (e.g. 'brew install gitleaks', 'scoop install gitleaks')"
+  echo "  or see https://github.com/gitleaks/gitleaks#installing."
+  exit 1
+fi
+
+echo "→ gitleaks: scanning staged changes…"
+if ! gitleaks protect --staged --redact --verbose; then
+  echo "✗ gitleaks found a potential secret in your staged changes."
+  echo "  Remove it before committing. False positive? Add an allowlist rule"
+  echo "  in a .gitleaks.toml at the repo root."
+  exit 1
+fi
+
+echo "✓ gitleaks: no secrets found."

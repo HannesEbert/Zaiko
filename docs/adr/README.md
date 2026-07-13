@@ -19,3 +19,4 @@ supersedes the old one and the old one is marked as superseded.
 | [0005](0005-go-router-for-navigation.md) | go_router for navigation | Accepted |
 | [0006](0006-supabase-backend-and-networking.md) | Supabase as backend, repository pattern for networking | Accepted |
 | [0007](0007-local-persistence-deferred.md) | Local persistence decision deferred | Accepted |
+| [0008](0008-secrets-management.md) | Secrets and configuration management | Accepted |
