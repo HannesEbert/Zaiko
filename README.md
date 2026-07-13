@@ -76,7 +76,39 @@ fvm flutter run
 
 > No FVM? A system-wide Flutter matching the version in `.fvmrc` works too — just drop the `fvm` prefix.
 
-No environment variables are needed yet. Once Supabase lands, configuration will come from `--dart-define` / `.env` (never committed) and be documented here.
+### Configuration & secrets
+
+Configuration (Supabase URL, anon key, Open Food Facts User-Agent) is injected
+at build time via `--dart-define-from-file` and read through
+[`AppConfig`](lib/core/config/app_config.dart). Real values live in a
+git-ignored `config/app_config.json`; only the `*.example.json` template is
+committed. See [ADR-0008](docs/adr/0008-secrets-management.md) for the full
+rationale.
+
+```bash
+# 1. Create your local config from the template, then fill in the values
+cp config/app_config.example.json config/app_config.json
+
+# 2. Enable the secret-scanning pre-commit hook (once per clone)
+git config core.hooksPath .githooks
+chmod +x .githooks/pre-commit          # macOS/Linux only
+
+# 3. Install gitleaks so the hook can run
+#    macOS:  brew install gitleaks
+#    Windows: scoop install gitleaks   (or winget install gitleaks.gitleaks)
+```
+
+Run with the config injected — the "Zaiko (dev)" launch config in
+`.vscode/launch.json` does this automatically, or from the CLI:
+
+```bash
+fvm flutter run --dart-define-from-file=config/app_config.json
+```
+
+Secrets are guarded on three layers: `.gitignore`, the gitleaks pre-commit
+hook, and a required `gitleaks` CI check on `main`. The Supabase `service_role`
+key must **never** be placed in the app or repo — only the anon key ships
+(access is gated by row-level security).
 
 ### Quality checks
 

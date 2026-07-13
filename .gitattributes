@@ -1,0 +1,4 @@
+# Shell scripts and git hooks must keep LF endings so they run on macOS/Linux
+# regardless of the committer's platform.
+.githooks/pre-commit text eol=lf
+*.sh text eol=lf
