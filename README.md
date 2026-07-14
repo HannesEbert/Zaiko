@@ -121,6 +121,24 @@ fvm flutter test --coverage  # ...with coverage (coverage/lcov.info)
 
 CI runs the same checks plus a debug Android build on every pull request — see [.github/workflows/ci.yml](.github/workflows/ci.yml).
 
+### Code generation
+
+Models and providers are generated with `build_runner` (freezed +
+json_serializable + riverpod_generator). While developing, run the watcher so
+`*.freezed.dart` / `*.g.dart` files regenerate on save:
+
+```bash
+fvm dart run build_runner watch   # regenerate on change
+fvm dart run build_runner build   # one-off build
+```
+
+> Conflict deletion is the default in the pinned `build_runner`, so the old
+> `--delete-conflicting-outputs` flag is no longer needed.
+
+The generated files **are committed** so the repository stays self-contained
+(clone and run without a codegen step, and diffs stay reviewable). See
+[ADR-0009](docs/adr/0009-code-generation.md) for the rationale.
+
 ---
 
 ## 📚 Documentation

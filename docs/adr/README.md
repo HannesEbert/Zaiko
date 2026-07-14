@@ -20,3 +20,4 @@ supersedes the old one and the old one is marked as superseded.
 | [0006](0006-supabase-backend-and-networking.md) | Supabase as backend, repository pattern for networking | Accepted |
 | [0007](0007-local-persistence-deferred.md) | Local persistence decision deferred | Accepted |
 | [0008](0008-secrets-management.md) | Secrets and configuration management | Accepted |
+| [0009](0009-code-generation.md) | Code generation for models and providers | Accepted |
