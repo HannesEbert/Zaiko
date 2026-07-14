@@ -10,7 +10,7 @@ import '../../../../shared/widgets/empty_state.dart';
 class InventoryPage extends StatelessWidget {
   const InventoryPage({super.key});
 
-  static const String routePath = '/';
+  static const String routePath = '/inventory';
   static const String routeName = 'inventory';
 
   @override
