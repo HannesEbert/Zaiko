@@ -10,11 +10,21 @@ import 'package:zaiko/features/auth/presentation/pages/login_page.dart';
 import 'package:zaiko/features/household/presentation/pages/join_household_page.dart';
 import 'package:zaiko/features/inventory/presentation/pages/inventory_page.dart';
 
+import '../../features/auth/fake_auth_repository.dart';
+
 void main() {
   testWidgets('unauthenticated users are redirected to the login page', (
     tester,
   ) async {
-    await tester.pumpWidget(const ProviderScope(child: ZaikoApp()));
+    final repository = FakeAuthRepository();
+    addTearDown(repository.dispose);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [authRepositoryProvider.overrideWithValue(repository)],
+        child: const ZaikoApp(),
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(find.byType(LoginPage), findsOneWidget);
@@ -42,7 +52,13 @@ void main() {
   testWidgets('the join deep link renders its page and connection code', (
     tester,
   ) async {
-    final container = ProviderContainer();
+    // The join route is public, so auth is irrelevant here; pin a constant
+    // status to keep this focused on deep-link routing.
+    final container = ProviderContainer(
+      overrides: [
+        authStateProvider.overrideWithValue(AuthStatus.unauthenticated),
+      ],
+    );
     addTearDown(container.dispose);
 
     final router = container.read(appRouterProvider)

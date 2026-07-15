@@ -24,24 +24,47 @@ abstract final class AppConfig {
   /// require an identifying User-Agent, e.g. `Zaiko/0.1 (contact@example.com)`.
   static const String offUserAgent = String.fromEnvironment('OFF_USER_AGENT');
 
-  /// Fails fast in debug builds when a required value is missing, so a
-  /// misconfigured run surfaces immediately with a clear message instead of at
-  /// the first network call. In release builds the `assert`s are stripped, so
-  /// this is a no-op.
+  /// Fails fast in debug builds when the configuration is missing or still
+  /// holds the template placeholders, so a misconfigured run surfaces
+  /// immediately with a clear message instead of at the first network call
+  /// (e.g. a confusing `Failed to fetch` against `your-project-ref`). In
+  /// release builds the `assert` is stripped, so this is a no-op.
   static void debugAssertValid() {
-    assert(
-      supabaseUrl.isNotEmpty,
-      'SUPABASE_URL is empty. Run with '
-      '--dart-define-from-file=config/app_config.json '
-      '(copy config/app_config.example.json to config/app_config.json first).',
+    final error = validate(
+      url: supabaseUrl,
+      anonKey: supabaseAnonKey,
+      userAgent: offUserAgent,
     );
-    assert(
-      supabaseAnonKey.isNotEmpty,
-      'SUPABASE_ANON_KEY is empty. See config/app_config.example.json.',
-    );
-    assert(
-      offUserAgent.isNotEmpty,
-      'OFF_USER_AGENT is empty. See config/app_config.example.json.',
-    );
+    assert(error == null, error);
+  }
+
+  /// Validates the three required config values, returning a human-readable
+  /// description of the first problem found, or `null` when all are set.
+  ///
+  /// Pure and parameterised so it can be unit-tested without `--dart-define`
+  /// injection. Rejects both empty values and the leftover template
+  /// placeholders from `config/app_config.example.json`.
+  static String? validate({
+    required String url,
+    required String anonKey,
+    required String userAgent,
+  }) {
+    const setupHint =
+        'Run with --dart-define-from-file=config/app_config.json and fill in '
+        'your real Supabase values (copy config/app_config.example.json first).';
+
+    if (url.isEmpty) return 'SUPABASE_URL is empty. $setupHint';
+    if (url.contains('your-project-ref')) {
+      return 'SUPABASE_URL is still the placeholder. $setupHint';
+    }
+    if (anonKey.isEmpty) return 'SUPABASE_ANON_KEY is empty. $setupHint';
+    if (anonKey.contains('your-supabase-anon-key')) {
+      return 'SUPABASE_ANON_KEY is still the placeholder. $setupHint';
+    }
+    if (userAgent.isEmpty) return 'OFF_USER_AGENT is empty. $setupHint';
+    if (userAgent.contains('your-contact@')) {
+      return 'OFF_USER_AGENT is still the placeholder. $setupHint';
+    }
+    return null;
   }
 }
