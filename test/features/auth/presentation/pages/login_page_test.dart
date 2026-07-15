@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zaiko/features/auth/application/auth_providers.dart';
 import 'package:zaiko/features/auth/presentation/pages/login_page.dart';
+import 'package:zaiko/l10n/app_localizations.dart';
 
 import '../../fake_auth_repository.dart';
 
@@ -14,7 +15,11 @@ void main() {
     return tester.pumpWidget(
       ProviderScope(
         overrides: [authRepositoryProvider.overrideWithValue(repository)],
-        child: const MaterialApp(home: LoginPage()),
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const LoginPage(),
+        ),
       ),
     );
   }

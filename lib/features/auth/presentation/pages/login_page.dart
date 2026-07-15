@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_constants.dart';
+import '../../../../core/l10n/l10n_extension.dart';
 import '../../application/auth_providers.dart';
 import '../../data/auth_repository.dart';
 
@@ -36,19 +37,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   String? _validateEmail(String? value) {
     final email = value?.trim() ?? '';
-    if (email.isEmpty) return 'Please enter your email';
+    if (email.isEmpty) return context.l10n.loginEmailEmpty;
     // Deliberately loose: the backend is the source of truth for validity.
     if (!email.contains('@') || !email.contains('.')) {
-      return 'Please enter a valid email';
+      return context.l10n.loginEmailInvalid;
     }
     return null;
   }
 
   String? _validatePassword(String? value) {
     final password = value ?? '';
-    if (password.isEmpty) return 'Please enter your password';
+    if (password.isEmpty) return context.l10n.loginPasswordEmpty;
     if (password.length < _minPasswordLength) {
-      return 'Password must be at least ${_minPasswordLength.toInt()} characters';
+      return context.l10n.loginPasswordTooShort(_minPasswordLength.toInt());
     }
     return null;
   }
@@ -73,9 +74,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         );
     if (outcome == SignUpOutcome.emailConfirmationRequired && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Check your email to confirm your account.'),
-        ),
+        SnackBar(content: Text(context.l10n.loginConfirmEmailSent)),
       );
     }
   }
@@ -90,7 +89,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       if (next case AsyncError(:final error)) {
         final message = error is AuthFailure
             ? error.message
-            : 'Something went wrong. Please try again.';
+            : context.l10n.loginGenericError;
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(SnackBar(content: Text(message)));
@@ -98,7 +97,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     });
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Sign in')),
+      appBar: AppBar(title: Text(context.l10n.loginTitle)),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -111,7 +110,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    'Welcome to ${AppConstants.appName}',
+                    context.l10n.loginWelcome(AppConstants.appName),
                     style: Theme.of(context).textTheme.headlineSmall,
                     textAlign: TextAlign.center,
                   ),
@@ -122,9 +121,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     keyboardType: TextInputType.emailAddress,
                     autofillHints: const [AutofillHints.email],
                     textInputAction: TextInputAction.next,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      prefixIcon: Icon(Icons.email_outlined),
+                    decoration: InputDecoration(
+                      labelText: context.l10n.loginEmailLabel,
+                      prefixIcon: const Icon(Icons.email_outlined),
                     ),
                     validator: _validateEmail,
                   ),
@@ -136,9 +135,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     autofillHints: const [AutofillHints.password],
                     textInputAction: TextInputAction.done,
                     onFieldSubmitted: (_) => _signIn(),
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      prefixIcon: Icon(Icons.lock_outline),
+                    decoration: InputDecoration(
+                      labelText: context.l10n.loginPasswordLabel,
+                      prefixIcon: const Icon(Icons.lock_outline),
                     ),
                     validator: _validatePassword,
                   ),
@@ -150,12 +149,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             dimension: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Text('Sign in'),
+                        : Text(context.l10n.loginSignInButton),
                   ),
                   const SizedBox(height: 12),
                   TextButton(
                     onPressed: isLoading ? null : _signUp,
-                    child: const Text('Create account'),
+                    child: Text(context.l10n.loginCreateAccountButton),
                   ),
                 ],
               ),

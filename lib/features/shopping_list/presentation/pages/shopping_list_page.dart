@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/l10n/l10n_extension.dart';
 import '../../../../shared/widgets/empty_state.dart';
 
 /// Landing page of the collaborative shopping list.
@@ -15,11 +16,11 @@ class ShoppingListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Shopping list')),
-      body: const EmptyState(
+      appBar: AppBar(title: Text(context.l10n.shoppingTitle)),
+      body: EmptyState(
         icon: Icons.shopping_cart_outlined,
-        title: 'Your shopping list is empty',
-        message: 'Items you need to buy will show up here.',
+        title: context.l10n.shoppingEmptyTitle,
+        message: context.l10n.shoppingEmptyMessage,
       ),
     );
   }
