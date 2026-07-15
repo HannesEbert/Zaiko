@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -18,8 +19,18 @@ import 'scaffold_with_nav_bar.dart';
 /// three main tabs live inside a [StatefulShellRoute] so each keeps its own
 /// navigation stack; `/login` and `/join/:code` sit outside the shell.
 final appRouterProvider = Provider<GoRouter>((ref) {
+  // Bridges the auth provider to a Listenable so go_router re-runs `redirect`
+  // on sign-in/sign-out without rebuilding the router (which would drop the
+  // navigation stack).
+  final refreshListenable = ValueNotifier<AuthStatus>(
+    ref.read(authStateProvider),
+  );
+  ref.listen(authStateProvider, (_, next) => refreshListenable.value = next);
+  ref.onDispose(refreshListenable.dispose);
+
   return GoRouter(
     initialLocation: InventoryPage.routePath,
+    refreshListenable: refreshListenable,
     redirect: (context, state) {
       final status = ref.read(authStateProvider);
       final location = state.matchedLocation;
