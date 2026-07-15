@@ -1,0 +1,105 @@
+{
+  "@@locale": "en",
+
+  "navHome": "Home",
+  "@navHome": {
+    "description": "Bottom navigation label for the home/overview tab"
+  },
+  "navInventory": "Inventory",
+  "@navInventory": {
+    "description": "Bottom navigation label for the inventory tab"
+  },
+  "navShopping": "Shopping",
+  "@navShopping": {
+    "description": "Bottom navigation label for the shopping list tab"
+  },
+  "navRecipes": "Recipes",
+  "@navRecipes": {
+    "description": "Bottom navigation label for the recipes tab"
+  },
+  "navProfile": "Profile",
+  "@navProfile": {
+    "description": "Bottom navigation label for the profile tab"
+  },
+
+  "loginTitle": "Sign in",
+  "loginWelcome": "Welcome to {appName}",
+  "@loginWelcome": {
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
+  },
+  "loginEmailLabel": "Email",
+  "loginPasswordLabel": "Password",
+  "loginSignInButton": "Sign in",
+  "loginCreateAccountButton": "Create account",
+  "loginEmailEmpty": "Please enter your email",
+  "loginEmailInvalid": "Please enter a valid email",
+  "loginPasswordEmpty": "Please enter your password",
+  "loginPasswordTooShort": "Password must be at least {count} characters",
+  "@loginPasswordTooShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "loginConfirmEmailSent": "Check your email to confirm your account.",
+  "loginGenericError": "Something went wrong. Please try again.",
+
+  "inventoryEmptyTitle": "Your inventory is empty",
+  "inventoryEmptyMessage": "Items you add to your fridge and pantry will show up here.",
+
+  "shoppingTitle": "Shopping list",
+  "shoppingEmptyTitle": "Your shopping list is empty",
+  "shoppingEmptyMessage": "Items you need to buy will show up here.",
+
+  "recipesTitle": "Recipes",
+  "recipesEmptyTitle": "No recipes yet",
+  "recipesEmptyMessage": "Recipe ideas from what you have in stock will show up here.",
+
+  "joinTitle": "Join household",
+  "joinInvited": "You have been invited to a household",
+  "joinConnectionCode": "Connection code: {code}",
+  "@joinConnectionCode": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+
+  "homeTitle": "Home",
+  "homeEmptyTitle": "Your overview is coming soon",
+  "homeEmptyMessage": "Expiring items, quick stats and shortcuts will show up here.",
+
+  "profileTitle": "Profile",
+  "profileManageAccount": "Manage profile",
+  "profilePersonalData": "Personal data",
+  "profileReminders": "Expiry reminders",
+  "profileHousehold": "Household",
+  "profileSettings": "Settings",
+  "profilePrivacy": "Privacy",
+  "profileHelp": "Help",
+  "profileSignOut": "Sign out",
+  "profileSignOutDialogTitle": "Sign out?",
+  "profileSignOutDialogMessage": "You'll need to sign in again to access your household.",
+  "commonCancel": "Cancel",
+
+  "profileManageAccountEmptyTitle": "Manage your profile",
+  "profileManageAccountEmptyMessage": "Editing your profile details will be available here.",
+  "profilePersonalDataEmptyTitle": "Your personal data",
+  "profilePersonalDataEmptyMessage": "Your stored personal information will be shown here.",
+  "profileRemindersEmptyTitle": "Expiry reminders",
+  "profileRemindersEmptyMessage": "Choose when to be reminded before your food expires.",
+  "profileHouseholdEmptyTitle": "Your household",
+  "profileHouseholdEmptyMessage": "Link and manage the household you share here.",
+  "profileSettingsEmptyTitle": "Settings",
+  "profileSettingsEmptyMessage": "App settings will be available here.",
+  "profilePrivacyEmptyTitle": "Privacy",
+  "profilePrivacyEmptyMessage": "The privacy policy and data settings will be shown here.",
+  "profileHelpEmptyTitle": "Help",
+  "profileHelpEmptyMessage": "Help and support will be available here."
+}

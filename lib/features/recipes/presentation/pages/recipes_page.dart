@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/l10n/l10n_extension.dart';
 import '../../../../shared/widgets/empty_state.dart';
 
 /// Landing page of the recipes feature.
@@ -15,11 +16,11 @@ class RecipesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Recipes')),
-      body: const EmptyState(
+      appBar: AppBar(title: Text(context.l10n.recipesTitle)),
+      body: EmptyState(
         icon: Icons.menu_book_outlined,
-        title: 'No recipes yet',
-        message: 'Recipe ideas from what you have in stock will show up here.',
+        title: context.l10n.recipesEmptyTitle,
+        message: context.l10n.recipesEmptyMessage,
       ),
     );
   }
