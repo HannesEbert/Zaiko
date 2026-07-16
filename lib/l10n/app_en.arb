@@ -1,0 +1,207 @@
+{
+  "@@locale": "en",
+
+  "navHome": "Home",
+  "@navHome": {
+    "description": "Bottom navigation label for the home/overview tab"
+  },
+  "navInventory": "Inventory",
+  "@navInventory": {
+    "description": "Bottom navigation label for the inventory tab"
+  },
+  "navShopping": "Shopping",
+  "@navShopping": {
+    "description": "Bottom navigation label for the shopping list tab"
+  },
+  "navRecipes": "Recipes",
+  "@navRecipes": {
+    "description": "Bottom navigation label for the recipes tab"
+  },
+  "navProfile": "Profile",
+  "@navProfile": {
+    "description": "Bottom navigation label for the profile tab"
+  },
+
+  "loginTitle": "Sign in",
+  "loginWelcome": "Welcome to {appName}",
+  "@loginWelcome": {
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
+  },
+  "loginEmailLabel": "Email",
+  "loginPasswordLabel": "Password",
+  "loginSignInButton": "Sign in",
+  "loginCreateAccountButton": "Create account",
+  "loginEmailEmpty": "Please enter your email",
+  "loginEmailInvalid": "Please enter a valid email",
+  "loginPasswordEmpty": "Please enter your password",
+  "loginPasswordTooShort": "Password must be at least {count} characters",
+  "@loginPasswordTooShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "loginConfirmEmailSent": "Check your email to confirm your account.",
+  "loginGenericError": "Something went wrong. Please try again.",
+
+  "inventoryEmptyTitle": "Your inventory is empty",
+  "inventoryEmptyMessage": "Items you add to your fridge and pantry will show up here.",
+
+  "shoppingTitle": "Shopping list",
+  "shoppingEmptyTitle": "Your shopping list is empty",
+  "shoppingEmptyMessage": "Items you need to buy will show up here.",
+
+  "recipesTitle": "Recipes",
+  "recipesEmptyTitle": "No recipes yet",
+  "recipesEmptyMessage": "Recipe ideas from what you have in stock will show up here.",
+
+  "joinTitle": "Join household",
+  "joinInvited": "You have been invited to a household",
+  "joinConnectionCode": "Connection code: {code}",
+  "@joinConnectionCode": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+
+  "homeTitle": "Home",
+  "homeEmptyTitle": "Your overview is coming soon",
+  "homeEmptyMessage": "Expiring items, quick stats and shortcuts will show up here.",
+
+  "profileTitle": "Profile",
+  "profileManageAccount": "Manage profile",
+  "profilePersonalData": "Personal data",
+  "profileReminders": "Expiry reminders",
+  "profileHousehold": "Household",
+  "profileSettings": "Settings",
+  "profilePrivacy": "Privacy",
+  "profileHelp": "Help",
+  "profileSignOut": "Sign out",
+  "profileSignOutDialogTitle": "Sign out?",
+  "profileSignOutDialogMessage": "You'll need to sign in again to access your household.",
+  "commonCancel": "Cancel",
+
+  "profileManageAccountEmptyTitle": "Manage your profile",
+  "profileManageAccountEmptyMessage": "Editing your profile details will be available here.",
+  "profilePersonalDataEmptyTitle": "Your personal data",
+  "profilePersonalDataEmptyMessage": "Your stored personal information will be shown here.",
+  "profileRemindersEmptyTitle": "Expiry reminders",
+  "profileRemindersEmptyMessage": "Choose when to be reminded before your food expires.",
+  "profileHouseholdEmptyTitle": "Your household",
+  "profileHouseholdEmptyMessage": "Link and manage the household you share here.",
+  "profileSettingsEmptyTitle": "Settings",
+  "profileSettingsEmptyMessage": "App settings will be available here.",
+  "profilePrivacyEmptyTitle": "Privacy",
+  "profilePrivacyEmptyMessage": "The privacy policy and data settings will be shown here.",
+  "profileHelpEmptyTitle": "Help",
+  "profileHelpEmptyMessage": "Help and support will be available here.",
+
+  "loginTagline": "在庫 · Inventory",
+  "loginHeadline": "Keep track of your groceries.",
+  "loginSubtitle": "Waste less, shop smarter — together as a household.",
+  "loginEmailHint": "name@example.com",
+  "loginTerms": "By signing in you accept our Terms of Use and Privacy Policy.",
+
+  "inventorySubtitle": "{count} items in {places} places",
+  "@inventorySubtitle": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "places": { "type": "int" }
+    }
+  },
+  "inventorySearchHint": "Search everything…",
+  "inventoryRecentlyAdded": "Recently added",
+  "inventoryItemsCount": "{count} items",
+  "@inventoryItemsCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "inventoryAllFresh": "All fresh",
+
+  "addItemTitle": "Add item",
+  "addItemScanTitle": "Scan barcode",
+  "addItemScanSubtitle": "Fastest — the product is recognized",
+  "addItemSearchTitle": "Search product",
+  "addItemSearchSubtitle": "Open Food Facts database",
+  "addItemManualTitle": "Enter manually",
+  "addItemManualSubtitle": "Create your own product",
+  "addItemAddAgain": "Add again",
+
+  "itemDetailHeader": "Item",
+  "itemDetailQuantity": "Quantity",
+  "itemDetailLocation": "Location",
+  "itemDetailCategory": "Category",
+  "itemDetailBestBefore": "Best before",
+  "itemDetailMarkConsumed": "Mark as consumed",
+  "itemDetailAddToList": "Add to shopping list",
+  "itemDetailRemove": "Remove item",
+  "itemDetailPhoto": "Product photo",
+
+  "shoppingProgress": "{done} of {total} done",
+  "@shoppingProgress": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "shoppingAddHint": "Add item…",
+  "shoppingDoneSection": "Done ({count})",
+  "@shoppingDoneSection": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "recipesSubtitle": "Cookable with your stock",
+  "recipesMissing": "Missing:",
+  "recipesAddToList": "To list",
+  "recipesPhoto": "Recipe photo",
+
+  "profileHouseholdSection": "Household",
+  "profileSettingsSection": "Settings",
+  "profileInviteMember": "Invite member",
+  "profileMembersCount": "{count} members",
+  "@profileMembersCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "profileVersion": "Zaiko {version}",
+  "@profileVersion": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "settingNotifications": "Notifications",
+  "settingReminder": "Reminder before expiry",
+  "settingReminderValue": "3 days before",
+  "settingAppearance": "Appearance",
+  "settingAppearanceSystem": "System",
+  "settingLanguage": "Language",
+  "settingLanguageGerman": "German",
+
+  "homeGreeting": "Hi {name}",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "homeSubtitle": "Household {household}",
+  "@homeSubtitle": {
+    "placeholders": {
+      "household": { "type": "String" }
+    }
+  },
+  "homeStatItems": "Items",
+  "homeStatExpiring": "Expiring soon",
+  "homeStatShopping": "On the list",
+  "homeExpiringSoon": "Expiring soon"
+}
