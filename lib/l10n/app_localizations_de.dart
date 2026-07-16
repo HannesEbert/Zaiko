@@ -197,4 +197,178 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get profileHelpEmptyMessage => 'Hilfe und Support erscheinen hier.';
+
+  @override
+  String get loginTagline => '在庫 · Inventar';
+
+  @override
+  String get loginHeadline => 'Behalte den Überblick über deine Lebensmittel.';
+
+  @override
+  String get loginSubtitle =>
+      'Weniger wegwerfen, smarter einkaufen — gemeinsam im Haushalt.';
+
+  @override
+  String get loginEmailHint => 'name@beispiel.de';
+
+  @override
+  String get loginTerms =>
+      'Mit der Anmeldung akzeptierst du unsere Nutzungsbedingungen und die Datenschutzerklärung.';
+
+  @override
+  String inventorySubtitle(int count, int places) {
+    return '$count Artikel an $places Orten';
+  }
+
+  @override
+  String get inventorySearchHint => 'Alles durchsuchen…';
+
+  @override
+  String get inventoryRecentlyAdded => 'Zuletzt hinzugefügt';
+
+  @override
+  String inventoryItemsCount(int count) {
+    return '$count Artikel';
+  }
+
+  @override
+  String get inventoryAllFresh => 'Alles frisch';
+
+  @override
+  String get addItemTitle => 'Artikel hinzufügen';
+
+  @override
+  String get addItemScanTitle => 'Barcode scannen';
+
+  @override
+  String get addItemScanSubtitle => 'Am schnellsten — Produkt wird erkannt';
+
+  @override
+  String get addItemSearchTitle => 'Produkt suchen';
+
+  @override
+  String get addItemSearchSubtitle => 'Open-Food-Facts-Datenbank';
+
+  @override
+  String get addItemManualTitle => 'Manuell eingeben';
+
+  @override
+  String get addItemManualSubtitle => 'Eigenes Produkt anlegen';
+
+  @override
+  String get addItemAddAgain => 'Erneut hinzufügen';
+
+  @override
+  String get itemDetailHeader => 'Artikel';
+
+  @override
+  String get itemDetailQuantity => 'Menge';
+
+  @override
+  String get itemDetailLocation => 'Lagerort';
+
+  @override
+  String get itemDetailCategory => 'Kategorie';
+
+  @override
+  String get itemDetailBestBefore => 'Mindesthaltbarkeit';
+
+  @override
+  String get itemDetailMarkConsumed => 'Als verbraucht markieren';
+
+  @override
+  String get itemDetailAddToList => 'Auf die Einkaufsliste';
+
+  @override
+  String get itemDetailRemove => 'Artikel entfernen';
+
+  @override
+  String get itemDetailPhoto => 'Produktfoto';
+
+  @override
+  String shoppingProgress(int done, int total) {
+    return '$done von $total erledigt';
+  }
+
+  @override
+  String get shoppingAddHint => 'Artikel hinzufügen…';
+
+  @override
+  String shoppingDoneSection(int count) {
+    return 'Erledigt ($count)';
+  }
+
+  @override
+  String get recipesSubtitle => 'Kochbar mit deinem Vorrat';
+
+  @override
+  String get recipesMissing => 'Fehlt:';
+
+  @override
+  String get recipesAddToList => 'Zur Liste';
+
+  @override
+  String get recipesPhoto => 'Rezeptfoto';
+
+  @override
+  String get profileHouseholdSection => 'Haushalt';
+
+  @override
+  String get profileSettingsSection => 'Einstellungen';
+
+  @override
+  String get profileInviteMember => 'Mitglied einladen';
+
+  @override
+  String profileMembersCount(int count) {
+    return '$count Mitglieder';
+  }
+
+  @override
+  String profileVersion(String version) {
+    return 'Zaiko $version';
+  }
+
+  @override
+  String get settingNotifications => 'Benachrichtigungen';
+
+  @override
+  String get settingReminder => 'Erinnerung vor Ablauf';
+
+  @override
+  String get settingReminderValue => '3 Tage vorher';
+
+  @override
+  String get settingAppearance => 'Darstellung';
+
+  @override
+  String get settingAppearanceSystem => 'System';
+
+  @override
+  String get settingLanguage => 'Sprache';
+
+  @override
+  String get settingLanguageGerman => 'Deutsch';
+
+  @override
+  String homeGreeting(String name) {
+    return 'Hallo $name';
+  }
+
+  @override
+  String homeSubtitle(String household) {
+    return 'Haushalt $household';
+  }
+
+  @override
+  String get homeStatItems => 'Artikel';
+
+  @override
+  String get homeStatExpiring => 'Läuft bald ab';
+
+  @override
+  String get homeStatShopping => 'Auf der Liste';
+
+  @override
+  String get homeExpiringSoon => 'Läuft bald ab';
 }
