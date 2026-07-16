@@ -23,9 +23,12 @@ lib/
 ├── main.dart                  # Entry point: bootstraps ProviderScope
 ├── app.dart                   # Root widget: theming + routing
 ├── core/                      # App-wide building blocks, feature-agnostic
+│   ├── config/                # AppConfig (compile-time configuration)
 │   ├── constants/             # App-wide constants
+│   ├── l10n/                  # Localization helpers (context.l10n)
 │   ├── router/                # go_router route table (single source of truth)
-│   └── theme/                 # ThemeData / color scheme
+│   └── theme/                 # Design tokens + ThemeData
+├── l10n/                      # ARB files + generated localizations
 ├── shared/                    # Reusable UI widgets used by multiple features
 │   └── widgets/
 └── features/                  # One folder per user-facing feature
@@ -38,14 +41,20 @@ Layers inside a feature are created **when they are needed**, not upfront:
 
 ```
 features/<feature>/
-├── presentation/   # Pages, widgets, controllers (Riverpod notifiers)
+├── presentation/   # Pages, widgets, view models
+├── application/    # Riverpod providers and controllers
 ├── domain/         # Entities + repository interfaces (pure Dart, no Flutter)
 └── data/           # Repository implementations, DTOs, data sources
 ```
 
-Dependency rule: `presentation → domain ← data`. The domain layer knows
-nothing about Flutter, Supabase, or the local database. Presentation and data
-both depend on domain, never on each other.
+Dependency rule: `presentation → application → domain ← data`. The domain layer
+knows nothing about Flutter, Supabase, or the local database. Presentation and
+data both depend on domain, never on each other; `application/` is the only
+layer that wires a repository to the UI.
+
+Repository **interfaces** and their failure types belong to `domain/`, their
+backend implementations to `data/`. (`features/auth` still keeps its interface
+in `data/` from before this was settled; it is scheduled to move.)
 
 - **`core/`** holds building blocks every feature may use but that belong to
   no feature (theme, router, constants, utils).
