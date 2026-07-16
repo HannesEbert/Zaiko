@@ -7,12 +7,28 @@ import 'package:zaiko/core/router/scaffold_with_nav_bar.dart';
 import 'package:zaiko/features/auth/application/auth_providers.dart';
 import 'package:zaiko/features/auth/domain/auth_status.dart';
 import 'package:zaiko/features/auth/presentation/pages/login_page.dart';
+import 'package:zaiko/features/home/presentation/pages/home_page.dart';
 import 'package:zaiko/features/household/presentation/pages/join_household_page.dart';
 import 'package:zaiko/features/inventory/presentation/pages/inventory_page.dart';
+import 'package:zaiko/features/profile/presentation/pages/profile_page.dart';
+import 'package:zaiko/l10n/app_localizations.dart';
 
 import '../../features/auth/fake_auth_repository.dart';
 
 void main() {
+  /// Boots the full app with a signed-in session so the shell is shown.
+  Future<void> pumpAuthedApp(WidgetTester tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith((ref) => AuthStatus.authenticated),
+        ],
+        child: const ZaikoApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+  }
+
   testWidgets('unauthenticated users are redirected to the login page', (
     tester,
   ) async {
@@ -28,24 +44,42 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(LoginPage), findsOneWidget);
-    expect(find.byType(InventoryPage), findsNothing);
+    expect(find.byType(HomePage), findsNothing);
   });
 
-  testWidgets('authenticated users see the inventory shell with a nav bar', (
+  testWidgets('authenticated users land on the home tab within the shell', (
     tester,
   ) async {
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          authStateProvider.overrideWith((ref) => AuthStatus.authenticated),
-        ],
-        child: const ZaikoApp(),
-      ),
-    );
-    await tester.pumpAndSettle();
+    await pumpAuthedApp(tester);
 
     expect(find.byType(ScaffoldWithNavBar), findsOneWidget);
-    expect(find.byType(NavigationBar), findsOneWidget);
+    expect(find.byType(HomePage), findsOneWidget);
+
+    // The custom bottom bar exposes all five main tab labels.
+    for (final label in [
+      'Home',
+      'Inventory',
+      'Shopping',
+      'Recipes',
+      'Profile',
+    ]) {
+      expect(find.text(label), findsOneWidget);
+    }
+  });
+
+  testWidgets('tapping a nav destination switches the active branch', (
+    tester,
+  ) async {
+    await pumpAuthedApp(tester);
+
+    await tester.tap(find.text('Profile'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ProfilePage), findsOneWidget);
+
+    await tester.tap(find.text('Inventory'));
+    await tester.pumpAndSettle();
+
     expect(find.byType(InventoryPage), findsOneWidget);
   });
 
@@ -67,7 +101,11 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: MaterialApp.router(routerConfig: router),
+        child: MaterialApp.router(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          routerConfig: router,
+        ),
       ),
     );
     await tester.pumpAndSettle();
