@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/l10n/l10n_extension.dart';
+
 /// Deep-link target for household invitations (`/join/:code`).
 ///
 /// Placeholder that surfaces the connection code carried by the link;
@@ -23,7 +25,7 @@ class JoinHouseholdPage extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Join household')),
+      appBar: AppBar(title: Text(context.l10n.joinTitle)),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(32),
@@ -37,13 +39,13 @@ class JoinHouseholdPage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'You have been invited to a household',
+                context.l10n.joinInvited,
                 style: theme.textTheme.titleMedium,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               Text(
-                'Connection code: $connectionCode',
+                context.l10n.joinConnectionCode(connectionCode),
                 style: theme.textTheme.bodyLarge?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
