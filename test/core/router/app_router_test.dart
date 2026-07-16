@@ -55,10 +55,16 @@ void main() {
     expect(find.byType(ScaffoldWithNavBar), findsOneWidget);
     expect(find.byType(HomePage), findsOneWidget);
 
-    // The bottom bar exposes all five main tabs, with Home selected.
-    final navBar = tester.widget<NavigationBar>(find.byType(NavigationBar));
-    expect(navBar.destinations.length, 5);
-    expect(navBar.selectedIndex, 0);
+    // The custom bottom bar exposes all five main tab labels.
+    for (final label in [
+      'Home',
+      'Inventory',
+      'Shopping',
+      'Recipes',
+      'Profile',
+    ]) {
+      expect(find.text(label), findsOneWidget);
+    }
   });
 
   testWidgets('tapping a nav destination switches the active branch', (
@@ -70,19 +76,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(ProfilePage), findsOneWidget);
-    expect(
-      tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
-      4,
-    );
 
     await tester.tap(find.text('Inventory'));
     await tester.pumpAndSettle();
 
     expect(find.byType(InventoryPage), findsOneWidget);
-    expect(
-      tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
-      1,
-    );
   });
 
   testWidgets('the join deep link renders its page and connection code', (

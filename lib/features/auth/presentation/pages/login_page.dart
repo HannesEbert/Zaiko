@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/l10n/l10n_extension.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../shared/widgets/zaiko_buttons.dart';
 import '../../application/auth_providers.dart';
 import '../../data/auth_repository.dart';
 
@@ -25,6 +29,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  bool _obscurePassword = true;
 
   static const double _minPasswordLength = 6;
 
@@ -81,6 +87,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final colors = context.colors;
     final state = ref.watch(loginControllerProvider);
     final isLoading = state.isLoading;
 
@@ -97,70 +105,150 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     });
 
     return Scaffold(
-      appBar: AppBar(title: Text(context.l10n.loginTitle)),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 400),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    context.l10n.loginWelcome(AppConstants.appName),
-                    style: Theme.of(context).textTheme.headlineSmall,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 32),
-                  TextFormField(
-                    controller: _emailController,
-                    enabled: !isLoading,
-                    keyboardType: TextInputType.emailAddress,
-                    autofillHints: const [AutofillHints.email],
-                    textInputAction: TextInputAction.next,
-                    decoration: InputDecoration(
-                      labelText: context.l10n.loginEmailLabel,
-                      prefixIcon: const Icon(Icons.email_outlined),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s8),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _Header(),
+                    const SizedBox(height: AppSpacing.s10),
+                    _FieldLabel(l10n.loginEmailLabel),
+                    const SizedBox(height: AppSpacing.s1 + 2),
+                    TextFormField(
+                      controller: _emailController,
+                      enabled: !isLoading,
+                      keyboardType: TextInputType.emailAddress,
+                      autofillHints: const [AutofillHints.email],
+                      textInputAction: TextInputAction.next,
+                      style: AppTypography.body.copyWith(
+                        color: colors.textPrimary,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: l10n.loginEmailHint,
+                      ),
+                      validator: _validateEmail,
                     ),
-                    validator: _validateEmail,
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _passwordController,
-                    enabled: !isLoading,
-                    obscureText: true,
-                    autofillHints: const [AutofillHints.password],
-                    textInputAction: TextInputAction.done,
-                    onFieldSubmitted: (_) => _signIn(),
-                    decoration: InputDecoration(
-                      labelText: context.l10n.loginPasswordLabel,
-                      prefixIcon: const Icon(Icons.lock_outline),
+                    const SizedBox(height: AppSpacing.s3),
+                    _FieldLabel(l10n.loginPasswordLabel),
+                    const SizedBox(height: AppSpacing.s1 + 2),
+                    TextFormField(
+                      controller: _passwordController,
+                      enabled: !isLoading,
+                      obscureText: _obscurePassword,
+                      autofillHints: const [AutofillHints.password],
+                      textInputAction: TextInputAction.done,
+                      onFieldSubmitted: (_) => _signIn(),
+                      style: AppTypography.body.copyWith(
+                        color: colors.textPrimary,
+                      ),
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          onPressed: () => setState(
+                            () => _obscurePassword = !_obscurePassword,
+                          ),
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            color: colors.textTertiary,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                      validator: _validatePassword,
                     ),
-                    validator: _validatePassword,
-                  ),
-                  const SizedBox(height: 32),
-                  FilledButton(
-                    onPressed: isLoading ? null : _signIn,
-                    child: isLoading
-                        ? const SizedBox.square(
-                            dimension: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : Text(context.l10n.loginSignInButton),
-                  ),
-                  const SizedBox(height: 12),
-                  TextButton(
-                    onPressed: isLoading ? null : _signUp,
-                    child: Text(context.l10n.loginCreateAccountButton),
-                  ),
-                ],
+                    const SizedBox(height: AppSpacing.s5),
+                    ZaikoPrimaryButton(
+                      label: l10n.loginSignInButton,
+                      isLoading: isLoading,
+                      onPressed: _signIn,
+                    ),
+                    const SizedBox(height: AppSpacing.s2),
+                    TextButton(
+                      onPressed: isLoading ? null : _signUp,
+                      style: TextButton.styleFrom(
+                        foregroundColor: colors.accentText,
+                        textStyle: AppTypography.bodyMedium,
+                      ),
+                      child: Text(l10n.loginCreateAccountButton),
+                    ),
+                    const SizedBox(height: AppSpacing.s5),
+                    Text(
+                      l10n.loginTerms,
+                      textAlign: TextAlign.center,
+                      style: AppTypography.caption.copyWith(
+                        color: colors.textTertiary,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final colors = context.colors;
+
+    return Column(
+      children: [
+        Text(
+          AppConstants.appName,
+          style: AppTypography.display.copyWith(
+            fontSize: 34,
+            color: colors.accentText,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.s1),
+        Text(
+          l10n.loginTagline,
+          style: AppTypography.caption.copyWith(color: colors.textTertiary),
+        ),
+        const SizedBox(height: AppSpacing.s6),
+        Text(
+          l10n.loginHeadline,
+          textAlign: TextAlign.center,
+          style: AppTypography.title.copyWith(
+            fontSize: 20,
+            color: colors.textPrimary,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.s2),
+        Text(
+          l10n.loginSubtitle,
+          textAlign: TextAlign.center,
+          style: AppTypography.body.copyWith(color: colors.textSecondary),
+        ),
+      ],
+    );
+  }
+}
+
+class _FieldLabel extends StatelessWidget {
+  const _FieldLabel(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: AppTypography.caption.copyWith(
+        fontWeight: FontWeight.w500,
+        color: context.colors.textStrong,
       ),
     );
   }

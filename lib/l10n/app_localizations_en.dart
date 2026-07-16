@@ -196,4 +196,178 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get profileHelpEmptyMessage =>
       'Help and support will be available here.';
+
+  @override
+  String get loginTagline => '在庫 · Inventory';
+
+  @override
+  String get loginHeadline => 'Keep track of your groceries.';
+
+  @override
+  String get loginSubtitle =>
+      'Waste less, shop smarter — together as a household.';
+
+  @override
+  String get loginEmailHint => 'name@example.com';
+
+  @override
+  String get loginTerms =>
+      'By signing in you accept our Terms of Use and Privacy Policy.';
+
+  @override
+  String inventorySubtitle(int count, int places) {
+    return '$count items in $places places';
+  }
+
+  @override
+  String get inventorySearchHint => 'Search everything…';
+
+  @override
+  String get inventoryRecentlyAdded => 'Recently added';
+
+  @override
+  String inventoryItemsCount(int count) {
+    return '$count items';
+  }
+
+  @override
+  String get inventoryAllFresh => 'All fresh';
+
+  @override
+  String get addItemTitle => 'Add item';
+
+  @override
+  String get addItemScanTitle => 'Scan barcode';
+
+  @override
+  String get addItemScanSubtitle => 'Fastest — the product is recognized';
+
+  @override
+  String get addItemSearchTitle => 'Search product';
+
+  @override
+  String get addItemSearchSubtitle => 'Open Food Facts database';
+
+  @override
+  String get addItemManualTitle => 'Enter manually';
+
+  @override
+  String get addItemManualSubtitle => 'Create your own product';
+
+  @override
+  String get addItemAddAgain => 'Add again';
+
+  @override
+  String get itemDetailHeader => 'Item';
+
+  @override
+  String get itemDetailQuantity => 'Quantity';
+
+  @override
+  String get itemDetailLocation => 'Location';
+
+  @override
+  String get itemDetailCategory => 'Category';
+
+  @override
+  String get itemDetailBestBefore => 'Best before';
+
+  @override
+  String get itemDetailMarkConsumed => 'Mark as consumed';
+
+  @override
+  String get itemDetailAddToList => 'Add to shopping list';
+
+  @override
+  String get itemDetailRemove => 'Remove item';
+
+  @override
+  String get itemDetailPhoto => 'Product photo';
+
+  @override
+  String shoppingProgress(int done, int total) {
+    return '$done of $total done';
+  }
+
+  @override
+  String get shoppingAddHint => 'Add item…';
+
+  @override
+  String shoppingDoneSection(int count) {
+    return 'Done ($count)';
+  }
+
+  @override
+  String get recipesSubtitle => 'Cookable with your stock';
+
+  @override
+  String get recipesMissing => 'Missing:';
+
+  @override
+  String get recipesAddToList => 'To list';
+
+  @override
+  String get recipesPhoto => 'Recipe photo';
+
+  @override
+  String get profileHouseholdSection => 'Household';
+
+  @override
+  String get profileSettingsSection => 'Settings';
+
+  @override
+  String get profileInviteMember => 'Invite member';
+
+  @override
+  String profileMembersCount(int count) {
+    return '$count members';
+  }
+
+  @override
+  String profileVersion(String version) {
+    return 'Zaiko $version';
+  }
+
+  @override
+  String get settingNotifications => 'Notifications';
+
+  @override
+  String get settingReminder => 'Reminder before expiry';
+
+  @override
+  String get settingReminderValue => '3 days before';
+
+  @override
+  String get settingAppearance => 'Appearance';
+
+  @override
+  String get settingAppearanceSystem => 'System';
+
+  @override
+  String get settingLanguage => 'Language';
+
+  @override
+  String get settingLanguageGerman => 'German';
+
+  @override
+  String homeGreeting(String name) {
+    return 'Hi $name';
+  }
+
+  @override
+  String homeSubtitle(String household) {
+    return 'Household $household';
+  }
+
+  @override
+  String get homeStatItems => 'Items';
+
+  @override
+  String get homeStatExpiring => 'Expiring soon';
+
+  @override
+  String get homeStatShopping => 'On the list';
+
+  @override
+  String get homeExpiringSoon => 'Expiring soon';
 }
