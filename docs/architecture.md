@@ -74,6 +74,9 @@ in `data/` from before this was settled; it is scheduled to move.)
 | Navigation | go_router | [ADR-0005](adr/0005-go-router-for-navigation.md) |
 | Backend & networking | Supabase (`supabase_flutter`), repository pattern | [ADR-0006](adr/0006-supabase-backend-and-networking.md) |
 | Local persistence | Deferred — evaluated when offline support lands | [ADR-0007](adr/0007-local-persistence-deferred.md) |
+| Secrets & configuration | Compile-time injection via `--dart-define-from-file`, read through `AppConfig` | [ADR-0008](adr/0008-secrets-management.md) |
+| Code generation | freezed + json_serializable + riverpod_generator, output committed | [ADR-0009](adr/0009-code-generation.md) |
+| Schema & migrations | Supabase CLI, hand-written SQL in `supabase/migrations/`, local Postgres via Docker — see [docs/database.md](database.md) | [ADR-0010](adr/0010-database-migrations-workflow.md) |
 
 ## Error handling conventions
 
