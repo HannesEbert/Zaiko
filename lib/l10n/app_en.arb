@@ -52,7 +52,7 @@
   "inventoryEmptyTitle": "Your inventory is empty",
   "inventoryEmptyMessage": "Items you add to your fridge and pantry will show up here.",
 
-  "shoppingTitle": "Shopping list",
+  "shoppingTitle": "Shopping",
   "shoppingEmptyTitle": "Your shopping list is empty",
   "shoppingEmptyMessage": "Items you need to buy will show up here.",
 
@@ -125,6 +125,15 @@
     }
   },
   "inventoryAllFresh": "All fresh",
+  "inventoryStatExpiring": "Expiring soon",
+  "inventoryStatExpired": "Expired",
+  "inventoryStatFresh": "Fresh",
+  "locationSearchHint": "Search in {name}…",
+  "@locationSearchHint": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
 
   "addItemTitle": "Add item",
   "addItemScanTitle": "Scan barcode",
@@ -145,16 +154,9 @@
   "itemDetailRemove": "Remove item",
   "itemDetailPhoto": "Product photo",
 
-  "shoppingProgress": "{done} of {total} done",
-  "@shoppingProgress": {
-    "placeholders": {
-      "done": { "type": "int" },
-      "total": { "type": "int" }
-    }
-  },
   "shoppingAddHint": "Add item…",
-  "shoppingDoneSection": "Done ({count})",
-  "@shoppingDoneSection": {
+  "shoppingListCount": "{count} items on the list",
+  "@shoppingListCount": {
     "placeholders": {
       "count": { "type": "int" }
     }
@@ -188,20 +190,21 @@
   "settingLanguage": "Language",
   "settingLanguageGerman": "German",
 
-  "homeGreeting": "Hi {name}",
+  "homeGreeting": "Good morning, {name}",
   "@homeGreeting": {
     "placeholders": {
       "name": { "type": "String" }
     }
   },
-  "homeSubtitle": "Household {household}",
-  "@homeSubtitle": {
+  "homeExpiringCount": "{count} items expiring soon",
+  "@homeExpiringCount": {
     "placeholders": {
-      "household": { "type": "String" }
+      "count": { "type": "int" }
     }
   },
-  "homeStatItems": "Items",
-  "homeStatExpiring": "Expiring soon",
-  "homeStatShopping": "On the list",
-  "homeExpiringSoon": "Expiring soon"
+  "homeSearchHint": "Search your stock…",
+  "homeCategories": "Categories",
+  "homeExpiringSoon": "Expiring soon",
+  "commonAll": "All",
+  "commonBack": "Back"
 }

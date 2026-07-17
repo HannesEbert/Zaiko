@@ -4,16 +4,22 @@ import '../../../../core/l10n/l10n_extension.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
-import '../../../../shared/widgets/card_list.dart';
+import '../../../../shared/widgets/header_icon_button.dart';
+import '../../../../shared/widgets/icon_tile.dart';
 import '../../../../shared/widgets/page_header.dart';
+import '../../../../shared/widgets/pill_field.dart';
 import '../../../../shared/widgets/section_label.dart';
-import '../../../../shared/widgets/status_pill.dart';
+import '../../../../shared/widgets/see_all_link.dart';
 import '../../../../shared/widgets/user_avatar.dart';
 import '../../../../shared/widgets/zaiko_card.dart';
 import '../../../inventory/presentation/inventory_demo_data.dart';
-import '../../../inventory/presentation/widgets/inventory_item_row.dart';
+import '../../../inventory/presentation/pages/location_detail_page.dart';
+import '../../../inventory/presentation/widgets/add_item_sheet.dart';
+import '../../../inventory/presentation/widgets/storage_location_card.dart';
 
-/// Home tab: a household overview with quick stats and items expiring soon.
+/// Home tab, following the Figma "Start" screen: greeting header with bell and
+/// avatar, a search field, the horizontal "expiring soon" rail and the
+/// category grid.
 ///
 /// Demo content; composed from the shared design components so it reads as one
 /// system with the other tabs.
@@ -23,79 +29,71 @@ class HomePage extends StatelessWidget {
   static const String routePath = '/home';
   static const String routeName = 'home';
 
-  static const List<_ExpiringItem> _expiring = [
-    _ExpiringItem(
-      item: InventoryItem(
-        name: 'Bio Vollmilch',
-        subtitle: '1 l · Kühlschrank',
-        icon: Icons.local_drink_outlined,
-      ),
-      label: 'Noch 2 Tage',
-      tone: StatusTone.warning,
-    ),
-    _ExpiringItem(
-      item: InventoryItem(
-        name: 'Hähnchenbrust',
-        subtitle: '400 g · Kühlschrank',
-        icon: Icons.set_meal_outlined,
-      ),
-      label: 'Heute',
-      tone: StatusTone.error,
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => showAddItemSheet(context),
+        child: const Icon(Icons.add),
+      ),
       body: SafeArea(
         bottom: false,
         child: ListView(
           padding: const EdgeInsets.fromLTRB(
             AppSpacing.pageInset,
-            AppSpacing.s3 + 2,
+            AppSpacing.s6,
             AppSpacing.pageInset,
             AppSpacing.s10,
           ),
           children: [
             PageHeader(
               title: l10n.homeGreeting('Hannes'),
-              subtitle: l10n.homeSubtitle(InventoryDemoData.householdName),
-              trailing: const UserAvatar(initial: 'H'),
+              subtitle: l10n.homeExpiringCount(InventoryDemoData.expiringCount),
+              trailing: Row(
+                children: [
+                  HeaderIconButton(
+                    icon: Icons.notifications_none,
+                    showDot: true,
+                    onTap: () {},
+                  ),
+                  const SizedBox(width: AppSpacing.s3),
+                  const UserAvatar(initial: 'H'),
+                ],
+              ),
             ),
             const SizedBox(height: AppSpacing.s5),
-            Row(
-              children: [
-                Expanded(
-                  child: _StatCard(
-                    value: '${InventoryDemoData.itemCount}',
-                    label: l10n.homeStatItems,
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.s3),
-                Expanded(
-                  child: _StatCard(
-                    value: '3',
-                    label: l10n.homeStatExpiring,
-                    tone: StatusTone.warning,
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.s3),
-                Expanded(
-                  child: _StatCard(value: '11', label: l10n.homeStatShopping),
-                ),
-              ],
+            PillField(
+              icon: Icons.search,
+              hint: l10n.homeSearchHint,
+              onTap: () {},
             ),
-            const SizedBox(height: AppSpacing.s5),
-            SectionLabel(l10n.homeExpiringSoon),
-            const SizedBox(height: AppSpacing.s2),
-            CardList(
+            const SizedBox(height: AppSpacing.s6),
+            SectionLabel(
+              l10n.homeExpiringSoon,
+              trailing: SeeAllLink(onTap: () {}),
+            ),
+            const SizedBox(height: AppSpacing.s3),
+            const _ExpiringRail(),
+            const SizedBox(height: AppSpacing.s6),
+            SectionLabel(l10n.homeCategories),
+            const SizedBox(height: AppSpacing.s3),
+            GridView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: AppSpacing.s3,
+                crossAxisSpacing: AppSpacing.s3,
+                mainAxisExtent: 128,
+              ),
               children: [
-                for (final entry in _expiring)
-                  InventoryItemRow(
-                    entry.item,
-                    trailing: StatusPill(entry.label, tone: entry.tone),
+                for (final location in InventoryDemoData.locations)
+                  StorageLocationCard(
+                    location,
+                    showStatus: false,
+                    onTap: () => LocationDetailPage.open(context, location),
                   ),
               ],
             ),
@@ -106,58 +104,63 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _ExpiringItem {
-  const _ExpiringItem({
-    required this.item,
-    required this.label,
-    required this.tone,
-  });
+/// Horizontally scrolling rail of items that expire soon.
+class _ExpiringRail extends StatelessWidget {
+  const _ExpiringRail();
 
-  final InventoryItem item;
-  final String label;
-  final StatusTone tone;
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 116,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        clipBehavior: Clip.none,
+        itemCount: InventoryDemoData.expiringSoon.length,
+        separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.s3),
+        itemBuilder: (context, index) =>
+            _ExpiringCard(item: InventoryDemoData.expiringSoon[index]),
+      ),
+    );
+  }
 }
 
-class _StatCard extends StatelessWidget {
-  const _StatCard({required this.value, required this.label, this.tone});
+class _ExpiringCard extends StatelessWidget {
+  const _ExpiringCard({required this.item});
 
-  final String value;
-  final String label;
-  final StatusTone? tone;
+  final InventoryItem item;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final valueColor = switch (tone) {
-      StatusTone.warning => colors.warning,
-      StatusTone.error => colors.error,
-      _ => colors.textPrimary,
-    };
 
-    return ZaikoCard(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.s3,
-        vertical: AppSpacing.s4,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            value,
-            style: AppTypography.title.copyWith(
-              color: valueColor,
-              fontFeatures: AppTypography.tabularFigures,
+    return SizedBox(
+      width: 160,
+      child: ZaikoCard(
+        padding: const EdgeInsets.all(AppSpacing.s4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            IconTile(item.icon, color: item.color, size: 32, iconSize: 16),
+            const SizedBox(height: AppSpacing.s3),
+            Text(
+              item.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.bodyMedium.copyWith(
+                fontWeight: FontWeight.w700,
+                color: colors.textPrimary,
+              ),
             ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: AppTypography.caption.copyWith(
-              fontSize: 12,
-              color: colors.textSecondary,
+            const SizedBox(height: 2),
+            Text(
+              item.trailing!,
+              style: AppTypography.caption.copyWith(
+                fontWeight: FontWeight.w500,
+                color: colors.error,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

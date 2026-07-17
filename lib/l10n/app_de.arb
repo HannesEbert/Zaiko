@@ -23,7 +23,7 @@
   "inventoryEmptyTitle": "Dein Inventar ist leer",
   "inventoryEmptyMessage": "Lebensmittel, die du zu Kühlschrank und Vorrat hinzufügst, erscheinen hier.",
 
-  "shoppingTitle": "Einkaufsliste",
+  "shoppingTitle": "Einkauf",
   "shoppingEmptyTitle": "Deine Einkaufsliste ist leer",
   "shoppingEmptyMessage": "Dinge, die du kaufen möchtest, erscheinen hier.",
 
@@ -78,6 +78,10 @@
   "inventoryRecentlyAdded": "Zuletzt hinzugefügt",
   "inventoryItemsCount": "{count} Artikel",
   "inventoryAllFresh": "Alles frisch",
+  "inventoryStatExpiring": "Bald ablaufend",
+  "inventoryStatExpired": "Abgelaufen",
+  "inventoryStatFresh": "Frisch",
+  "locationSearchHint": "In {name} suchen…",
 
   "addItemTitle": "Artikel hinzufügen",
   "addItemScanTitle": "Barcode scannen",
@@ -98,9 +102,8 @@
   "itemDetailRemove": "Artikel entfernen",
   "itemDetailPhoto": "Produktfoto",
 
-  "shoppingProgress": "{done} von {total} erledigt",
   "shoppingAddHint": "Artikel hinzufügen…",
-  "shoppingDoneSection": "Erledigt ({count})",
+  "shoppingListCount": "{count} Artikel auf der Liste",
 
   "recipesSubtitle": "Kochbar mit deinem Vorrat",
   "recipesMissing": "Fehlt:",
@@ -120,10 +123,11 @@
   "settingLanguage": "Sprache",
   "settingLanguageGerman": "Deutsch",
 
-  "homeGreeting": "Hallo {name}",
-  "homeSubtitle": "Haushalt {household}",
-  "homeStatItems": "Artikel",
-  "homeStatExpiring": "Läuft bald ab",
-  "homeStatShopping": "Auf der Liste",
-  "homeExpiringSoon": "Läuft bald ab"
+  "homeGreeting": "Guten Morgen, {name}",
+  "homeExpiringCount": "{count} Artikel laufen bald ab",
+  "homeSearchHint": "Vorrat durchsuchen…",
+  "homeCategories": "Kategorien",
+  "homeExpiringSoon": "Bald ablaufend",
+  "commonAll": "Alle",
+  "commonBack": "Zurück"
 }

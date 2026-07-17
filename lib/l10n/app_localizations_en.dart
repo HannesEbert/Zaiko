@@ -72,7 +72,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Items you add to your fridge and pantry will show up here.';
 
   @override
-  String get shoppingTitle => 'Shopping list';
+  String get shoppingTitle => 'Shopping';
 
   @override
   String get shoppingEmptyTitle => 'Your shopping list is empty';
@@ -234,6 +234,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get inventoryAllFresh => 'All fresh';
 
   @override
+  String get inventoryStatExpiring => 'Expiring soon';
+
+  @override
+  String get inventoryStatExpired => 'Expired';
+
+  @override
+  String get inventoryStatFresh => 'Fresh';
+
+  @override
+  String locationSearchHint(String name) {
+    return 'Search in $name…';
+  }
+
+  @override
   String get addItemTitle => 'Add item';
 
   @override
@@ -285,16 +299,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get itemDetailPhoto => 'Product photo';
 
   @override
-  String shoppingProgress(int done, int total) {
-    return '$done of $total done';
-  }
-
-  @override
   String get shoppingAddHint => 'Add item…';
 
   @override
-  String shoppingDoneSection(int count) {
-    return 'Done ($count)';
+  String shoppingListCount(int count) {
+    return '$count items on the list';
   }
 
   @override
@@ -351,23 +360,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String homeGreeting(String name) {
-    return 'Hi $name';
+    return 'Good morning, $name';
   }
 
   @override
-  String homeSubtitle(String household) {
-    return 'Household $household';
+  String homeExpiringCount(int count) {
+    return '$count items expiring soon';
   }
 
   @override
-  String get homeStatItems => 'Items';
+  String get homeSearchHint => 'Search your stock…';
 
   @override
-  String get homeStatExpiring => 'Expiring soon';
-
-  @override
-  String get homeStatShopping => 'On the list';
+  String get homeCategories => 'Categories';
 
   @override
   String get homeExpiringSoon => 'Expiring soon';
+
+  @override
+  String get commonAll => 'All';
+
+  @override
+  String get commonBack => 'Back';
 }

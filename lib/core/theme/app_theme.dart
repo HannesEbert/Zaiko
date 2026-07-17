@@ -9,19 +9,21 @@ import 'app_typography.dart';
 /// them.
 ///
 /// The palette is the Zaiko design system's exact tokens rather than a
-/// generated `fromSeed` scheme, so brand green stays precise. Extra semantic
-/// colors that Material's [ColorScheme] doesn't cover live in [AppColors].
+/// generated `fromSeed` scheme, so the indigo brand color stays precise. The
+/// design is dark-only, so [light] and [dark] resolve to the same theme.
+/// Extra semantic colors that Material's [ColorScheme] doesn't cover live in
+/// [AppColors].
 abstract final class AppTheme {
-  static ThemeData get light => _base(Brightness.light, AppColors.light);
+  static ThemeData get light => dark;
 
-  static ThemeData get dark => _base(Brightness.dark, AppColors.dark);
+  static ThemeData get dark => _base(AppColors.dark);
 
-  static ThemeData _base(Brightness brightness, AppColors colors) {
-    final isDark = brightness == Brightness.dark;
+  static ThemeData _base(AppColors colors) {
+    const brightness = Brightness.dark;
 
     final colorScheme =
         ColorScheme.fromSeed(
-          seedColor: const Color(0xFF004225),
+          seedColor: const Color(0xFF6366F1),
           brightness: brightness,
         ).copyWith(
           primary: colors.accent,
@@ -54,7 +56,15 @@ abstract final class AppTheme {
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: isDark ? colors.card : const Color(0xFF1E1E1E),
+        backgroundColor: colors.sunken,
+      ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: colors.accent,
+        foregroundColor: colors.onAccent,
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+        ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -75,7 +85,7 @@ abstract final class AppTheme {
 
   static OutlineInputBorder _fieldBorder(Color color, {double width = 1}) {
     return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(AppRadius.md),
+      borderRadius: BorderRadius.circular(AppRadius.lg),
       borderSide: BorderSide(color: color, width: width),
     );
   }

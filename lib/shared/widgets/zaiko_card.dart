@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 
-/// The app's standard elevated surface: a white (or dark) rounded container
-/// with a subtle border and shadow.
+/// The app's standard elevated surface: a near-black rounded container with a
+/// hairline border, matching the design's flat card style.
 ///
 /// Used for every card, grouped list and sheet in the design so their
 /// appearance stays consistent. Pass [onTap] to make the whole card tappable.
@@ -36,13 +36,6 @@ class ZaikoCard extends StatelessWidget {
         color: colors.card,
         borderRadius: radius,
         border: Border.all(color: colors.borderSubtle),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x0A1E1E1E),
-            blurRadius: 2,
-            offset: Offset(0, 1),
-          ),
-        ],
       ),
       child: onTap == null
           ? ClipRRect(borderRadius: radius, child: content)

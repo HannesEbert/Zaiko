@@ -73,7 +73,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Lebensmittel, die du zu Kühlschrank und Vorrat hinzufügst, erscheinen hier.';
 
   @override
-  String get shoppingTitle => 'Einkaufsliste';
+  String get shoppingTitle => 'Einkauf';
 
   @override
   String get shoppingEmptyTitle => 'Deine Einkaufsliste ist leer';
@@ -235,6 +235,20 @@ class AppLocalizationsDe extends AppLocalizations {
   String get inventoryAllFresh => 'Alles frisch';
 
   @override
+  String get inventoryStatExpiring => 'Bald ablaufend';
+
+  @override
+  String get inventoryStatExpired => 'Abgelaufen';
+
+  @override
+  String get inventoryStatFresh => 'Frisch';
+
+  @override
+  String locationSearchHint(String name) {
+    return 'In $name suchen…';
+  }
+
+  @override
   String get addItemTitle => 'Artikel hinzufügen';
 
   @override
@@ -286,16 +300,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get itemDetailPhoto => 'Produktfoto';
 
   @override
-  String shoppingProgress(int done, int total) {
-    return '$done von $total erledigt';
-  }
-
-  @override
   String get shoppingAddHint => 'Artikel hinzufügen…';
 
   @override
-  String shoppingDoneSection(int count) {
-    return 'Erledigt ($count)';
+  String shoppingListCount(int count) {
+    return '$count Artikel auf der Liste';
   }
 
   @override
@@ -352,23 +361,26 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String homeGreeting(String name) {
-    return 'Hallo $name';
+    return 'Guten Morgen, $name';
   }
 
   @override
-  String homeSubtitle(String household) {
-    return 'Haushalt $household';
+  String homeExpiringCount(int count) {
+    return '$count Artikel laufen bald ab';
   }
 
   @override
-  String get homeStatItems => 'Artikel';
+  String get homeSearchHint => 'Vorrat durchsuchen…';
 
   @override
-  String get homeStatExpiring => 'Läuft bald ab';
+  String get homeCategories => 'Kategorien';
 
   @override
-  String get homeStatShopping => 'Auf der Liste';
+  String get homeExpiringSoon => 'Bald ablaufend';
 
   @override
-  String get homeExpiringSoon => 'Läuft bald ab';
+  String get commonAll => 'Alle';
+
+  @override
+  String get commonBack => 'Zurück';
 }

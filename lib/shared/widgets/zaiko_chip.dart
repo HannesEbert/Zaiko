@@ -4,8 +4,8 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
 
-/// A selectable filter pill. Selected uses the green tint; unselected is a
-/// bordered card-surface pill.
+/// A selectable filter pill. Selected is solid indigo with white text;
+/// unselected is a bordered card-surface pill — the design's filter chips.
 class ZaikoChip extends StatelessWidget {
   const ZaikoChip({
     required this.label,
@@ -21,26 +21,27 @@ class ZaikoChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final radius = BorderRadius.circular(AppRadius.md);
 
     return Material(
-      color: selected ? colors.accentMuted : colors.card,
-      borderRadius: BorderRadius.circular(AppRadius.full),
+      color: selected ? colors.accent : colors.card,
+      borderRadius: radius,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppRadius.full),
+        borderRadius: radius,
         child: Container(
-          height: 34,
+          height: 36,
           alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s3 + 2),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s4),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppRadius.full),
+            borderRadius: radius,
             border: selected ? null : Border.all(color: colors.borderSubtle),
           ),
           child: Text(
             label,
-            style: AppTypography.caption.copyWith(
+            style: AppTypography.body.copyWith(
               fontWeight: FontWeight.w500,
-              color: selected ? colors.accentText : colors.textStrong,
+              color: selected ? colors.onAccent : colors.textSecondary,
             ),
           ),
         ),

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 /// Semantic color tokens from the Zaiko design system, exposed as a
-/// [ThemeExtension] so widgets read them from `Theme.of(context)` and get the
-/// right values in light and dark automatically.
+/// [ThemeExtension] so widgets read them from `Theme.of(context)`.
 ///
-/// The palette guidance: ~80% white/neutral surfaces, ~15% British Racing
-/// Green, ~5% status colors. Green is intentional and premium — never a wash.
+/// The palette follows the "Modern App Layout" Figma design: a near-black
+/// canvas (`#000000` page, `#0a0a0a` cards) with hairline white borders,
+/// indigo (`#6366f1`) as the single brand accent and slate greys for
+/// secondary text. Storage-location colors live in the `category*` constants.
 @immutable
 class AppColors extends ThemeExtension<AppColors> {
   const AppColors({
@@ -36,13 +37,22 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.navUnselected,
   });
 
-  /// Page background behind cards (`--surface-page`).
+  /// Category accents for storage locations (fridge, freezer, pantry,
+  /// drinks). Fixed brand values straight from the design — they don't vary
+  /// with theme brightness, so they are constants rather than instance
+  /// tokens. Tinted backgrounds are derived at 12% alpha (see `IconTile`).
+  static const Color categoryBlue = Color(0xFF3B82F6);
+  static const Color categoryCyan = Color(0xFF06B6D4);
+  static const Color categoryOrange = Color(0xFFF97316);
+  static const Color categoryPurple = Color(0xFFA855F7);
+
+  /// Page background behind cards (`--background`).
   final Color pageBackground;
 
-  /// Elevated surface for cards, sheets and list containers.
+  /// Elevated surface for cards, sheets and list containers (`--card`).
   final Color card;
 
-  /// Sunken neutral fill for chips and inactive icon tiles.
+  /// Sunken neutral fill for chips and inactive icon tiles (`--muted`).
   final Color sunken;
 
   /// Background of inputs and search fields.
@@ -51,13 +61,13 @@ class AppColors extends ThemeExtension<AppColors> {
   /// Primary brand color for filled buttons, active nav and the FAB.
   final Color accent;
 
-  /// Brand color when used as text/icon on a neutral surface (lighter in dark).
+  /// Brand color when used as text/icon on a neutral surface.
   final Color accentText;
 
-  /// Subtle green tint for selected chips and avatars.
+  /// Indigo tint (15%) behind the active nav item.
   final Color accentMuted;
 
-  /// Faintest green wash for icon tiles.
+  /// Faintest indigo wash (12%) for icon tiles.
   final Color accentWash;
 
   /// Foreground on top of [accent].
@@ -85,62 +95,36 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color navSelected;
   final Color navUnselected;
 
-  /// Light theme token set.
-  static const AppColors light = AppColors(
-    pageBackground: Color(0xFFF7F7F2),
-    card: Color(0xFFFFFFFF),
-    sunken: Color(0xFFF3F4F1),
-    field: Color(0xFFFFFFFF),
-    accent: Color(0xFF004225),
-    accentText: Color(0xFF004225),
-    accentMuted: Color(0xFFE3ECE6),
-    accentWash: Color(0xFFEFF4F0),
-    onAccent: Color(0xFFFFFFFF),
-    textPrimary: Color(0xFF1E1E1E),
-    textSecondary: Color(0xFF6B7280),
-    textTertiary: Color(0xFF9CA3AF),
-    textStrong: Color(0xFF40474F),
-    borderSubtle: Color(0xFFE5E7EB),
-    borderStrong: Color(0xFFD6D9DE),
-    divider: Color(0xFFF3F4F1),
-    success: Color(0xFF2E7D32),
-    successBg: Color(0xFFEBF3EB),
-    warning: Color(0xFFB45309),
-    warningBg: Color(0xFFFAF3E7),
-    error: Color(0xFFB3261E),
-    errorBg: Color(0xFFF9ECEB),
-    navBackground: Color(0xFFFFFFFF),
-    navSelected: Color(0xFF004225),
-    navUnselected: Color(0xFF9CA3AF),
-  );
+  /// The design is dark-only, so both theme slots share one token set.
+  static const AppColors light = dark;
 
-  /// Dark theme token set (derived from the "Inventar · Dark Mode" screen).
+  /// Token set from the Figma "Modern App Layout" design (dark).
   static const AppColors dark = AppColors(
-    pageBackground: Color(0xFF141513),
-    card: Color(0xFF1F211E),
-    sunken: Color(0x12FFFFFF),
-    field: Color(0xFF1F211E),
-    accent: Color(0xFF1A6440),
-    accentText: Color(0xFF9FC4AE),
-    accentMuted: Color(0x29E3ECE6),
-    accentWash: Color(0x12FFFFFF),
+    pageBackground: Color(0xFF000000),
+    card: Color(0xFF0A0A0A),
+    sunken: Color(0xFF171717),
+    field: Color(0xFF0A0A0A),
+    accent: Color(0xFF6366F1),
+    accentText: Color(0xFF6366F1),
+    accentMuted: Color(0x266366F1),
+    accentWash: Color(0x1F6366F1),
     onAccent: Color(0xFFFFFFFF),
-    textPrimary: Color(0xFFF2F2ED),
-    textSecondary: Color(0xFF9BA19B),
-    textTertiary: Color(0xFF7A807A),
-    textStrong: Color(0xFFA8ADA6),
-    borderSubtle: Color(0x17FFFFFF),
-    borderStrong: Color(0x24FFFFFF),
-    divider: Color(0x12FFFFFF),
-    success: Color(0xFF9FC4AE),
-    successBg: Color(0x2E2E7D32),
-    warning: Color(0xFFE8B37B),
-    warningBg: Color(0x38B45309),
-    error: Color(0xFFF2A59F),
-    errorBg: Color(0x3DB3261E),
-    navBackground: Color(0xFF181A17),
-    navSelected: Color(0xFF9FC4AE),
-    navUnselected: Color(0xFF7A807A),
+    textPrimary: Color(0xFFF8FAFC),
+    textSecondary: Color(0xFF94A3B8),
+    textTertiary: Color(0xFF64748B),
+    textStrong: Color(0xFF94A3B8),
+    borderSubtle: Color(0x0FFFFFFF),
+    borderStrong: Color(0x1FFFFFFF),
+    divider: Color(0x0AFFFFFF),
+    success: Color(0xFF34D399),
+    successBg: Color(0x1F34D399),
+    warning: Color(0xFFFBBF24),
+    warningBg: Color(0x1FFBBF24),
+    error: Color(0xFFF87171),
+    errorBg: Color(0x1FF87171),
+    navBackground: Color(0xEB000000),
+    navSelected: Color(0xFF6366F1),
+    navUnselected: Color(0xFF475569),
   );
 
   @override
