@@ -70,8 +70,8 @@ fvm install
 # Install dependencies
 fvm flutter pub get
 
-# Run on a simulator or connected device
-fvm flutter run
+# Run on a simulator or connected device (see "Configuration & secrets" below)
+fvm flutter run --dart-define-from-file=config/app_config.json
 ```
 
 > No FVM? A system-wide Flutter matching the version in `.fvmrc` works too — just drop the `fvm` prefix.
