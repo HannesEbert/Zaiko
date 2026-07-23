@@ -20,6 +20,13 @@
   "loginConfirmEmailSent": "Bitte bestätige dein Konto über die E-Mail in deinem Postfach.",
   "loginGenericError": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
 
+  "registerTitle": "Konto erstellen",
+  "registerSubtitle": "Erstelle dein Konto, um loszulegen.",
+  "registerConfirmPasswordLabel": "Passwort bestätigen",
+  "registerPasswordMismatch": "Die Passwörter stimmen nicht überein",
+  "registerPrivacyConsent": "Ich akzeptiere die Datenschutzerklärung.",
+  "registerPrivacyPolicyLink": "Datenschutzerklärung",
+
   "inventoryEmptyTitle": "Dein Inventar ist leer",
   "inventoryEmptyMessage": "Lebensmittel, die du zu Kühlschrank und Vorrat hinzufügst, erscheinen hier.",
 

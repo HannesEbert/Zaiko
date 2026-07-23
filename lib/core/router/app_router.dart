@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/application/auth_providers.dart';
 import '../../features/auth/domain/auth_status.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
+import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/household/presentation/pages/join_household_page.dart';
 import '../../features/inventory/presentation/pages/inventory_page.dart';
@@ -44,15 +45,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) {
       final status = ref.read(authStateProvider);
       final location = state.matchedLocation;
-      final isLoggingIn = location == LoginPage.routePath;
-      // Invite links must be reachable before a user has signed in.
+      final isAuthScreen =
+          location == LoginPage.routePath || location == RegisterPage.routePath;
+      // Auth screens and invite links must be reachable before signing in.
       final isPublic =
-          isLoggingIn || location.startsWith(JoinHouseholdPage.pathPrefix);
+          isAuthScreen || location.startsWith(JoinHouseholdPage.pathPrefix);
 
       if (status == AuthStatus.unauthenticated && !isPublic) {
         return LoginPage.routePath;
       }
-      if (status == AuthStatus.authenticated && isLoggingIn) {
+      if (status == AuthStatus.authenticated && isAuthScreen) {
         return HomePage.routePath;
       }
       return null;
@@ -62,6 +64,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: LoginPage.routePath,
         name: LoginPage.routeName,
         builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: RegisterPage.routePath,
+        name: RegisterPage.routeName,
+        builder: (context, state) => const RegisterPage(),
       ),
       GoRoute(
         path: JoinHouseholdPage.routePath,
