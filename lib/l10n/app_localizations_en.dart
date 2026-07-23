@@ -65,6 +65,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginGenericError => 'Something went wrong. Please try again.';
 
   @override
+  String get registerTitle => 'Create account';
+
+  @override
+  String get registerSubtitle => 'Create your account to get started.';
+
+  @override
+  String get registerConfirmPasswordLabel => 'Confirm password';
+
+  @override
+  String get registerPasswordMismatch => 'The passwords don\'t match';
+
+  @override
+  String get registerPrivacyConsent => 'I accept the Privacy Policy.';
+
+  @override
+  String get registerPrivacyPolicyLink => 'Privacy Policy';
+
+  @override
   String get inventoryEmptyTitle => 'Your inventory is empty';
 
   @override

@@ -200,6 +200,42 @@ abstract class AppLocalizations {
   /// **'Something went wrong. Please try again.'**
   String get loginGenericError;
 
+  /// Title of the dedicated account registration screen
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get registerTitle;
+
+  /// Short intro shown under the registration screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Create your account to get started.'**
+  String get registerSubtitle;
+
+  /// Label for the password confirmation field
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get registerConfirmPasswordLabel;
+
+  /// Validation error when password and confirmation differ
+  ///
+  /// In en, this message translates to:
+  /// **'The passwords don\'t match'**
+  String get registerPasswordMismatch;
+
+  /// Consent checkbox label; must contain registerPrivacyPolicyLink verbatim as the tappable part
+  ///
+  /// In en, this message translates to:
+  /// **'I accept the Privacy Policy.'**
+  String get registerPrivacyConsent;
+
+  /// Substring of registerPrivacyConsent rendered as a tappable link to the privacy policy
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get registerPrivacyPolicyLink;
+
   /// No description provided for @inventoryEmptyTitle.
   ///
   /// In en, this message translates to:

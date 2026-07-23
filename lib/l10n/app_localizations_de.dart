@@ -66,6 +66,25 @@ class AppLocalizationsDe extends AppLocalizations {
       'Etwas ist schiefgelaufen. Bitte versuche es erneut.';
 
   @override
+  String get registerTitle => 'Konto erstellen';
+
+  @override
+  String get registerSubtitle => 'Erstelle dein Konto, um loszulegen.';
+
+  @override
+  String get registerConfirmPasswordLabel => 'Passwort bestätigen';
+
+  @override
+  String get registerPasswordMismatch => 'Die Passwörter stimmen nicht überein';
+
+  @override
+  String get registerPrivacyConsent =>
+      'Ich akzeptiere die Datenschutzerklärung.';
+
+  @override
+  String get registerPrivacyPolicyLink => 'Datenschutzerklärung';
+
+  @override
   String get inventoryEmptyTitle => 'Dein Inventar ist leer';
 
   @override

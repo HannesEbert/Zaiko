@@ -49,6 +49,31 @@
   "loginConfirmEmailSent": "Check your email to confirm your account.",
   "loginGenericError": "Something went wrong. Please try again.",
 
+  "registerTitle": "Create account",
+  "@registerTitle": {
+    "description": "Title of the dedicated account registration screen"
+  },
+  "registerSubtitle": "Create your account to get started.",
+  "@registerSubtitle": {
+    "description": "Short intro shown under the registration screen title"
+  },
+  "registerConfirmPasswordLabel": "Confirm password",
+  "@registerConfirmPasswordLabel": {
+    "description": "Label for the password confirmation field"
+  },
+  "registerPasswordMismatch": "The passwords don't match",
+  "@registerPasswordMismatch": {
+    "description": "Validation error when password and confirmation differ"
+  },
+  "registerPrivacyConsent": "I accept the Privacy Policy.",
+  "@registerPrivacyConsent": {
+    "description": "Consent checkbox label; must contain registerPrivacyPolicyLink verbatim as the tappable part"
+  },
+  "registerPrivacyPolicyLink": "Privacy Policy",
+  "@registerPrivacyPolicyLink": {
+    "description": "Substring of registerPrivacyConsent rendered as a tappable link to the privacy policy"
+  },
+
   "inventoryEmptyTitle": "Your inventory is empty",
   "inventoryEmptyMessage": "Items you add to your fridge and pantry will show up here.",
 
