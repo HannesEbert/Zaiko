@@ -16,7 +16,7 @@ class SectionLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     final label = Text(
       text.toUpperCase(),
-      style: AppTypography.micro.copyWith(color: context.colors.textSecondary),
+      style: AppTypography.micro.copyWith(color: context.colors.textTertiary),
     );
 
     if (trailing == null) return label;

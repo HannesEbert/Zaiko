@@ -215,7 +215,7 @@ abstract class AppLocalizations {
   /// No description provided for @shoppingTitle.
   ///
   /// In en, this message translates to:
-  /// **'Shopping list'**
+  /// **'Shopping'**
   String get shoppingTitle;
 
   /// No description provided for @shoppingEmptyTitle.
@@ -500,6 +500,30 @@ abstract class AppLocalizations {
   /// **'All fresh'**
   String get inventoryAllFresh;
 
+  /// No description provided for @inventoryStatExpiring.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiring soon'**
+  String get inventoryStatExpiring;
+
+  /// No description provided for @inventoryStatExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get inventoryStatExpired;
+
+  /// No description provided for @inventoryStatFresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Fresh'**
+  String get inventoryStatFresh;
+
+  /// No description provided for @locationSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search in {name}…'**
+  String locationSearchHint(String name);
+
   /// No description provided for @addItemTitle.
   ///
   /// In en, this message translates to:
@@ -602,23 +626,17 @@ abstract class AppLocalizations {
   /// **'Product photo'**
   String get itemDetailPhoto;
 
-  /// No description provided for @shoppingProgress.
-  ///
-  /// In en, this message translates to:
-  /// **'{done} of {total} done'**
-  String shoppingProgress(int done, int total);
-
   /// No description provided for @shoppingAddHint.
   ///
   /// In en, this message translates to:
   /// **'Add item…'**
   String get shoppingAddHint;
 
-  /// No description provided for @shoppingDoneSection.
+  /// No description provided for @shoppingListCount.
   ///
   /// In en, this message translates to:
-  /// **'Done ({count})'**
-  String shoppingDoneSection(int count);
+  /// **'{count} items on the list'**
+  String shoppingListCount(int count);
 
   /// No description provided for @recipesSubtitle.
   ///
@@ -719,38 +737,44 @@ abstract class AppLocalizations {
   /// No description provided for @homeGreeting.
   ///
   /// In en, this message translates to:
-  /// **'Hi {name}'**
+  /// **'Good morning, {name}'**
   String homeGreeting(String name);
 
-  /// No description provided for @homeSubtitle.
+  /// No description provided for @homeExpiringCount.
   ///
   /// In en, this message translates to:
-  /// **'Household {household}'**
-  String homeSubtitle(String household);
+  /// **'{count} items expiring soon'**
+  String homeExpiringCount(int count);
 
-  /// No description provided for @homeStatItems.
+  /// No description provided for @homeSearchHint.
   ///
   /// In en, this message translates to:
-  /// **'Items'**
-  String get homeStatItems;
+  /// **'Search your stock…'**
+  String get homeSearchHint;
 
-  /// No description provided for @homeStatExpiring.
+  /// No description provided for @homeCategories.
   ///
   /// In en, this message translates to:
-  /// **'Expiring soon'**
-  String get homeStatExpiring;
-
-  /// No description provided for @homeStatShopping.
-  ///
-  /// In en, this message translates to:
-  /// **'On the list'**
-  String get homeStatShopping;
+  /// **'Categories'**
+  String get homeCategories;
 
   /// No description provided for @homeExpiringSoon.
   ///
   /// In en, this message translates to:
   /// **'Expiring soon'**
   String get homeExpiringSoon;
+
+  /// No description provided for @commonAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get commonAll;
+
+  /// No description provided for @commonBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get commonBack;
 }
 
 class _AppLocalizationsDelegate

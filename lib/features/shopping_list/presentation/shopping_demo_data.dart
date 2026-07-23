@@ -1,52 +1,43 @@
 /// Placeholder shopping-list data used to render the UI before the real,
 /// collaborative list (Supabase-synced) exists. Demo content only.
 abstract final class ShoppingDemoData {
-  static const int doneCount = 4;
-  static const int totalCount = 11;
+  /// Filter chips above the list; the first entry is the "all" filter and is
+  /// resolved via l10n at the call site.
+  static const List<String> categories = ['Supermarkt', 'Drogerie'];
 
-  /// Fraction of the list that is done, for the progress bar.
-  static double get progress => doneCount / totalCount;
-
-  static const List<ShoppingSection> openSections = [
-    ShoppingSection(
-      title: 'Obst & Gemüse',
-      items: [
-        ShoppingItem(name: 'Bananen', trailing: '6 Stück'),
-        ShoppingItem(name: 'Tomaten', memberInitial: 'M'),
-      ],
-    ),
-    ShoppingSection(
-      title: 'Milchprodukte',
-      items: [
-        ShoppingItem(name: 'Bio Vollmilch', trailing: '2 × 1 l'),
-        ShoppingItem(name: 'Skyr', memberInitial: 'H'),
-      ],
+  static const List<ShoppingItem> items = [
+    ShoppingItem(name: 'Haferdrink', detail: '2 × 1 l', category: 'Supermarkt'),
+    ShoppingItem(name: 'Äpfel', detail: '1 kg', category: 'Supermarkt'),
+    ShoppingItem(name: 'Brot', detail: '1 Laib', category: 'Supermarkt'),
+    ShoppingItem(
+      name: 'Spülmittel',
+      detail: '1 Flasche',
+      category: 'Drogerie',
+      checked: true,
     ),
   ];
 
-  static const List<ShoppingItem> doneItems = [
-    ShoppingItem(name: 'Brot'),
-    ShoppingItem(name: 'Eier'),
-  ];
-}
-
-/// A titled group of shopping items (e.g. "Obst & Gemüse").
-class ShoppingSection {
-  const ShoppingSection({required this.title, required this.items});
-
-  final String title;
-  final List<ShoppingItem> items;
+  /// Number of still-open items, for the header subtitle.
+  static int get openCount => items.where((item) => !item.checked).length;
 }
 
 /// A single shopping-list entry.
 class ShoppingItem {
-  const ShoppingItem({required this.name, this.trailing, this.memberInitial});
+  const ShoppingItem({
+    required this.name,
+    required this.detail,
+    required this.category,
+    this.checked = false,
+  });
 
   final String name;
 
-  /// Quantity text shown on the trailing edge, if any.
-  final String? trailing;
+  /// Quantity text shown in the subtitle (e.g. "2 × 1 l").
+  final String detail;
 
-  /// Initial of the member who added it, shown as a small avatar, if any.
-  final String? memberInitial;
+  /// Store category, shown in the subtitle and used by the filter chips.
+  final String category;
+
+  /// Whether the item is already ticked off (demo initial state).
+  final bool checked;
 }

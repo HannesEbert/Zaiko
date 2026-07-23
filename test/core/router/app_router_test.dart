@@ -67,6 +67,21 @@ void main() {
     }
   });
 
+  testWidgets('the bottom nav bar stays at the bottom, not over the page', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(400, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await pumpAuthedApp(tester);
+
+    // Regression: a `Center` in the nav item expanded to the loose height the
+    // Scaffold offers its bottom bar, so the bar filled the screen and
+    // vertically centred the labels over every page. The labels must sit in
+    // the bottom slice of the viewport instead.
+    expect(tester.getCenter(find.text('Home')).dy, greaterThan(700));
+  });
+
   testWidgets('tapping a nav destination switches the active branch', (
     tester,
   ) async {

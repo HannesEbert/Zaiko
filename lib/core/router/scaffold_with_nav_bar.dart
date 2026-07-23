@@ -110,18 +110,43 @@ class _NavItem extends StatelessWidget {
           initialLocation: index == navigationShell.currentIndex,
         ),
         radius: 40,
+        // The outer min-height Column keeps the bar exactly one item tall. A
+        // Center here would instead stretch to the loose height the Scaffold
+        // offers the bottom bar (the full screen), covering every page.
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.s1),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(isSelected ? activeIcon : icon, size: 24, color: color),
-              const SizedBox(height: AppSpacing.s1),
-              Text(
-                label,
-                style: AppTypography.micro.copyWith(
-                  color: color,
-                  letterSpacing: 0.2,
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.s3,
+                  vertical: AppSpacing.s1 + 2,
+                ),
+                decoration: BoxDecoration(
+                  color: isSelected ? colors.accentMuted : Colors.transparent,
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      isSelected ? activeIcon : icon,
+                      size: 20,
+                      color: color,
+                    ),
+                    const SizedBox(height: AppSpacing.s1),
+                    Text(
+                      label,
+                      style: AppTypography.micro.copyWith(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w600,
+                        color: color,
+                        letterSpacing: 0.2,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

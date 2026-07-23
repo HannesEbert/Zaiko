@@ -45,7 +45,7 @@ class _RecipesPageState extends State<RecipesPage> {
             ),
             const SizedBox(height: AppSpacing.s3),
             SizedBox(
-              height: 34,
+              height: 36,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: RecipesDemoData.filters.length,

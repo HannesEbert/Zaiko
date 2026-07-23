@@ -42,8 +42,8 @@ class InventoryItemRow extends StatelessWidget {
         ),
         child: Row(
           children: [
-            IconTile(item.icon),
-            const SizedBox(width: AppSpacing.s3),
+            IconTile(item.icon, color: item.color, iconSize: 18),
+            const SizedBox(width: AppSpacing.s4),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -26,21 +26,21 @@ class PillField extends StatelessWidget {
 
     return Material(
       color: colors.field,
-      borderRadius: BorderRadius.circular(AppRadius.md),
+      borderRadius: BorderRadius.circular(AppRadius.lg),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppRadius.md),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         child: Container(
-          height: AppSpacing.hitTarget,
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s3 + 2),
+          height: AppSpacing.s12,
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s4),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppRadius.md),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
             border: Border.all(color: colors.borderSubtle),
           ),
           child: Row(
             children: [
-              Icon(icon, size: 18, color: colors.textTertiary),
-              const SizedBox(width: AppSpacing.s2 + 2),
+              Icon(icon, size: 16, color: colors.textTertiary),
+              const SizedBox(width: AppSpacing.s3),
               Text(
                 hint,
                 style: AppTypography.body.copyWith(color: colors.textTertiary),

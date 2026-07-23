@@ -9,13 +9,22 @@ import '../../../../shared/widgets/status_pill.dart';
 import '../../../../shared/widgets/zaiko_card.dart';
 import '../inventory_demo_data.dart';
 
-/// A single storage-location tile in the inventory grid: icon, name, item count
-/// and a status line (a colored dot + text, or "Alles frisch").
+/// A single storage-location tile in the inventory grid: tinted category
+/// icon, name, item count and — unless [showStatus] is false — a status badge
+/// (small icon + colored text, as in the design).
 class StorageLocationCard extends StatelessWidget {
-  const StorageLocationCard(this.location, {this.onTap, super.key});
+  const StorageLocationCard(
+    this.location, {
+    this.onTap,
+    this.showStatus = true,
+    super.key,
+  });
 
   final StorageLocation location;
   final VoidCallback? onTap;
+
+  /// The home tab's category grid hides the status line.
+  final bool showStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +37,13 @@ class StorageLocationCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          IconTile(location.icon, accent: true),
+          IconTile(location.icon, color: location.color),
           const SizedBox(height: AppSpacing.s3),
           Text(
             location.name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: AppTypography.bodyMedium.copyWith(
-              fontWeight: FontWeight.w600,
-              color: colors.textPrimary,
-            ),
+            style: AppTypography.headline.copyWith(color: colors.textPrimary),
           ),
           const SizedBox(height: 2),
           Text(
@@ -47,51 +53,48 @@ class StorageLocationCard extends StatelessWidget {
               fontFeatures: AppTypography.tabularFigures,
             ),
           ),
-          const SizedBox(height: AppSpacing.s2),
-          _StatusLine(location: location),
+          if (showStatus) ...[
+            const SizedBox(height: AppSpacing.s3),
+            _StatusBadge(location: location),
+          ],
         ],
       ),
     );
   }
 }
 
-class _StatusLine extends StatelessWidget {
-  const _StatusLine({required this.location});
+class _StatusBadge extends StatelessWidget {
+  const _StatusBadge({required this.location});
 
   final StorageLocation location;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final status = location.status;
-    final tone = location.tone;
 
-    if (status == null || tone == null) {
-      return Text(
+    final (color, icon, text) = switch (location.tone) {
+      StatusTone.error => (colors.error, Icons.error_outline, location.status!),
+      StatusTone.warning => (colors.warning, Icons.schedule, location.status!),
+      _ => (
+        colors.success,
+        Icons.check_circle_outline,
         context.l10n.inventoryAllFresh,
-        style: AppTypography.caption.copyWith(
-          fontSize: 12,
-          color: colors.textTertiary,
-        ),
-      );
-    }
-
-    final color = tone == StatusTone.error ? colors.error : colors.warning;
+      ),
+    };
 
     return Row(
       children: [
-        Container(
-          width: 6,
-          height: 6,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        ),
-        const SizedBox(width: 5),
+        Icon(icon, size: 12, color: color),
+        const SizedBox(width: 6),
         Flexible(
           child: Text(
-            status,
+            text,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: AppTypography.caption.copyWith(fontSize: 12, color: color),
+            style: AppTypography.caption.copyWith(
+              fontWeight: FontWeight.w500,
+              color: color,
+            ),
           ),
         ),
       ],
