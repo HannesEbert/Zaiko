@@ -11,6 +11,9 @@ import '../../../../shared/widgets/section_label.dart';
 import '../../../../shared/widgets/user_avatar.dart';
 import '../../../../shared/widgets/zaiko_card.dart';
 import '../../../auth/application/auth_providers.dart';
+import '../../../household/application/households_providers.dart';
+import '../../../household/domain/household.dart';
+import '../../../household/presentation/widgets/household_avatar.dart';
 import 'household_link_page.dart';
 import 'profile_edit_page.dart';
 import 'reminders_page.dart';
@@ -64,7 +67,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             SectionLabel(l10n.profileHouseholdSection),
             const SizedBox(height: AppSpacing.s2),
             _HouseholdCard(
-              onInvite: () => context.pushNamed(HouseholdLinkPage.routeName),
+              onManage: () => context.pushNamed(HouseholdLinkPage.routeName),
             ),
             const SizedBox(height: AppSpacing.s5),
             SectionLabel(l10n.profileSettingsSection),
@@ -190,71 +193,42 @@ class _AccountCard extends StatelessWidget {
   }
 }
 
-class _HouseholdCard extends StatelessWidget {
-  const _HouseholdCard({required this.onInvite});
+class _HouseholdCard extends ConsumerWidget {
+  const _HouseholdCard({required this.onManage});
 
-  final VoidCallback onInvite;
+  final VoidCallback onManage;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
     final l10n = context.l10n;
+    final household = ref.watch(currentHouseholdProvider);
 
     return ZaikoCard(
       padding: const EdgeInsets.all(AppSpacing.s3 + 2),
       child: Column(
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Lindenhof',
-                      style: AppTypography.bodyMedium.copyWith(
-                        color: colors.textPrimary,
-                      ),
-                    ),
-                    Text(
-                      l10n.profileMembersCount(2),
-                      style: AppTypography.caption.copyWith(
-                        color: colors.textSecondary,
-                        fontFeatures: AppTypography.tabularFigures,
-                      ),
-                    ),
-                  ],
+          household.when(
+            loading: () => const SizedBox(
+              height: 30,
+              child: Center(
+                child: SizedBox.square(
+                  dimension: 18,
+                  child: CircularProgressIndicator(strokeWidth: 2),
                 ),
               ),
-              SizedBox(
-                width: 52,
-                height: 30,
-                child: Stack(
-                  children: [
-                    UserAvatar(
-                      initial: 'H',
-                      size: 30,
-                      borderColor: colors.card,
-                    ),
-                    Positioned(
-                      left: 22,
-                      child: UserAvatar(
-                        initial: 'M',
-                        size: 30,
-                        accent: false,
-                        borderColor: colors.card,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            ),
+            error: (_, _) =>
+                _HouseholdCardMessage(text: l10n.householdErrorGeneric),
+            data: (data) => data == null
+                ? _HouseholdCardMessage(text: l10n.profileHouseholdEmptyTitle)
+                : _HouseholdSummary(household: data),
           ),
           const SizedBox(height: AppSpacing.s3),
           OutlinedButton.icon(
-            onPressed: onInvite,
-            icon: const Icon(Icons.person_add_alt, size: 16),
-            label: Text(l10n.profileInviteMember),
+            onPressed: onManage,
+            icon: const Icon(Icons.settings_outlined, size: 16),
+            label: Text(l10n.profileHousehold),
             style: OutlinedButton.styleFrom(
               minimumSize: const Size.fromHeight(40),
               foregroundColor: colors.accentText,
@@ -268,6 +242,81 @@ class _HouseholdCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Name + member count with an avatar cluster, shown on the profile card.
+class _HouseholdSummary extends ConsumerWidget {
+  const _HouseholdSummary({required this.household});
+
+  final Household household;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    final count =
+        ref.watch(householdMembersProvider(household.id)).value?.length ?? 0;
+
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                household.name,
+                style: AppTypography.bodyMedium.copyWith(
+                  color: colors.textPrimary,
+                ),
+              ),
+              if (count > 0)
+                Text(
+                  l10n.profileMembersCount(count),
+                  style: AppTypography.caption.copyWith(
+                    color: colors.textSecondary,
+                    fontFeatures: AppTypography.tabularFigures,
+                  ),
+                ),
+            ],
+          ),
+        ),
+        SizedBox(
+          width: 52,
+          height: 30,
+          child: Stack(
+            children: [
+              HouseholdAvatar(accent: true, size: 30, borderColor: colors.card),
+              if (count > 1)
+                Positioned(
+                  left: 22,
+                  child: HouseholdAvatar(size: 30, borderColor: colors.card),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// A single left-aligned line used for the card's loading/empty/error states.
+class _HouseholdCardMessage extends StatelessWidget {
+  const _HouseholdCardMessage({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        text,
+        style: AppTypography.bodyMedium.copyWith(
+          color: context.colors.textSecondary,
+        ),
       ),
     );
   }
