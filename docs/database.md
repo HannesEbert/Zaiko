@@ -109,7 +109,36 @@ by every authenticated user but not writable by them.
 
 **Membership changes bypass RLS deliberately.** There is no member `INSERT`
 policy. The creator is enrolled by the `on_household_created` trigger, and
-joining via an invite runs through a `SECURITY DEFINER` RPC (added with the
-households feature) — both run as the definer and so are not gated by RLS,
-which is what lets them write membership while direct client inserts stay
-blocked. The service role bypasses RLS entirely for administrative tasks.
+joining via an invite runs through a `SECURITY DEFINER` RPC (see below) — both
+run as the definer and so are not gated by RLS, which is what lets them write
+membership while direct client inserts stay blocked. The service role bypasses
+RLS entirely for administrative tasks.
+
+## Invite RPCs
+
+Invite generation and join are two `SECURITY DEFINER` functions
+(`20260803090000_household_invite_rpcs.sql`), the only sanctioned write path for
+membership and for consuming an invite (`household_members` has no `INSERT`
+policy, `household_invites` no `UPDATE` policy).
+
+- **`create_household_invite(hid uuid) → text`** — checks the caller is a member
+  of `hid`, then inserts an invite with a fresh 6-character code (alphabet
+  `ABCDEFGHJKLMNPQRSTUVWXYZ23456789`, no `0/O/1/I/L`, regenerated on collision)
+  and `expires_at = now() + 15 min`, and returns the code. The QR shown in the
+  app encodes the `/join/<code>` link.
+- **`accept_household_invite(invite_code text) → uuid`** — enforces the
+  one-household-per-user rule, locks and validates the invite (`for update`),
+  inserts the caller as a `member`, marks the invite `used_at`, and returns the
+  joined household id.
+
+Failures raise custom SQLSTATEs, surfaced to the client as
+`PostgrestException.code` and mapped to localized messages in the Dart
+repository:
+
+| Code | Meaning |
+| --- | --- |
+| `ZKH01` | caller already belongs to a household |
+| `ZKH02` | invite code not found |
+| `ZKH03` | invite already used |
+| `ZKH04` | invite expired |
+| `42501` | caller is not a member of the household (create) |

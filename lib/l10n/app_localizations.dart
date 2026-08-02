@@ -811,6 +811,264 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back'**
   String get commonBack;
+
+  /// No description provided for @onboardingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up your household'**
+  String get onboardingTitle;
+
+  /// No description provided for @onboardingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a household to start tracking, or join one you were invited to.'**
+  String get onboardingSubtitle;
+
+  /// No description provided for @onboardingCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a household'**
+  String get onboardingCreateTitle;
+
+  /// No description provided for @onboardingCreateSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start fresh — you can invite others afterwards.'**
+  String get onboardingCreateSubtitle;
+
+  /// No description provided for @onboardingNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Household name'**
+  String get onboardingNameLabel;
+
+  /// No description provided for @onboardingNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Lindenhof'**
+  String get onboardingNameHint;
+
+  /// No description provided for @onboardingNameEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a household name'**
+  String get onboardingNameEmpty;
+
+  /// No description provided for @onboardingCreateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Create household'**
+  String get onboardingCreateButton;
+
+  /// No description provided for @onboardingJoinTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Join a household'**
+  String get onboardingJoinTitle;
+
+  /// No description provided for @onboardingJoinSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the invite code you received.'**
+  String get onboardingJoinSubtitle;
+
+  /// No description provided for @onboardingCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite code'**
+  String get onboardingCodeLabel;
+
+  /// No description provided for @onboardingCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'6-character code'**
+  String get onboardingCodeHint;
+
+  /// No description provided for @onboardingCodeEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter an invite code'**
+  String get onboardingCodeEmpty;
+
+  /// No description provided for @onboardingJoinButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Join'**
+  String get onboardingJoinButton;
+
+  /// No description provided for @inviteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite member'**
+  String get inviteTitle;
+
+  /// No description provided for @inviteSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this code, or let them scan the QR. It expires in 15 minutes.'**
+  String get inviteSubtitle;
+
+  /// No description provided for @inviteExpiresHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid for 15 minutes'**
+  String get inviteExpiresHint;
+
+  /// No description provided for @inviteCreateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Create invite code'**
+  String get inviteCreateButton;
+
+  /// No description provided for @inviteRegenerate.
+  ///
+  /// In en, this message translates to:
+  /// **'New code'**
+  String get inviteRegenerate;
+
+  /// No description provided for @householdMembersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Members'**
+  String get householdMembersTitle;
+
+  /// No description provided for @householdRoleOwner.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner'**
+  String get householdRoleOwner;
+
+  /// No description provided for @householdRoleMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Member'**
+  String get householdRoleMember;
+
+  /// No description provided for @householdYou.
+  ///
+  /// In en, this message translates to:
+  /// **'You'**
+  String get householdYou;
+
+  /// No description provided for @householdRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename household'**
+  String get householdRename;
+
+  /// No description provided for @householdRenameSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get householdRenameSave;
+
+  /// No description provided for @householdRemoveMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get householdRemoveMember;
+
+  /// No description provided for @householdRemoveMemberTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove member?'**
+  String get householdRemoveMemberTitle;
+
+  /// No description provided for @householdRemoveMemberMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'They will lose access to this household.'**
+  String get householdRemoveMemberMessage;
+
+  /// No description provided for @householdLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave household'**
+  String get householdLeave;
+
+  /// No description provided for @householdLeaveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave household?'**
+  String get householdLeaveTitle;
+
+  /// No description provided for @householdLeaveMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll lose access to its inventory and shopping list.'**
+  String get householdLeaveMessage;
+
+  /// No description provided for @householdLeaveConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave'**
+  String get householdLeaveConfirm;
+
+  /// No description provided for @joinConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to join this household?'**
+  String get joinConfirmMessage;
+
+  /// No description provided for @joinAcceptButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Join household'**
+  String get joinAcceptButton;
+
+  /// No description provided for @joinSignInPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in or create an account to join this household.'**
+  String get joinSignInPrompt;
+
+  /// No description provided for @joinSignInButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in & join'**
+  String get joinSignInButton;
+
+  /// No description provided for @joinSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'You joined the household.'**
+  String get joinSuccess;
+
+  /// No description provided for @joinToProfileButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to profile'**
+  String get joinToProfileButton;
+
+  /// No description provided for @householdErrorAlreadyMember.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re already in a household. Leave it first to join another.'**
+  String get householdErrorAlreadyMember;
+
+  /// No description provided for @householdErrorInviteNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This invite code doesn\'t exist.'**
+  String get householdErrorInviteNotFound;
+
+  /// No description provided for @householdErrorInviteUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'This invite has already been used.'**
+  String get householdErrorInviteUsed;
+
+  /// No description provided for @householdErrorInviteExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'This invite has expired. Ask for a new one.'**
+  String get householdErrorInviteExpired;
+
+  /// No description provided for @householdErrorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get householdErrorGeneric;
 }
 
 class _AppLocalizationsDelegate
