@@ -7,7 +7,9 @@ import '../../features/auth/domain/auth_status.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/household/application/households_providers.dart';
 import '../../features/household/presentation/pages/join_household_page.dart';
+import '../../features/household/presentation/pages/onboarding_page.dart';
 import '../../features/inventory/presentation/pages/inventory_page.dart';
 import '../../features/profile/presentation/pages/help_page.dart';
 import '../../features/profile/presentation/pages/household_link_page.dart';
@@ -30,32 +32,55 @@ import 'scaffold_with_nav_bar.dart';
 /// navigation stack; the profile tab nests its detail pages as sub-routes, and
 /// `/login` and `/join/:code` sit outside the shell.
 final appRouterProvider = Provider<GoRouter>((ref) {
-  // Bridges the auth provider to a Listenable so go_router re-runs `redirect`
-  // on sign-in/sign-out without rebuilding the router (which would drop the
-  // navigation stack).
-  final refreshListenable = ValueNotifier<AuthStatus>(
-    ref.read(authStateProvider),
+  // Bridge the auth and household providers to Listenables so go_router re-runs
+  // `redirect` on sign-in/sign-out and on gaining/leaving a household, without
+  // rebuilding the router (which would drop the navigation stack).
+  final authListenable = ValueNotifier<AuthStatus>(ref.read(authStateProvider));
+  ref.listen(authStateProvider, (_, next) => authListenable.value = next);
+  final householdListenable = ValueNotifier<HouseholdMembership>(
+    ref.read(householdMembershipProvider),
   );
-  ref.listen(authStateProvider, (_, next) => refreshListenable.value = next);
-  ref.onDispose(refreshListenable.dispose);
+  ref.listen(
+    householdMembershipProvider,
+    (_, next) => householdListenable.value = next,
+  );
+  ref.onDispose(() {
+    authListenable.dispose();
+    householdListenable.dispose();
+  });
 
   return GoRouter(
     initialLocation: HomePage.routePath,
-    refreshListenable: refreshListenable,
+    refreshListenable: Listenable.merge([authListenable, householdListenable]),
     redirect: (context, state) {
       final status = ref.read(authStateProvider);
       final location = state.matchedLocation;
       final isAuthScreen =
           location == LoginPage.routePath || location == RegisterPage.routePath;
+      final isJoin = location.startsWith(JoinHouseholdPage.pathPrefix);
       // Auth screens and invite links must be reachable before signing in.
-      final isPublic =
-          isAuthScreen || location.startsWith(JoinHouseholdPage.pathPrefix);
+      final isPublic = isAuthScreen || isJoin;
 
       if (status == AuthStatus.unauthenticated && !isPublic) {
         return LoginPage.routePath;
       }
-      if (status == AuthStatus.authenticated && isAuthScreen) {
-        return HomePage.routePath;
+      if (status == AuthStatus.authenticated) {
+        if (isAuthScreen) return HomePage.routePath;
+
+        // A signed-in user without a household is sent to onboarding, except
+        // while already there or on a join link. `unknown` (the membership
+        // load still in flight) is a no-op, so a restored session doesn't
+        // flash onboarding before the answer is known.
+        final membership = ref.read(householdMembershipProvider);
+        final onOnboarding = location == OnboardingPage.routePath;
+        if (membership == HouseholdMembership.none &&
+            !onOnboarding &&
+            !isJoin) {
+          return OnboardingPage.routePath;
+        }
+        if (membership == HouseholdMembership.joined && onOnboarding) {
+          return HomePage.routePath;
+        }
       }
       return null;
     },
@@ -76,6 +101,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => JoinHouseholdPage(
           connectionCode: state.pathParameters['code'] ?? '',
         ),
+      ),
+      GoRoute(
+        path: OnboardingPage.routePath,
+        name: OnboardingPage.routeName,
+        builder: (context, state) => const OnboardingPage(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
