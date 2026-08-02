@@ -5,9 +5,9 @@ its rationale are recorded in
 [ADR-0010](adr/0010-database-migrations-workflow.md); this page is the practical
 reference.
 
-> **Status:** the workflow is in place, the schema is not designed yet. The ER
-> overview and RLS sections below are scaffolds and get filled in with the
-> first schema migration.
+> **Status:** the first schema is in place (households, membership, storage
+> locations, categories, foods, inventory items, shopping items). Its design and
+> rationale are recorded in [ADR-0011](adr/0011-database-schema-design.md).
 
 ## Prerequisites
 
@@ -50,21 +50,64 @@ database that already ran the old version.
 
 ## ER overview
 
-Not yet designed. The domain centers on households: users belong to a
-household, and inventory items and shopping lists belong to a household rather
-than to an individual user — that ownership chain is what the RLS policies key
-off.
+The domain centers on **households**. A user belongs to at most one household
+(`household_members.user_id` is unique); inventory and shopping items belong to
+a household, never directly to a user. That ownership chain is what the RLS
+policies key off.
 
-This section gets the table-by-table overview when the first schema migration
-lands.
+```
+auth.users ─┐
+            ├─< household_members >── households ──< household_invites
+            │                            │
+            │                            ├──< storage_locations
+            │                            ├──< categories        (also global defaults, household_id null)
+            │                            ├──< foods             (also shared catalog, household_id null)
+            │                            ├──< inventory_items >── foods / categories / storage_locations
+            │                            └──< shopping_items  >── categories
+            └── added_by / created_by (audit references)
+```
+
+| Table | Purpose | Notes |
+|---|---|---|
+| `households` | Top of the ownership chain | `created_by` is nullable audit (set null on user delete) |
+| `household_members` | Who is in a household, with a role | `user_id` unique → one household per user; role `owner`/`member` |
+| `household_invites` | Short-lived join tokens | unique `token`, `expires_at`; a QR code encodes the token link |
+| `storage_locations` | Per-household places (fridge, freezer, …) | seeded with a default set on household creation |
+| `categories` | Item categories | hybrid: global defaults (`household_id` null, `is_default`) + per-household custom |
+| `foods` | Product catalog | shared cache (`household_id` null) + per-household products; soft-deleted |
+| `inventory_items` | What's in stock | household-scoped; `quantity`/`unit`, `best_before`; soft-deleted |
+| `shopping_items` | The shopping list | household-scoped; `checked`; hard-deleted (no `deleted_at`) |
+
+`color` on storage locations and categories stores a palette key
+(`blue|cyan|orange|purple`) that the app maps to `AppColors.category*`; `icon`
+stores a Material icon identifier. Retention: `purge_expired()` hard-deletes
+`deleted_at` tombstones older than 30 days and drops expired invites, scheduled
+via `pg_cron` on the hosted project.
 
 ## RLS patterns
 
 Row-level security is not optional here: household data isolation is the whole
 reason the backend has a relational model with membership in it. Every table
 holding user data gets RLS enabled, and the policies ship in the same migration
-as the table.
+as the table. Because new tables are **not** auto-exposed to the Data API, each
+table also grants CRUD to the `authenticated` role in the same migration — the
+grant makes the table reachable, RLS decides which rows. `anon` gets nothing.
 
-The concrete policy patterns (household membership lookup, the read vs. write
-split, and how the service role bypasses them) are written down here once the
-first tables exist.
+**Membership lookup.** Two `SECURITY DEFINER` helpers,
+`is_household_member(hid)` and `is_household_owner(hid)`, answer "is the current
+user in / an owner of this household?". They are `SECURITY DEFINER` so they read
+`household_members` without invoking that table's own RLS (which would recurse),
+with `search_path` pinned to `public`.
+
+**Read vs. write split.** The common pattern is: `select` for members of the
+owning household; the same for `insert`/`update`/`delete`. Owner-only actions
+(rename/delete a household, remove members) use `is_household_owner`. Global rows
+(default categories, the shared food catalog, `household_id null`) are readable
+by every authenticated user but not writable by them.
+
+**Membership changes bypass RLS deliberately.** There is no member `INSERT`
+policy. The creator is enrolled by the `on_household_created` trigger, and
+joining via an invite runs through a `SECURITY DEFINER` RPC (added with the
+households feature) — both run as the definer and so are not gated by RLS,
+which is what lets them write membership while direct client inserts stay
+blocked. The service role bypasses RLS entirely for administrative tasks.
