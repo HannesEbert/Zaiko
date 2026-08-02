@@ -38,9 +38,11 @@ membership.
   Storage locations, by contrast, are always per-household and seeded per
   household on creation.
 - **`color` is a palette key, not a hex value.** Storage locations and
-  categories store one of `blue|cyan|orange|purple`; the app maps that to the
-  `AppColors.category*` constants, so colors stay defined in one place (the
-  design system) instead of being duplicated as hex in the database. `icon`
+  categories store a stable key (`green`, `amber`, `cyan`, …); the app maps that
+  to the `AppColors.category*` constants, so colors stay defined in one place
+  (the design system) instead of being duplicated as hex in the database. A
+  check constraint limits the key to the known palette; the twelve seeded
+  default categories each carry their own key. `icon`
   stores a Material icon identifier.
 - **Soft delete + 30-day retention.** `foods` and `inventory_items` carry
   `deleted_at`; a `purge_expired()` function hard-deletes tombstones older than
