@@ -400,4 +400,141 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commonBack => 'Back';
+
+  @override
+  String get onboardingTitle => 'Set up your household';
+
+  @override
+  String get onboardingSubtitle =>
+      'Create a household to start tracking, or join one you were invited to.';
+
+  @override
+  String get onboardingCreateTitle => 'Create a household';
+
+  @override
+  String get onboardingCreateSubtitle =>
+      'Start fresh — you can invite others afterwards.';
+
+  @override
+  String get onboardingNameLabel => 'Household name';
+
+  @override
+  String get onboardingNameHint => 'e.g. Lindenhof';
+
+  @override
+  String get onboardingNameEmpty => 'Please enter a household name';
+
+  @override
+  String get onboardingCreateButton => 'Create household';
+
+  @override
+  String get onboardingJoinTitle => 'Join a household';
+
+  @override
+  String get onboardingJoinSubtitle => 'Enter the invite code you received.';
+
+  @override
+  String get onboardingCodeLabel => 'Invite code';
+
+  @override
+  String get onboardingCodeHint => '6-character code';
+
+  @override
+  String get onboardingCodeEmpty => 'Please enter an invite code';
+
+  @override
+  String get onboardingJoinButton => 'Join';
+
+  @override
+  String get inviteTitle => 'Invite member';
+
+  @override
+  String get inviteSubtitle =>
+      'Share this code, or let them scan the QR. It expires in 15 minutes.';
+
+  @override
+  String get inviteExpiresHint => 'Valid for 15 minutes';
+
+  @override
+  String get inviteCreateButton => 'Create invite code';
+
+  @override
+  String get inviteRegenerate => 'New code';
+
+  @override
+  String get householdMembersTitle => 'Members';
+
+  @override
+  String get householdRoleOwner => 'Owner';
+
+  @override
+  String get householdRoleMember => 'Member';
+
+  @override
+  String get householdYou => 'You';
+
+  @override
+  String get householdRename => 'Rename household';
+
+  @override
+  String get householdRenameSave => 'Save';
+
+  @override
+  String get householdRemoveMember => 'Remove';
+
+  @override
+  String get householdRemoveMemberTitle => 'Remove member?';
+
+  @override
+  String get householdRemoveMemberMessage =>
+      'They will lose access to this household.';
+
+  @override
+  String get householdLeave => 'Leave household';
+
+  @override
+  String get householdLeaveTitle => 'Leave household?';
+
+  @override
+  String get householdLeaveMessage =>
+      'You\'ll lose access to its inventory and shopping list.';
+
+  @override
+  String get householdLeaveConfirm => 'Leave';
+
+  @override
+  String get joinConfirmMessage => 'Do you want to join this household?';
+
+  @override
+  String get joinAcceptButton => 'Join household';
+
+  @override
+  String get joinSignInPrompt =>
+      'Sign in or create an account to join this household.';
+
+  @override
+  String get joinSignInButton => 'Sign in & join';
+
+  @override
+  String get joinSuccess => 'You joined the household.';
+
+  @override
+  String get joinToProfileButton => 'Back to profile';
+
+  @override
+  String get householdErrorAlreadyMember =>
+      'You\'re already in a household. Leave it first to join another.';
+
+  @override
+  String get householdErrorInviteNotFound => 'This invite code doesn\'t exist.';
+
+  @override
+  String get householdErrorInviteUsed => 'This invite has already been used.';
+
+  @override
+  String get householdErrorInviteExpired =>
+      'This invite has expired. Ask for a new one.';
+
+  @override
+  String get householdErrorGeneric => 'Something went wrong. Please try again.';
 }
