@@ -78,9 +78,11 @@ auth.users ─┐
 | `inventory_items` | What's in stock | household-scoped; `quantity`/`unit`, `best_before`; soft-deleted |
 | `shopping_items` | The shopping list | household-scoped; `checked`; hard-deleted (no `deleted_at`) |
 
-`color` on storage locations and categories stores a palette key
-(`blue|cyan|orange|purple`) that the app maps to `AppColors.category*`; `icon`
-stores a Material icon identifier. Retention: `purge_expired()` hard-deletes
+`color` on storage locations and categories stores a stable palette key (e.g.
+`green`, `amber`, `cyan`; see the `AppColors.category*` constants for the full
+set) that the app maps to a color; the twelve default categories each get their
+own key, storage-location defaults use blue/cyan/orange/purple. `icon` stores a
+Material icon identifier. Retention: `purge_expired()` hard-deletes
 `deleted_at` tombstones older than 30 days and drops expired invites, scheduled
 via `pg_cron` on the hosted project.
 

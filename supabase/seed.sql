@@ -59,9 +59,9 @@ select
   c.id, sl.id, v.best_before,
   '11111111-1111-1111-1111-111111111111'
 from (values
-  ('Milch',  1, 'l',       'Milchprodukte', 'Kühlschrank', current_date + 5),
-  ('Äpfel',  6, 'piece',   'Obst & Gemüse', 'Kühlschrank', current_date + 10),
-  ('Butter', 1, 'package', 'Milchprodukte', 'Kühlschrank', current_date + 2)
+  ('Milch',  1, 'l',       'Käse, Eier & Molkerei', 'Kühlschrank', current_date + 5),
+  ('Äpfel',  6, 'piece',   'Obst & Gemüse',         'Kühlschrank', current_date + 10),
+  ('Butter', 1, 'package', 'Käse, Eier & Molkerei', 'Kühlschrank', current_date + 2)
 ) as v(name, quantity, unit, category_name, location_name, best_before)
 left join public.categories c
   on c.name = v.category_name and c.is_default
@@ -77,7 +77,7 @@ select
   '22222222-2222-2222-2222-222222222222', v.name, v.quantity, c.id, v.checked,
   '11111111-1111-1111-1111-111111111111'
 from (values
-  ('Haferdrink', '2 x 1 l', 'Milchprodukte', false),
-  ('Brot',       '1 Laib',  'Backwaren',     false)
+  ('Haferdrink', '2 x 1 l', 'Getränke & Genussmittel',      false),
+  ('Brot',       '1 Laib',  'Brot, Cerealien & Aufstriche', false)
 ) as v(name, quantity, category_name, checked)
 left join public.categories c on c.name = v.category_name and c.is_default;
