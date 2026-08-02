@@ -37,14 +37,27 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.navUnselected,
   });
 
-  /// Category accents for storage locations (fridge, freezer, pantry,
-  /// drinks). Fixed brand values straight from the design — they don't vary
-  /// with theme brightness, so they are constants rather than instance
-  /// tokens. Tinted backgrounds are derived at 12% alpha (see `IconTile`).
-  static const Color categoryBlue = Color(0xFF3B82F6);
-  static const Color categoryCyan = Color(0xFF06B6D4);
-  static const Color categoryOrange = Color(0xFFF97316);
-  static const Color categoryPurple = Color(0xFFA855F7);
+  /// Category and storage-location accents (Tailwind-500 family). Fixed brand
+  /// values that don't vary with theme brightness, so they are constants rather
+  /// than instance tokens. Tinted backgrounds are derived at 12% alpha (see
+  /// `IconTile`).
+  ///
+  /// The database stores a stable palette *key* (e.g. `green`, `amber`) on
+  /// categories and storage locations; each key below maps to the matching
+  /// constant. Storage-location defaults use blue/cyan/orange/purple.
+  static const Color categoryBlue = Color(0xFF3B82F6); // key: blue
+  static const Color categoryCyan = Color(0xFF06B6D4); // key: cyan
+  static const Color categoryOrange = Color(0xFFF97316); // key: orange
+  static const Color categoryPurple = Color(0xFFA855F7); // key: purple
+  static const Color categoryGreen = Color(0xFF22C55E); // key: green
+  static const Color categoryRed = Color(0xFFEF4444); // key: red
+  static const Color categoryAmber = Color(0xFFF59E0B); // key: amber
+  static const Color categoryYellow = Color(0xFFEAB308); // key: yellow
+  static const Color categoryBeige = Color(0xFFD6B588); // key: beige
+  static const Color categoryLime = Color(0xFF84CC16); // key: lime
+  static const Color categorySlate = Color(0xFF64748B); // key: slate
+  static const Color categoryPink = Color(0xFFEC4899); // key: pink
+  static const Color categoryBrown = Color(0xFFB45309); // key: brown
 
   /// Page background behind cards (`--background`).
   final Color pageBackground;
