@@ -1,4 +1,24 @@
+# Normalize text files to LF in the repo; check out native per platform. Keeps
+# Flutter-generated files (plugin registrants, CMake) from showing up as
+# modified because of CRLF/LF differences on Windows.
+* text=auto
+
 # Shell scripts and git hooks must keep LF endings so they run on macOS/Linux
 # regardless of the committer's platform.
 .githooks/pre-commit text eol=lf
 *.sh text eol=lf
+
+# Windows-specific scripts stay CRLF.
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary assets.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
