@@ -200,5 +200,27 @@
   "householdErrorInviteNotFound": "Diesen Einladungscode gibt es nicht.",
   "householdErrorInviteUsed": "Dieser Einladungscode wurde bereits verwendet.",
   "householdErrorInviteExpired": "Dieser Einladungscode ist abgelaufen. Bitte um einen neuen.",
-  "householdErrorGeneric": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
+  "householdErrorGeneric": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+
+  "homeGreetingGeneric": "Guten Morgen",
+  "inventoryLocationExpiringSoon": "{count} laufen bald ab",
+  "inventoryLocationExpired": "{count} abgelaufen",
+  "inventoryLoadError": "Inventar konnte nicht geladen werden.",
+  "inventoryLocationEmpty": "Noch keine Artikel an diesem Ort.",
+  "inventoryRecentlyAddedEmpty": "Noch nichts hinzugefügt.",
+  "homeExpiringEmpty": "Nichts läuft bald ab.",
+  "commonRetry": "Erneut versuchen",
+  "expiryExpired": "Abgelaufen",
+  "expiryToday": "Heute",
+  "expiryTomorrow": "Morgen",
+  "expiryInDays": "In {count} Tagen",
+  "itemDetailExpiresToday": "Läuft heute ab",
+  "itemDetailExpiresTomorrow": "Läuft morgen ab",
+  "itemDetailExpiresInDays": "Läuft in {count} Tagen ab",
+  "itemDetailNoDate": "Nicht angegeben",
+  "relativeToday": "Heute",
+  "relativeYesterday": "Gestern",
+  "relativeDaysAgo": "Vor {count} Tagen",
+  "unitPiece": "Stück",
+  "unitPackage": "Packung"
 }

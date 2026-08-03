@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/l10n/l10n_extension.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -12,27 +13,39 @@ import '../../../../shared/widgets/section_label.dart';
 import '../../../../shared/widgets/see_all_link.dart';
 import '../../../../shared/widgets/user_avatar.dart';
 import '../../../../shared/widgets/zaiko_card.dart';
-import '../inventory_demo_data.dart';
+import '../../../household/application/households_providers.dart';
+import '../../application/inventory_providers.dart';
+import '../../application/inventory_view.dart';
+import '../inventory_labels.dart';
 import '../widgets/add_item_sheet.dart';
 import '../widgets/inventory_item_row.dart';
+import '../widgets/inventory_message.dart';
 import '../widgets/storage_location_card.dart';
 import 'item_detail_page.dart';
 import 'location_detail_page.dart';
 
 /// Inventory tab: the household food inventory, organized by storage location,
-/// with the quick-stats strip and the "recently added" list from the design.
-///
-/// Content is demo data (see [InventoryDemoData]); the layout is ready to bind
-/// to real providers. The FAB opens the "add item" sheet.
-class InventoryPage extends StatelessWidget {
+/// with the quick-stats strip and the "recently added" list. Data comes from
+/// the Supabase-backed inventory providers, scoped to the active household.
+class InventoryPage extends ConsumerWidget {
   const InventoryPage({super.key});
 
   static const String routePath = '/inventory';
   static const String routeName = 'inventory';
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final summaries = ref.watch(locationSummariesProvider);
+    final stats = ref.watch(quickStatsProvider);
+    final recent = ref.watch(recentlyAddedItemsProvider);
+    final household = ref.watch(currentHouseholdProvider);
+
+    final subtitle = switch ((stats, summaries)) {
+      (AsyncData(:final value), AsyncData(value: final locations)) =>
+        l10n.inventorySubtitle(value.total, locations.length),
+      _ => '',
+    };
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -51,10 +64,7 @@ class InventoryPage extends StatelessWidget {
           children: [
             PageHeader(
               title: l10n.navInventory,
-              subtitle: l10n.inventorySubtitle(
-                InventoryDemoData.itemCount,
-                InventoryDemoData.locations.length,
-              ),
+              subtitle: subtitle,
               trailing: Row(
                 children: [
                   HeaderIconButton(
@@ -63,7 +73,9 @@ class InventoryPage extends StatelessWidget {
                     onTap: () {},
                   ),
                   const SizedBox(width: AppSpacing.s3),
-                  const UserAvatar(initial: 'H'),
+                  UserAvatar(
+                    initial: householdInitial(household.asData?.value?.name),
+                  ),
                 ],
               ),
             ),
@@ -74,41 +86,43 @@ class InventoryPage extends StatelessWidget {
               onTap: () {},
             ),
             const SizedBox(height: AppSpacing.s6),
-            GridView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: AppSpacing.s3,
-                crossAxisSpacing: AppSpacing.s3,
-                // Fixed height keeps the card content from overflowing on
-                // narrower phones (unlike a width-derived aspect ratio).
-                mainAxisExtent: 158,
+            summaries.when(
+              loading: () => const InventoryLoading(height: 158),
+              error: (_, _) => InventoryError(
+                onRetry: () => ref.invalidate(inventoryItemsProvider),
               ),
-              children: [
-                for (final location in InventoryDemoData.locations)
-                  StorageLocationCard(
-                    location,
-                    onTap: () => LocationDetailPage.open(context, location),
-                  ),
-              ],
+              data: (locations) => _LocationGrid(locations: locations),
             ),
             const SizedBox(height: AppSpacing.s6),
-            const _QuickStats(),
+            stats.when(
+              loading: () => const InventoryLoading(height: 64),
+              error: (_, _) => const SizedBox.shrink(),
+              data: (value) => _QuickStats(stats: value),
+            ),
             const SizedBox(height: AppSpacing.s6),
             SectionLabel(
               l10n.inventoryRecentlyAdded,
               trailing: SeeAllLink(onTap: () {}),
             ),
             const SizedBox(height: AppSpacing.s3),
-            CardList(
-              children: [
-                for (final item in InventoryDemoData.recentlyAdded)
-                  InventoryItemRow(
-                    item,
-                    onTap: () => _openDetail(context, item),
-                  ),
-              ],
+            recent.when(
+              loading: () => const InventoryLoading(),
+              error: (_, _) => InventoryError(
+                onRetry: () => ref.invalidate(inventoryItemsProvider),
+              ),
+              data: (items) => items.isEmpty
+                  ? InventoryEmptyLine(l10n.inventoryRecentlyAddedEmpty)
+                  : CardList(
+                      children: [
+                        for (final resolved in items)
+                          InventoryItemRow(
+                            resolved,
+                            trailing: ItemRowTrailing.addedDate,
+                            showLocation: true,
+                            onTap: () => _openDetail(context, resolved),
+                          ),
+                      ],
+                    ),
             ),
           ],
         ),
@@ -116,12 +130,39 @@ class InventoryPage extends StatelessWidget {
     );
   }
 
-  void _openDetail(BuildContext context, InventoryItem item) {
-    Navigator.of(context, rootNavigator: true).push(
-      MaterialPageRoute<void>(
-        builder: (_) =>
-            ItemDetailPage(title: item.name, subtitle: item.subtitle),
+  void _openDetail(BuildContext context, ResolvedItem resolved) {
+    Navigator.of(
+      context,
+      rootNavigator: true,
+    ).push(MaterialPageRoute<void>(builder: (_) => ItemDetailPage(resolved)));
+  }
+}
+
+class _LocationGrid extends StatelessWidget {
+  const _LocationGrid({required this.locations});
+
+  final List<LocationSummary> locations;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: AppSpacing.s3,
+        crossAxisSpacing: AppSpacing.s3,
+        // Fixed height keeps the card content from overflowing on narrower
+        // phones (unlike a width-derived aspect ratio).
+        mainAxisExtent: 158,
       ),
+      children: [
+        for (final summary in locations)
+          StorageLocationCard(
+            summary,
+            onTap: () => LocationDetailPage.open(context, summary.location),
+          ),
+      ],
     );
   }
 }
@@ -129,7 +170,9 @@ class InventoryPage extends StatelessWidget {
 /// The design's quick-stats strip: expiring / expired / fresh counters
 /// separated by hairline dividers.
 class _QuickStats extends StatelessWidget {
-  const _QuickStats();
+  const _QuickStats({required this.stats});
+
+  final InventoryStats stats;
 
   @override
   Widget build(BuildContext context) {
@@ -145,19 +188,19 @@ class _QuickStats extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _Stat(
-            value: '${InventoryDemoData.expiringCount}',
+            value: '${stats.soon}',
             label: l10n.inventoryStatExpiring,
             color: colors.accentText,
           ),
           const _StatDivider(),
           _Stat(
-            value: '${InventoryDemoData.expiredCount}',
+            value: '${stats.expired}',
             label: l10n.inventoryStatExpired,
             color: colors.error,
           ),
           const _StatDivider(),
           _Stat(
-            value: '${InventoryDemoData.freshCount}',
+            value: '${stats.fresh}',
             label: l10n.inventoryStatFresh,
             color: colors.success,
           ),

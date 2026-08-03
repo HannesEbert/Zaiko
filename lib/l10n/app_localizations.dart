@@ -1159,6 +1159,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something went wrong. Please try again.'**
   String get householdErrorGeneric;
+
+  /// Home header greeting shown before the household name is known
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get homeGreetingGeneric;
+
+  /// Storage-location card status when items are close to expiry
+  ///
+  /// In en, this message translates to:
+  /// **'{count} expiring soon'**
+  String inventoryLocationExpiringSoon(int count);
+
+  /// Storage-location card status when items are past their best-before date
+  ///
+  /// In en, this message translates to:
+  /// **'{count} expired'**
+  String inventoryLocationExpired(int count);
+
+  /// Error shown when the inventory data fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load your inventory.'**
+  String get inventoryLoadError;
+
+  /// Empty state on a storage-location detail screen
+  ///
+  /// In en, this message translates to:
+  /// **'No items in this location yet.'**
+  String get inventoryLocationEmpty;
+
+  /// Empty state for the recently-added list on the inventory tab
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing added yet.'**
+  String get inventoryRecentlyAddedEmpty;
+
+  /// Empty state for the home tab's expiring-soon rail
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing expiring soon.'**
+  String get homeExpiringEmpty;
+
+  /// Generic retry button label
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get commonRetry;
+
+  /// Short expiry label for an item past its best-before date
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get expiryExpired;
+
+  /// Short expiry label when the best-before date is today
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get expiryToday;
+
+  /// Short expiry label when the best-before date is tomorrow
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get expiryTomorrow;
+
+  /// Short expiry label a few days before the best-before date
+  ///
+  /// In en, this message translates to:
+  /// **'In {count} days'**
+  String expiryInDays(int count);
+
+  /// Expiry status pill on the item detail screen, best-before today
+  ///
+  /// In en, this message translates to:
+  /// **'Expires today'**
+  String get itemDetailExpiresToday;
+
+  /// Expiry status pill on the item detail screen, best-before tomorrow
+  ///
+  /// In en, this message translates to:
+  /// **'Expires tomorrow'**
+  String get itemDetailExpiresTomorrow;
+
+  /// Expiry status pill on the item detail screen, best-before soon
+  ///
+  /// In en, this message translates to:
+  /// **'Expires in {count} days'**
+  String itemDetailExpiresInDays(int count);
+
+  /// Placeholder value for an item detail row without a date
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get itemDetailNoDate;
+
+  /// Relative label for something that happened today
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get relativeToday;
+
+  /// Relative label for something that happened yesterday
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get relativeYesterday;
+
+  /// Relative label for something that happened a few days ago
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days ago'**
+  String relativeDaysAgo(int count);
+
+  /// Short unit label for individual pieces of an item
+  ///
+  /// In en, this message translates to:
+  /// **'pcs'**
+  String get unitPiece;
+
+  /// Short unit label for a packaged item
+  ///
+  /// In en, this message translates to:
+  /// **'pack'**
+  String get unitPackage;
 }
 
 class _AppLocalizationsDelegate

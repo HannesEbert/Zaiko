@@ -345,5 +345,105 @@
   "householdErrorInviteNotFound": "This invite code doesn't exist.",
   "householdErrorInviteUsed": "This invite has already been used.",
   "householdErrorInviteExpired": "This invite has expired. Ask for a new one.",
-  "householdErrorGeneric": "Something went wrong. Please try again."
+  "householdErrorGeneric": "Something went wrong. Please try again.",
+
+  "homeGreetingGeneric": "Good morning",
+  "@homeGreetingGeneric": {
+    "description": "Home header greeting shown before the household name is known"
+  },
+  "inventoryLocationExpiringSoon": "{count} expiring soon",
+  "@inventoryLocationExpiringSoon": {
+    "description": "Storage-location card status when items are close to expiry",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "inventoryLocationExpired": "{count} expired",
+  "@inventoryLocationExpired": {
+    "description": "Storage-location card status when items are past their best-before date",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "inventoryLoadError": "Couldn't load your inventory.",
+  "@inventoryLoadError": {
+    "description": "Error shown when the inventory data fails to load"
+  },
+  "inventoryLocationEmpty": "No items in this location yet.",
+  "@inventoryLocationEmpty": {
+    "description": "Empty state on a storage-location detail screen"
+  },
+  "inventoryRecentlyAddedEmpty": "Nothing added yet.",
+  "@inventoryRecentlyAddedEmpty": {
+    "description": "Empty state for the recently-added list on the inventory tab"
+  },
+  "homeExpiringEmpty": "Nothing expiring soon.",
+  "@homeExpiringEmpty": {
+    "description": "Empty state for the home tab's expiring-soon rail"
+  },
+  "commonRetry": "Try again",
+  "@commonRetry": {
+    "description": "Generic retry button label"
+  },
+  "expiryExpired": "Expired",
+  "@expiryExpired": {
+    "description": "Short expiry label for an item past its best-before date"
+  },
+  "expiryToday": "Today",
+  "@expiryToday": {
+    "description": "Short expiry label when the best-before date is today"
+  },
+  "expiryTomorrow": "Tomorrow",
+  "@expiryTomorrow": {
+    "description": "Short expiry label when the best-before date is tomorrow"
+  },
+  "expiryInDays": "In {count} days",
+  "@expiryInDays": {
+    "description": "Short expiry label a few days before the best-before date",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "itemDetailExpiresToday": "Expires today",
+  "@itemDetailExpiresToday": {
+    "description": "Expiry status pill on the item detail screen, best-before today"
+  },
+  "itemDetailExpiresTomorrow": "Expires tomorrow",
+  "@itemDetailExpiresTomorrow": {
+    "description": "Expiry status pill on the item detail screen, best-before tomorrow"
+  },
+  "itemDetailExpiresInDays": "Expires in {count} days",
+  "@itemDetailExpiresInDays": {
+    "description": "Expiry status pill on the item detail screen, best-before soon",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "itemDetailNoDate": "Not set",
+  "@itemDetailNoDate": {
+    "description": "Placeholder value for an item detail row without a date"
+  },
+  "relativeToday": "Today",
+  "@relativeToday": {
+    "description": "Relative label for something that happened today"
+  },
+  "relativeYesterday": "Yesterday",
+  "@relativeYesterday": {
+    "description": "Relative label for something that happened yesterday"
+  },
+  "relativeDaysAgo": "{count} days ago",
+  "@relativeDaysAgo": {
+    "description": "Relative label for something that happened a few days ago",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "unitPiece": "pcs",
+  "@unitPiece": {
+    "description": "Short unit label for individual pieces of an item"
+  },
+  "unitPackage": "pack",
+  "@unitPackage": {
+    "description": "Short unit label for a packaged item"
+  }
 }

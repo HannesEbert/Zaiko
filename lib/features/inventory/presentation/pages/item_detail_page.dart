@@ -8,33 +8,34 @@ import '../../../../shared/widgets/card_list.dart';
 import '../../../../shared/widgets/status_pill.dart';
 import '../../../../shared/widgets/zaiko_buttons.dart';
 import '../../../../shared/widgets/zaiko_card.dart';
+import '../../application/inventory_view.dart';
+import '../inventory_labels.dart';
 
 /// Full-screen detail for a single inventory article.
 ///
-/// Fields other than [title]/[subtitle] use demo values; editing them is wired
-/// once the data layer exists. Pushed on the root navigator so it covers the
-/// bottom navigation bar, matching the design.
+/// Reads the tapped [ResolvedItem]; editing (quantity, consume, remove) lands
+/// with E1.2, so those controls are still local-only no-ops here. Pushed on the
+/// root navigator so it covers the bottom navigation bar, matching the design.
 class ItemDetailPage extends StatefulWidget {
-  const ItemDetailPage({
-    required this.title,
-    required this.subtitle,
-    super.key,
-  });
+  const ItemDetailPage(this.resolved, {super.key});
 
-  final String title;
-  final String subtitle;
+  final ResolvedItem resolved;
 
   @override
   State<ItemDetailPage> createState() => _ItemDetailPageState();
 }
 
 class _ItemDetailPageState extends State<ItemDetailPage> {
-  int _quantity = 2;
+  late int _quantity = widget.resolved.item.quantity.round();
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final colors = context.colors;
+    final resolved = widget.resolved;
+    final item = resolved.item;
+
+    final expiryLabel = expiryDetailLabel(l10n, item.bestBefore);
 
     return Scaffold(
       body: SafeArea(
@@ -53,23 +54,23 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                   const _PhotoPlaceholder(),
                   const SizedBox(height: AppSpacing.s4),
                   Text(
-                    widget.title,
+                    item.name,
                     style: AppTypography.title.copyWith(
                       color: colors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 3),
                   Text(
-                    widget.subtitle,
+                    formatQuantity(l10n, item.quantity, item.unit),
                     style: AppTypography.caption.copyWith(
                       color: colors.textSecondary,
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.s2 + 2),
-                  const StatusPill(
-                    'Läuft in 2 Tagen ab',
-                    tone: StatusTone.warning,
-                  ),
+                  // Items without a best-before date show no expiry status.
+                  if (expiryLabel != null) ...[
+                    const SizedBox(height: AppSpacing.s2 + 2),
+                    StatusPill(expiryLabel, tone: expiryTone(resolved.status)),
+                  ],
                   const SizedBox(height: AppSpacing.s4),
                   CardList(
                     children: [
@@ -85,18 +86,27 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                       ),
                       _DetailRow(
                         label: l10n.itemDetailLocation,
-                        child: _ValueWithChevron(value: 'Kühlschrank'),
-                      ),
-                      _DetailRow(
-                        label: l10n.itemDetailCategory,
-                        child: const StatusPill(
-                          'Milchprodukte',
-                          tone: StatusTone.brand,
+                        child: _ValueWithChevron(
+                          value:
+                              resolved.location?.name ?? l10n.itemDetailNoDate,
                         ),
                       ),
                       _DetailRow(
+                        label: l10n.itemDetailCategory,
+                        child: resolved.category == null
+                            ? _ValueWithChevron(value: l10n.itemDetailNoDate)
+                            : StatusPill(
+                                resolved.category!.name,
+                                tone: StatusTone.brand,
+                              ),
+                      ),
+                      _DetailRow(
                         label: l10n.itemDetailBestBefore,
-                        child: _ValueWithChevron(value: '17.07.2026'),
+                        child: _ValueWithChevron(
+                          value: item.bestBefore == null
+                              ? l10n.itemDetailNoDate
+                              : formatBestBefore(item.bestBefore!),
+                        ),
                       ),
                     ],
                   ),

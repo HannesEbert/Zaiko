@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/l10n/l10n_extension.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_icons.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../shared/widgets/header_icon_button.dart';
@@ -12,26 +14,40 @@ import '../../../../shared/widgets/section_label.dart';
 import '../../../../shared/widgets/see_all_link.dart';
 import '../../../../shared/widgets/user_avatar.dart';
 import '../../../../shared/widgets/zaiko_card.dart';
-import '../../../inventory/presentation/inventory_demo_data.dart';
+import '../../../household/application/households_providers.dart';
+import '../../../inventory/application/inventory_providers.dart';
+import '../../../inventory/application/inventory_view.dart';
+import '../../../inventory/presentation/inventory_labels.dart';
 import '../../../inventory/presentation/pages/location_detail_page.dart';
 import '../../../inventory/presentation/widgets/add_item_sheet.dart';
+import '../../../inventory/presentation/widgets/inventory_message.dart';
 import '../../../inventory/presentation/widgets/storage_location_card.dart';
 
-/// Home tab, following the Figma "Start" screen: greeting header with bell and
-/// avatar, a search field, the horizontal "expiring soon" rail and the
-/// category grid.
-///
-/// Demo content; composed from the shared design components so it reads as one
-/// system with the other tabs.
-class HomePage extends StatelessWidget {
+/// Home tab: greeting header with bell and avatar, a search field, the
+/// horizontal "expiring soon" rail and the storage-location grid — all driven
+/// by the active household's real inventory data.
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   static const String routePath = '/home';
   static const String routeName = 'home';
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final household = ref.watch(currentHouseholdProvider);
+    final stats = ref.watch(quickStatsProvider);
+    final expiring = ref.watch(expiringSoonItemsProvider);
+    final summaries = ref.watch(locationSummariesProvider);
+
+    final name = household.asData?.value?.name;
+    final greeting = name == null
+        ? l10n.homeGreetingGeneric
+        : l10n.homeGreeting(name);
+    final subtitle = stats.maybeWhen(
+      data: (value) => l10n.homeExpiringCount(value.soon),
+      orElse: () => '',
+    );
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -49,8 +65,8 @@ class HomePage extends StatelessWidget {
           ),
           children: [
             PageHeader(
-              title: l10n.homeGreeting('Hannes'),
-              subtitle: l10n.homeExpiringCount(InventoryDemoData.expiringCount),
+              title: greeting,
+              subtitle: subtitle,
               trailing: Row(
                 children: [
                   HeaderIconButton(
@@ -59,7 +75,7 @@ class HomePage extends StatelessWidget {
                     onTap: () {},
                   ),
                   const SizedBox(width: AppSpacing.s3),
-                  const UserAvatar(initial: 'H'),
+                  UserAvatar(initial: householdInitial(name)),
                 ],
               ),
             ),
@@ -75,27 +91,24 @@ class HomePage extends StatelessWidget {
               trailing: SeeAllLink(onTap: () {}),
             ),
             const SizedBox(height: AppSpacing.s3),
-            const _ExpiringRail(),
+            expiring.when(
+              loading: () => const InventoryLoading(height: 116),
+              error: (_, _) => InventoryError(
+                onRetry: () => ref.invalidate(inventoryItemsProvider),
+              ),
+              data: (items) => items.isEmpty
+                  ? InventoryEmptyLine(l10n.homeExpiringEmpty)
+                  : _ExpiringRail(items: items),
+            ),
             const SizedBox(height: AppSpacing.s6),
             SectionLabel(l10n.homeCategories),
             const SizedBox(height: AppSpacing.s3),
-            GridView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: AppSpacing.s3,
-                crossAxisSpacing: AppSpacing.s3,
-                mainAxisExtent: 128,
+            summaries.when(
+              loading: () => const InventoryLoading(height: 128),
+              error: (_, _) => InventoryError(
+                onRetry: () => ref.invalidate(inventoryItemsProvider),
               ),
-              children: [
-                for (final location in InventoryDemoData.locations)
-                  StorageLocationCard(
-                    location,
-                    showStatus: false,
-                    onTap: () => LocationDetailPage.open(context, location),
-                  ),
-              ],
+              data: (locations) => _LocationGrid(locations: locations),
             ),
           ],
         ),
@@ -104,9 +117,39 @@ class HomePage extends StatelessWidget {
   }
 }
 
-/// Horizontally scrolling rail of items that expire soon.
+class _LocationGrid extends StatelessWidget {
+  const _LocationGrid({required this.locations});
+
+  final List<LocationSummary> locations;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: AppSpacing.s3,
+        crossAxisSpacing: AppSpacing.s3,
+        mainAxisExtent: 128,
+      ),
+      children: [
+        for (final summary in locations)
+          StorageLocationCard(
+            summary,
+            showStatus: false,
+            onTap: () => LocationDetailPage.open(context, summary.location),
+          ),
+      ],
+    );
+  }
+}
+
+/// Horizontally scrolling rail of items that need attention soon.
 class _ExpiringRail extends StatelessWidget {
-  const _ExpiringRail();
+  const _ExpiringRail({required this.items});
+
+  final List<ResolvedItem> items;
 
   @override
   Widget build(BuildContext context) {
@@ -115,23 +158,25 @@ class _ExpiringRail extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         clipBehavior: Clip.none,
-        itemCount: InventoryDemoData.expiringSoon.length,
+        itemCount: items.length,
         separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.s3),
-        itemBuilder: (context, index) =>
-            _ExpiringCard(item: InventoryDemoData.expiringSoon[index]),
+        itemBuilder: (context, index) => _ExpiringCard(resolved: items[index]),
       ),
     );
   }
 }
 
 class _ExpiringCard extends StatelessWidget {
-  const _ExpiringCard({required this.item});
+  const _ExpiringCard({required this.resolved});
 
-  final InventoryItem item;
+  final ResolvedItem resolved;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final l10n = context.l10n;
+    final item = resolved.item;
+    final label = expiryShortLabel(l10n, item.bestBefore) ?? '';
 
     return SizedBox(
       width: 160,
@@ -140,7 +185,12 @@ class _ExpiringCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            IconTile(item.icon, color: item.color, size: 32, iconSize: 16),
+            IconTile(
+              AppIcons.forKey(resolved.category?.icon),
+              color: AppColors.categoryForKey(resolved.category?.color),
+              size: 32,
+              iconSize: 16,
+            ),
             const SizedBox(height: AppSpacing.s3),
             Text(
               item.name,
@@ -153,7 +203,7 @@ class _ExpiringCard extends StatelessWidget {
             ),
             const SizedBox(height: 2),
             Text(
-              item.trailing!,
+              label,
               style: AppTypography.caption.copyWith(
                 fontWeight: FontWeight.w500,
                 color: colors.error,

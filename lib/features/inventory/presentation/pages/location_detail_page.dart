@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/l10n/l10n_extension.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -8,16 +9,18 @@ import '../../../../shared/widgets/card_list.dart';
 import '../../../../shared/widgets/header_icon_button.dart';
 import '../../../../shared/widgets/page_header.dart';
 import '../../../../shared/widgets/pill_field.dart';
-import '../inventory_demo_data.dart';
+import '../../application/inventory_providers.dart';
+import '../../domain/storage_location.dart';
 import '../widgets/inventory_item_row.dart';
+import '../widgets/inventory_message.dart';
+import 'item_detail_page.dart';
 
 /// Detail view of a single storage location (e.g. the fridge): back link,
-/// title with item count, a filter action, search and the item list — the
-/// design's "Kühlschrank" screen.
+/// title with item count, a filter action, search and the item list.
 ///
-/// Content is demo data; every location currently shows the fridge item list
-/// until the real data layer exists.
-class LocationDetailPage extends StatelessWidget {
+/// Shows the items actually stored in [location], loaded from the inventory
+/// providers.
+class LocationDetailPage extends ConsumerWidget {
   const LocationDetailPage({required this.location, super.key});
 
   final StorageLocation location;
@@ -33,9 +36,10 @@ class LocationDetailPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final colors = context.colors;
+    final items = ref.watch(itemsForLocationProvider(location.id));
 
     return Scaffold(
       body: SafeArea(
@@ -76,7 +80,9 @@ class LocationDetailPage extends StatelessWidget {
             const SizedBox(height: AppSpacing.s6),
             PageHeader(
               title: location.name,
-              subtitle: l10n.inventoryItemsCount(location.itemCount),
+              subtitle: l10n.inventoryItemsCount(
+                items.asData?.value.length ?? 0,
+              ),
               trailing: HeaderIconButton(icon: Icons.filter_list, onTap: () {}),
             ),
             const SizedBox(height: AppSpacing.s5),
@@ -86,11 +92,27 @@ class LocationDetailPage extends StatelessWidget {
               onTap: () {},
             ),
             const SizedBox(height: AppSpacing.s6),
-            CardList(
-              children: [
-                for (final item in InventoryDemoData.fridgeItems)
-                  InventoryItemRow(item),
-              ],
+            items.when(
+              loading: () => const InventoryLoading(),
+              error: (_, _) => InventoryError(
+                onRetry: () => ref.invalidate(inventoryItemsProvider),
+              ),
+              data: (resolved) => resolved.isEmpty
+                  ? InventoryEmptyLine(l10n.inventoryLocationEmpty)
+                  : CardList(
+                      children: [
+                        for (final item in resolved)
+                          InventoryItemRow(
+                            item,
+                            onTap: () =>
+                                Navigator.of(context, rootNavigator: true).push(
+                                  MaterialPageRoute<void>(
+                                    builder: (_) => ItemDetailPage(item),
+                                  ),
+                                ),
+                          ),
+                      ],
+                    ),
             ),
           ],
         ),

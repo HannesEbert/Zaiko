@@ -594,4 +594,77 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get householdErrorGeneric =>
       'Etwas ist schiefgelaufen. Bitte versuche es erneut.';
+
+  @override
+  String get homeGreetingGeneric => 'Guten Morgen';
+
+  @override
+  String inventoryLocationExpiringSoon(int count) {
+    return '$count laufen bald ab';
+  }
+
+  @override
+  String inventoryLocationExpired(int count) {
+    return '$count abgelaufen';
+  }
+
+  @override
+  String get inventoryLoadError => 'Inventar konnte nicht geladen werden.';
+
+  @override
+  String get inventoryLocationEmpty => 'Noch keine Artikel an diesem Ort.';
+
+  @override
+  String get inventoryRecentlyAddedEmpty => 'Noch nichts hinzugefügt.';
+
+  @override
+  String get homeExpiringEmpty => 'Nichts läuft bald ab.';
+
+  @override
+  String get commonRetry => 'Erneut versuchen';
+
+  @override
+  String get expiryExpired => 'Abgelaufen';
+
+  @override
+  String get expiryToday => 'Heute';
+
+  @override
+  String get expiryTomorrow => 'Morgen';
+
+  @override
+  String expiryInDays(int count) {
+    return 'In $count Tagen';
+  }
+
+  @override
+  String get itemDetailExpiresToday => 'Läuft heute ab';
+
+  @override
+  String get itemDetailExpiresTomorrow => 'Läuft morgen ab';
+
+  @override
+  String itemDetailExpiresInDays(int count) {
+    return 'Läuft in $count Tagen ab';
+  }
+
+  @override
+  String get itemDetailNoDate => 'Nicht angegeben';
+
+  @override
+  String get relativeToday => 'Heute';
+
+  @override
+  String get relativeYesterday => 'Gestern';
+
+  @override
+  String relativeDaysAgo(int count) {
+    return 'Vor $count Tagen';
+  }
+
+  @override
+  String get unitPiece => 'Stück';
+
+  @override
+  String get unitPackage => 'Packung';
 }
