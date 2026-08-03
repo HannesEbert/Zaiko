@@ -59,6 +59,28 @@ class AppColors extends ThemeExtension<AppColors> {
   static const Color categoryPink = Color(0xFFEC4899); // key: pink
   static const Color categoryBrown = Color(0xFFB45309); // key: brown
 
+  /// Maps a stored palette [key] (e.g. `green`, `amber`) to its category
+  /// constant. Unknown or null keys fall back to [categorySlate], so a new
+  /// backend key never crashes the UI.
+  static Color categoryForKey(String? key) =>
+      _categoryByKey[key] ?? categorySlate;
+
+  static const Map<String, Color> _categoryByKey = {
+    'blue': categoryBlue,
+    'cyan': categoryCyan,
+    'orange': categoryOrange,
+    'purple': categoryPurple,
+    'green': categoryGreen,
+    'red': categoryRed,
+    'amber': categoryAmber,
+    'yellow': categoryYellow,
+    'beige': categoryBeige,
+    'lime': categoryLime,
+    'slate': categorySlate,
+    'pink': categoryPink,
+    'brown': categoryBrown,
+  };
+
   /// Page background behind cards (`--background`).
   final Color pageBackground;
 
