@@ -9,10 +9,11 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../shared/widgets/zaiko_buttons.dart';
 import '../../application/auth_providers.dart';
-import '../../data/auth_repository.dart';
+import '../../domain/auth_repository.dart';
 import '../auth_validators.dart';
 import '../widgets/field_label.dart';
 import '../widgets/password_field.dart';
+import 'forgot_password_page.dart';
 import 'register_page.dart';
 
 /// Email/password sign-in screen.
@@ -113,7 +114,22 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       validator: (value) =>
                           AuthValidators.password(l10n, value),
                     ),
-                    const SizedBox(height: AppSpacing.s5),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: isLoading
+                            ? null
+                            : () => context.pushNamed(
+                                ForgotPasswordPage.routeName,
+                              ),
+                        style: TextButton.styleFrom(
+                          foregroundColor: colors.accentText,
+                          textStyle: AppTypography.caption,
+                        ),
+                        child: Text(l10n.forgotPasswordLink),
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.s3),
                     ZaikoPrimaryButton(
                       label: l10n.loginSignInButton,
                       isLoading: isLoading,

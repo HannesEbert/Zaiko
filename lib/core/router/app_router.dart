@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth/application/auth_providers.dart';
 import '../../features/auth/domain/auth_status.dart';
+import '../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
+import '../../features/auth/presentation/pages/reset_password_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/household/application/households_providers.dart';
 import '../../features/household/presentation/pages/join_household_page.dart';
@@ -44,22 +46,46 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     householdMembershipProvider,
     (_, next) => householdListenable.value = next,
   );
+  final recoveryListenable = ValueNotifier<bool>(
+    ref.read(passwordRecoveryActiveProvider),
+  );
+  ref.listen(
+    passwordRecoveryActiveProvider,
+    (_, next) => recoveryListenable.value = next,
+  );
   ref.onDispose(() {
     authListenable.dispose();
     householdListenable.dispose();
+    recoveryListenable.dispose();
   });
 
   return GoRouter(
     initialLocation: HomePage.routePath,
-    refreshListenable: Listenable.merge([authListenable, householdListenable]),
+    refreshListenable: Listenable.merge([
+      authListenable,
+      householdListenable,
+      recoveryListenable,
+    ]),
     redirect: (context, state) {
       final status = ref.read(authStateProvider);
       final location = state.matchedLocation;
+
+      // A recovery deep link creates a session, so the user is authenticated —
+      // keep them on the reset screen instead of bouncing to home/onboarding
+      // until the new password is saved (which clears this flag).
+      if (ref.read(passwordRecoveryActiveProvider)) {
+        return location == ResetPasswordPage.routePath
+            ? null
+            : ResetPasswordPage.routePath;
+      }
+
       final isAuthScreen =
           location == LoginPage.routePath || location == RegisterPage.routePath;
       final isJoin = location.startsWith(JoinHouseholdPage.pathPrefix);
-      // Auth screens and invite links must be reachable before signing in.
-      final isPublic = isAuthScreen || isJoin;
+      // Auth screens, the forgot-password request, and invite links must be
+      // reachable before signing in.
+      final isPublic =
+          isAuthScreen || isJoin || location == ForgotPasswordPage.routePath;
 
       if (status == AuthStatus.unauthenticated && !isPublic) {
         return LoginPage.routePath;
@@ -94,6 +120,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RegisterPage.routePath,
         name: RegisterPage.routeName,
         builder: (context, state) => const RegisterPage(),
+      ),
+      GoRoute(
+        path: ForgotPasswordPage.routePath,
+        name: ForgotPasswordPage.routeName,
+        builder: (context, state) => const ForgotPasswordPage(),
+      ),
+      GoRoute(
+        path: ResetPasswordPage.routePath,
+        name: ResetPasswordPage.routeName,
+        builder: (context, state) => const ResetPasswordPage(),
       ),
       GoRoute(
         path: JoinHouseholdPage.routePath,

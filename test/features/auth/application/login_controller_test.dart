@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zaiko/features/auth/application/auth_providers.dart';
-import 'package:zaiko/features/auth/data/auth_repository.dart';
+import 'package:zaiko/features/auth/domain/auth_repository.dart';
 
 import '../fake_auth_repository.dart';
 

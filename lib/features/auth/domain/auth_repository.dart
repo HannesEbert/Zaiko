@@ -1,6 +1,4 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../domain/auth_status.dart';
+import 'auth_status.dart';
 
 /// Outcome of a sign-up attempt.
 ///
@@ -16,8 +14,8 @@ enum SignUpOutcome {
 
 /// Domain-level authentication error with a user-presentable [message].
 ///
-/// Keeps Supabase's [AuthException] out of the UI layer so the presentation
-/// code never depends on the backend SDK.
+/// Keeps the backend SDK's `AuthException` out of the UI layer so the
+/// presentation code never depends on Supabase.
 class AuthFailure implements Exception {
   const AuthFailure(this.message);
 
@@ -40,6 +38,10 @@ abstract interface class AuthRepository {
   /// token refresh, restored session).
   Stream<AuthStatus> get statusChanges;
 
+  /// Emits whenever the user opens a password-recovery deep link and a
+  /// recovery session is established, so the UI can prompt for a new password.
+  Stream<void> get passwordRecoveryEvents;
+
   /// Signs in with email and password. Throws [AuthFailure] on invalid
   /// credentials or network errors.
   Future<void> signInWithPassword({
@@ -54,56 +56,14 @@ abstract interface class AuthRepository {
     required String password,
   });
 
+  /// Sends a password-reset email containing a deep link back into the app.
+  /// Throws [AuthFailure] on failure.
+  Future<void> sendPasswordResetEmail(String email);
+
+  /// Sets a new password for the current (recovery) session. Throws
+  /// [AuthFailure] on failure.
+  Future<void> updatePassword(String newPassword);
+
   /// Ends the current session.
   Future<void> signOut();
-}
-
-/// [AuthRepository] backed by Supabase's GoTrue auth.
-class SupabaseAuthRepository implements AuthRepository {
-  SupabaseAuthRepository([GoTrueClient? auth])
-    : _auth = auth ?? Supabase.instance.client.auth;
-
-  final GoTrueClient _auth;
-
-  @override
-  AuthStatus get currentStatus => _auth.currentSession == null
-      ? AuthStatus.unauthenticated
-      : AuthStatus.authenticated;
-
-  @override
-  Stream<AuthStatus> get statusChanges => _auth.onAuthStateChange.map(
-    (state) => state.session == null
-        ? AuthStatus.unauthenticated
-        : AuthStatus.authenticated,
-  );
-
-  @override
-  Future<void> signInWithPassword({
-    required String email,
-    required String password,
-  }) async {
-    try {
-      await _auth.signInWithPassword(email: email, password: password);
-    } on AuthException catch (e) {
-      throw AuthFailure(e.message);
-    }
-  }
-
-  @override
-  Future<SignUpOutcome> signUp({
-    required String email,
-    required String password,
-  }) async {
-    try {
-      final response = await _auth.signUp(email: email, password: password);
-      return response.session == null
-          ? SignUpOutcome.emailConfirmationRequired
-          : SignUpOutcome.signedIn;
-    } on AuthException catch (e) {
-      throw AuthFailure(e.message);
-    }
-  }
-
-  @override
-  Future<void> signOut() => _auth.signOut();
 }

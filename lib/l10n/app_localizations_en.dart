@@ -83,6 +83,56 @@ class AppLocalizationsEn extends AppLocalizations {
   String get registerPrivacyPolicyLink => 'Privacy Policy';
 
   @override
+  String get forgotPasswordLink => 'Forgot password?';
+
+  @override
+  String get forgotPasswordTitle => 'Reset password';
+
+  @override
+  String get forgotPasswordSubtitle =>
+      'Enter your email and we\'ll send you a link to reset your password.';
+
+  @override
+  String get forgotPasswordSendButton => 'Send reset link';
+
+  @override
+  String get forgotPasswordEmailSent =>
+      'Check your email for a link to reset your password.';
+
+  @override
+  String get forgotPasswordSentTitle => 'Check your email';
+
+  @override
+  String forgotPasswordSentBody(String email) {
+    return 'We\'ve sent a password reset link to $email. Open it to choose a new password.';
+  }
+
+  @override
+  String get forgotPasswordResend => 'Resend email';
+
+  @override
+  String get forgotPasswordBackToLogin => 'Back to login';
+
+  @override
+  String get resetPasswordTitle => 'New password';
+
+  @override
+  String get resetPasswordSubtitle => 'Choose a new password for your account.';
+
+  @override
+  String get resetPasswordNewPasswordLabel => 'New password';
+
+  @override
+  String get resetPasswordConfirmLabel => 'Confirm new password';
+
+  @override
+  String get resetPasswordSaveButton => 'Save new password';
+
+  @override
+  String get resetPasswordSuccess =>
+      'Password updated. Please sign in with your new password.';
+
+  @override
   String get inventoryEmptyTitle => 'Your inventory is empty';
 
   @override

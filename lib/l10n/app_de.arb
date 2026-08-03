@@ -27,6 +27,22 @@
   "registerPrivacyConsent": "Ich akzeptiere die Datenschutzerklärung.",
   "registerPrivacyPolicyLink": "Datenschutzerklärung",
 
+  "forgotPasswordLink": "Passwort vergessen?",
+  "forgotPasswordTitle": "Passwort zurücksetzen",
+  "forgotPasswordSubtitle": "Gib deine E-Mail-Adresse ein und wir senden dir einen Link zum Zurücksetzen deines Passworts.",
+  "forgotPasswordSendButton": "Link senden",
+  "forgotPasswordEmailSent": "Prüfe deine E-Mails für den Link zum Zurücksetzen deines Passworts.",
+  "forgotPasswordSentTitle": "Prüfe deine E-Mails",
+  "forgotPasswordSentBody": "Wir haben einen Link zum Zurücksetzen an {email} gesendet. Öffne ihn, um ein neues Passwort zu wählen.",
+  "forgotPasswordResend": "E-Mail erneut senden",
+  "forgotPasswordBackToLogin": "Zurück zur Anmeldung",
+  "resetPasswordTitle": "Neues Passwort",
+  "resetPasswordSubtitle": "Wähle ein neues Passwort für dein Konto.",
+  "resetPasswordNewPasswordLabel": "Neues Passwort",
+  "resetPasswordConfirmLabel": "Neues Passwort bestätigen",
+  "resetPasswordSaveButton": "Neues Passwort speichern",
+  "resetPasswordSuccess": "Passwort aktualisiert. Bitte melde dich mit deinem neuen Passwort an.",
+
   "inventoryEmptyTitle": "Dein Inventar ist leer",
   "inventoryEmptyMessage": "Lebensmittel, die du zu Kühlschrank und Vorrat hinzufügst, erscheinen hier.",
 

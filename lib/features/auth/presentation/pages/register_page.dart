@@ -11,7 +11,7 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../shared/widgets/zaiko_buttons.dart';
 import '../../../profile/presentation/pages/privacy_page.dart';
 import '../../application/auth_providers.dart';
-import '../../data/auth_repository.dart';
+import '../../domain/auth_repository.dart';
 import '../auth_validators.dart';
 import '../widgets/field_label.dart';
 import '../widgets/password_field.dart';
