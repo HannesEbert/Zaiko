@@ -74,6 +74,72 @@
     "description": "Substring of registerPrivacyConsent rendered as a tappable link to the privacy policy"
   },
 
+  "forgotPasswordLink": "Forgot password?",
+  "@forgotPasswordLink": {
+    "description": "Link on the login screen that opens the password-reset request screen"
+  },
+  "forgotPasswordTitle": "Reset password",
+  "@forgotPasswordTitle": {
+    "description": "Title of the password-reset request screen"
+  },
+  "forgotPasswordSubtitle": "Enter your email and we'll send you a link to reset your password.",
+  "@forgotPasswordSubtitle": {
+    "description": "Instructions on the password-reset request screen"
+  },
+  "forgotPasswordSendButton": "Send reset link",
+  "@forgotPasswordSendButton": {
+    "description": "Button that sends the password-reset email"
+  },
+  "forgotPasswordEmailSent": "Check your email for a link to reset your password.",
+  "@forgotPasswordEmailSent": {
+    "description": "Confirmation shown after the reset email was sent"
+  },
+  "forgotPasswordSentTitle": "Check your email",
+  "@forgotPasswordSentTitle": {
+    "description": "Heading of the confirmation screen shown after the reset email was sent"
+  },
+  "forgotPasswordSentBody": "We've sent a password reset link to {email}. Open it to choose a new password.",
+  "@forgotPasswordSentBody": {
+    "description": "Body of the reset-email confirmation screen, naming the recipient address",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "forgotPasswordResend": "Resend email",
+  "@forgotPasswordResend": {
+    "description": "Button that sends the password-reset email again"
+  },
+  "forgotPasswordBackToLogin": "Back to login",
+  "@forgotPasswordBackToLogin": {
+    "description": "Button that returns from the confirmation screen to sign-in"
+  },
+  "resetPasswordTitle": "New password",
+  "@resetPasswordTitle": {
+    "description": "Title of the screen where the user sets a new password"
+  },
+  "resetPasswordSubtitle": "Choose a new password for your account.",
+  "@resetPasswordSubtitle": {
+    "description": "Instructions on the set-new-password screen"
+  },
+  "resetPasswordNewPasswordLabel": "New password",
+  "@resetPasswordNewPasswordLabel": {
+    "description": "Label for the new password field"
+  },
+  "resetPasswordConfirmLabel": "Confirm new password",
+  "@resetPasswordConfirmLabel": {
+    "description": "Label for the new password confirmation field"
+  },
+  "resetPasswordSaveButton": "Save new password",
+  "@resetPasswordSaveButton": {
+    "description": "Button that saves the new password"
+  },
+  "resetPasswordSuccess": "Password updated. Please sign in with your new password.",
+  "@resetPasswordSuccess": {
+    "description": "Confirmation shown after the password was changed successfully"
+  },
+
   "inventoryEmptyTitle": "Your inventory is empty",
   "inventoryEmptyMessage": "Items you add to your fridge and pantry will show up here.",
 

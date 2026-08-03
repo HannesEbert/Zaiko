@@ -53,8 +53,7 @@ data both depend on domain, never on each other; `application/` is the only
 layer that wires a repository to the UI.
 
 Repository **interfaces** and their failure types belong to `domain/`, their
-backend implementations to `data/`. (`features/auth` still keeps its interface
-in `data/` from before this was settled; it is scheduled to move.)
+backend implementations to `data/`.
 
 - **`core/`** holds building blocks every feature may use but that belong to
   no feature (theme, router, constants, utils).

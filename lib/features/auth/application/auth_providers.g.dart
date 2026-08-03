@@ -223,3 +223,176 @@ abstract class _$LoginController extends $AsyncNotifier<void> {
     element.handleCreate(ref, build);
   }
 }
+
+/// Emits when the user opens a password-recovery deep link.
+
+@ProviderFor(passwordRecoveryEvents)
+final passwordRecoveryEventsProvider = PasswordRecoveryEventsProvider._();
+
+/// Emits when the user opens a password-recovery deep link.
+
+final class PasswordRecoveryEventsProvider
+    extends $FunctionalProvider<AsyncValue<void>, void, Stream<void>>
+    with $FutureModifier<void>, $StreamProvider<void> {
+  /// Emits when the user opens a password-recovery deep link.
+  PasswordRecoveryEventsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'passwordRecoveryEventsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$passwordRecoveryEventsHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<void> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<void> create(Ref ref) {
+    return passwordRecoveryEvents(ref);
+  }
+}
+
+String _$passwordRecoveryEventsHash() =>
+    r'531bde3f7df567631bfe4abe8803422a93a07210';
+
+/// Whether a password-recovery flow is in progress.
+///
+/// Flips to `true` when a recovery deep link arrives (via
+/// [passwordRecoveryEventsProvider]); the router reads this to route the
+/// recovery session to the reset-password screen instead of home/onboarding.
+/// [complete] clears it once the new password has been set.
+
+@ProviderFor(PasswordRecoveryActive)
+final passwordRecoveryActiveProvider = PasswordRecoveryActiveProvider._();
+
+/// Whether a password-recovery flow is in progress.
+///
+/// Flips to `true` when a recovery deep link arrives (via
+/// [passwordRecoveryEventsProvider]); the router reads this to route the
+/// recovery session to the reset-password screen instead of home/onboarding.
+/// [complete] clears it once the new password has been set.
+final class PasswordRecoveryActiveProvider
+    extends $NotifierProvider<PasswordRecoveryActive, bool> {
+  /// Whether a password-recovery flow is in progress.
+  ///
+  /// Flips to `true` when a recovery deep link arrives (via
+  /// [passwordRecoveryEventsProvider]); the router reads this to route the
+  /// recovery session to the reset-password screen instead of home/onboarding.
+  /// [complete] clears it once the new password has been set.
+  PasswordRecoveryActiveProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'passwordRecoveryActiveProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$passwordRecoveryActiveHash();
+
+  @$internal
+  @override
+  PasswordRecoveryActive create() => PasswordRecoveryActive();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$passwordRecoveryActiveHash() =>
+    r'3fe090532dc9c5044b6e09196a39d5c90747970b';
+
+/// Whether a password-recovery flow is in progress.
+///
+/// Flips to `true` when a recovery deep link arrives (via
+/// [passwordRecoveryEventsProvider]); the router reads this to route the
+/// recovery session to the reset-password screen instead of home/onboarding.
+/// [complete] clears it once the new password has been set.
+
+abstract class _$PasswordRecoveryActive extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Drives the "forgot password" and "set new password" screens, exposing
+/// loading/error state the same way [LoginController] does.
+
+@ProviderFor(PasswordResetController)
+final passwordResetControllerProvider = PasswordResetControllerProvider._();
+
+/// Drives the "forgot password" and "set new password" screens, exposing
+/// loading/error state the same way [LoginController] does.
+final class PasswordResetControllerProvider
+    extends $AsyncNotifierProvider<PasswordResetController, void> {
+  /// Drives the "forgot password" and "set new password" screens, exposing
+  /// loading/error state the same way [LoginController] does.
+  PasswordResetControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'passwordResetControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$passwordResetControllerHash();
+
+  @$internal
+  @override
+  PasswordResetController create() => PasswordResetController();
+}
+
+String _$passwordResetControllerHash() =>
+    r'5e925821b4fdc09168a2e48bcd4f47fded58e7a6';
+
+/// Drives the "forgot password" and "set new password" screens, exposing
+/// loading/error state the same way [LoginController] does.
+
+abstract class _$PasswordResetController extends $AsyncNotifier<void> {
+  FutureOr<void> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<void>, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, void>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

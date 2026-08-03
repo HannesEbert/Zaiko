@@ -85,6 +85,57 @@ class AppLocalizationsDe extends AppLocalizations {
   String get registerPrivacyPolicyLink => 'Datenschutzerklärung';
 
   @override
+  String get forgotPasswordLink => 'Passwort vergessen?';
+
+  @override
+  String get forgotPasswordTitle => 'Passwort zurücksetzen';
+
+  @override
+  String get forgotPasswordSubtitle =>
+      'Gib deine E-Mail-Adresse ein und wir senden dir einen Link zum Zurücksetzen deines Passworts.';
+
+  @override
+  String get forgotPasswordSendButton => 'Link senden';
+
+  @override
+  String get forgotPasswordEmailSent =>
+      'Prüfe deine E-Mails für den Link zum Zurücksetzen deines Passworts.';
+
+  @override
+  String get forgotPasswordSentTitle => 'Prüfe deine E-Mails';
+
+  @override
+  String forgotPasswordSentBody(String email) {
+    return 'Wir haben einen Link zum Zurücksetzen an $email gesendet. Öffne ihn, um ein neues Passwort zu wählen.';
+  }
+
+  @override
+  String get forgotPasswordResend => 'E-Mail erneut senden';
+
+  @override
+  String get forgotPasswordBackToLogin => 'Zurück zur Anmeldung';
+
+  @override
+  String get resetPasswordTitle => 'Neues Passwort';
+
+  @override
+  String get resetPasswordSubtitle =>
+      'Wähle ein neues Passwort für dein Konto.';
+
+  @override
+  String get resetPasswordNewPasswordLabel => 'Neues Passwort';
+
+  @override
+  String get resetPasswordConfirmLabel => 'Neues Passwort bestätigen';
+
+  @override
+  String get resetPasswordSaveButton => 'Neues Passwort speichern';
+
+  @override
+  String get resetPasswordSuccess =>
+      'Passwort aktualisiert. Bitte melde dich mit deinem neuen Passwort an.';
+
+  @override
   String get inventoryEmptyTitle => 'Dein Inventar ist leer';
 
   @override

@@ -236,6 +236,96 @@ abstract class AppLocalizations {
   /// **'Privacy Policy'**
   String get registerPrivacyPolicyLink;
 
+  /// Link on the login screen that opens the password-reset request screen
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get forgotPasswordLink;
+
+  /// Title of the password-reset request screen
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get forgotPasswordTitle;
+
+  /// Instructions on the password-reset request screen
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email and we\'ll send you a link to reset your password.'**
+  String get forgotPasswordSubtitle;
+
+  /// Button that sends the password-reset email
+  ///
+  /// In en, this message translates to:
+  /// **'Send reset link'**
+  String get forgotPasswordSendButton;
+
+  /// Confirmation shown after the reset email was sent
+  ///
+  /// In en, this message translates to:
+  /// **'Check your email for a link to reset your password.'**
+  String get forgotPasswordEmailSent;
+
+  /// Heading of the confirmation screen shown after the reset email was sent
+  ///
+  /// In en, this message translates to:
+  /// **'Check your email'**
+  String get forgotPasswordSentTitle;
+
+  /// Body of the reset-email confirmation screen, naming the recipient address
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ve sent a password reset link to {email}. Open it to choose a new password.'**
+  String forgotPasswordSentBody(String email);
+
+  /// Button that sends the password-reset email again
+  ///
+  /// In en, this message translates to:
+  /// **'Resend email'**
+  String get forgotPasswordResend;
+
+  /// Button that returns from the confirmation screen to sign-in
+  ///
+  /// In en, this message translates to:
+  /// **'Back to login'**
+  String get forgotPasswordBackToLogin;
+
+  /// Title of the screen where the user sets a new password
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get resetPasswordTitle;
+
+  /// Instructions on the set-new-password screen
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a new password for your account.'**
+  String get resetPasswordSubtitle;
+
+  /// Label for the new password field
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get resetPasswordNewPasswordLabel;
+
+  /// Label for the new password confirmation field
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm new password'**
+  String get resetPasswordConfirmLabel;
+
+  /// Button that saves the new password
+  ///
+  /// In en, this message translates to:
+  /// **'Save new password'**
+  String get resetPasswordSaveButton;
+
+  /// Confirmation shown after the password was changed successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Password updated. Please sign in with your new password.'**
+  String get resetPasswordSuccess;
+
   /// No description provided for @inventoryEmptyTitle.
   ///
   /// In en, this message translates to:

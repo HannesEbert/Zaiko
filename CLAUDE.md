@@ -67,11 +67,9 @@ presentation-only feature is fine until it grows a data layer.
 - `test/` mirrors `lib/` one-to-one
 
 `lib/features/auth/` is the reference slice for how a feature is wired
-(repository behind an interface, providers in `application/`, a fake repository
-in `test/features/auth/fake_auth_repository.dart` for tests). One exception:
-its `AuthRepository` interface and `AuthFailure` still sit in `data/` from
-before this rule existed and are scheduled to move to `domain/`. Follow the
-rule above, not that detail.
+(repository interface + `AuthFailure` in `domain/`, the Supabase
+implementation in `data/`, providers in `application/`, and a fake repository
+in `test/features/auth/fake_auth_repository.dart` for tests).
 
 ---
 

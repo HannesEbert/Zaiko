@@ -28,7 +28,7 @@ A reference model, [`Food`](../../lib/features/food/domain/food.dart), proves th
 chain end to end (freezed + json_serializable, including an enum with stable
 `@JsonValue` codes and a `Food.create` factory that mints the client-side UUID),
 and a trivial `@riverpod` provider
-([`sampleFoods`](../../lib/features/food/presentation/food_providers.dart))
+([`sampleFoods`](../../lib/features/food/application/food_providers.dart))
 confirms the Riverpod generator.
 
 **Generated files (`*.freezed.dart`, `*.g.dart`) are committed to the

@@ -8,6 +8,7 @@ import 'package:zaiko/core/theme/app_theme.dart';
 import 'package:zaiko/features/auth/application/auth_providers.dart';
 import 'package:zaiko/features/auth/domain/auth_status.dart';
 import 'package:zaiko/features/auth/presentation/pages/login_page.dart';
+import 'package:zaiko/features/auth/presentation/pages/reset_password_page.dart';
 import 'package:zaiko/features/home/presentation/pages/home_page.dart';
 import 'package:zaiko/features/household/application/households_providers.dart';
 import 'package:zaiko/features/household/presentation/pages/join_household_page.dart';
@@ -166,4 +167,44 @@ void main() {
     expect(find.byType(JoinHouseholdPage), findsOneWidget);
     expect(find.textContaining('ABC123'), findsOneWidget);
   });
+
+  testWidgets('an active password recovery is routed to the reset screen', (
+    tester,
+  ) async {
+    // A recovery deep link authenticates the user, but the guard must keep
+    // them on the reset screen instead of bouncing to home/onboarding.
+    final householdRepository = FakeHouseholdRepository();
+    addTearDown(householdRepository.dispose);
+
+    final container = ProviderContainer(
+      overrides: [
+        authStateProvider.overrideWithValue(AuthStatus.authenticated),
+        householdRepositoryProvider.overrideWithValue(householdRepository),
+        passwordRecoveryActiveProvider.overrideWith(_AlwaysRecovering.new),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp.router(
+          theme: AppTheme.dark,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          routerConfig: container.read(appRouterProvider),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ResetPasswordPage), findsOneWidget);
+  });
+}
+
+/// Forces [passwordRecoveryActiveProvider] on, so the router test can assert the
+/// redirect without driving the live recovery stream.
+class _AlwaysRecovering extends PasswordRecoveryActive {
+  @override
+  bool build() => true;
 }
