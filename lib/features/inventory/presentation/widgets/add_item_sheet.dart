@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/l10n/l10n_extension.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -7,7 +8,10 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../shared/widgets/card_list.dart';
 import '../../../../shared/widgets/icon_tile.dart';
 import '../../../../shared/widgets/section_label.dart';
-import '../inventory_demo_data.dart';
+import '../../application/inventory_providers.dart';
+
+/// How many quick "add again" chips the sheet shows at most.
+const int _quickAddLimit = 6;
 
 /// Shows the "Artikel hinzufügen" modal bottom sheet with the three ways to add
 /// an item plus quick "add again" chips.
@@ -20,13 +24,23 @@ Future<void> showAddItemSheet(BuildContext context) {
   );
 }
 
-class _AddItemSheet extends StatelessWidget {
+class _AddItemSheet extends ConsumerWidget {
   const _AddItemSheet();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final colors = context.colors;
+
+    // Recently added product names, de-duplicated, for the quick "add again"
+    // chips. Empty until the data loads or when the inventory is empty.
+    final recentNames = <String>{
+      ...?ref
+          .watch(recentlyAddedItemsProvider)
+          .asData
+          ?.value
+          .map((resolved) => resolved.item.name),
+    }.take(_quickAddLimit).toList();
 
     return Container(
       decoration: BoxDecoration(
@@ -94,20 +108,22 @@ class _AddItemSheet extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: AppSpacing.s5),
-              SectionLabel(l10n.addItemAddAgain),
-              const SizedBox(height: AppSpacing.s2 + 2),
-              Wrap(
-                spacing: AppSpacing.s2,
-                runSpacing: AppSpacing.s2,
-                children: [
-                  for (final product in InventoryDemoData.recentlyUsedProducts)
-                    _QuickAddChip(
-                      label: product,
-                      onTap: () => Navigator.of(context).pop(),
-                    ),
-                ],
-              ),
+              if (recentNames.isNotEmpty) ...[
+                const SizedBox(height: AppSpacing.s5),
+                SectionLabel(l10n.addItemAddAgain),
+                const SizedBox(height: AppSpacing.s2 + 2),
+                Wrap(
+                  spacing: AppSpacing.s2,
+                  runSpacing: AppSpacing.s2,
+                  children: [
+                    for (final product in recentNames)
+                      _QuickAddChip(
+                        label: product,
+                        onTap: () => Navigator.of(context).pop(),
+                      ),
+                  ],
+                ),
+              ],
             ],
           ),
         ),
