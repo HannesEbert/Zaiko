@@ -51,31 +51,32 @@ void main() {
       );
   });
 
-  testWidgets('shows only the tapped location\'s items, not the fridge always', (
-    tester,
-  ) async {
-    addTearDown(inventory.dispose);
-    addTearDown(household.dispose);
+  testWidgets(
+    'shows only the tapped location\'s items, not the fridge always',
+    (tester) async {
+      addTearDown(inventory.dispose);
+      addTearDown(household.dispose);
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          householdRepositoryProvider.overrideWithValue(household),
-          inventoryRepositoryProvider.overrideWithValue(inventory),
-        ],
-        child: MaterialApp(
-          theme: AppTheme.light,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: const LocationDetailPage(location: pantry),
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            householdRepositoryProvider.overrideWithValue(household),
+            inventoryRepositoryProvider.overrideWithValue(inventory),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const LocationDetailPage(location: pantry),
+          ),
         ),
-      ),
-    );
-    await tester.pumpAndSettle();
+      );
+      await tester.pumpAndSettle();
 
-    // The pantry screen shows the pantry item and not the fridge item — the
-    // regression this epic fixes.
-    expect(find.text('Reis'), findsOneWidget);
-    expect(find.text('Butter'), findsNothing);
-  });
+      // The pantry screen shows the pantry item and not the fridge item — the
+      // regression this epic fixes.
+      expect(find.text('Reis'), findsOneWidget);
+      expect(find.text('Butter'), findsNothing);
+    },
+  );
 }
