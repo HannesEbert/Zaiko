@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Barcode scanning (Open Food Facts add flow). Requested at runtime. -->
+    <uses-permission android:name="android.permission.CAMERA"/>
     <application
         android:label="zaiko"
         android:name="${applicationName}"
