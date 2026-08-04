@@ -11,7 +11,9 @@ import 'package:zaiko/features/auth/presentation/pages/login_page.dart';
 import 'package:zaiko/features/auth/presentation/pages/reset_password_page.dart';
 import 'package:zaiko/features/home/presentation/pages/home_page.dart';
 import 'package:zaiko/features/household/application/households_providers.dart';
+import 'package:zaiko/features/household/domain/household.dart';
 import 'package:zaiko/features/household/presentation/pages/join_household_page.dart';
+import 'package:zaiko/features/household/presentation/pages/onboarding_page.dart';
 import 'package:zaiko/features/inventory/presentation/pages/inventory_page.dart';
 import 'package:zaiko/features/profile/presentation/pages/profile_page.dart';
 import 'package:zaiko/l10n/app_localizations.dart';
@@ -167,6 +169,59 @@ void main() {
     expect(find.byType(JoinHouseholdPage), findsOneWidget);
     expect(find.textContaining('ABC123'), findsOneWidget);
   });
+
+  testWidgets(
+    'a returning member with a household lands on home, not onboarding, after '
+    'sign-in',
+    (tester) async {
+      final auth = FakeAuthRepository();
+      addTearDown(auth.dispose);
+      // No household is loaded while signed out; sign-in must trigger the load
+      // and route the member home rather than to onboarding.
+      final household = FakeHouseholdRepository()..current = null;
+      addTearDown(household.dispose);
+
+      final container = ProviderContainer(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(auth),
+          householdRepositoryProvider.overrideWithValue(household),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp.router(
+            theme: AppTheme.dark,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            routerConfig: container.read(appRouterProvider),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Keep the auth chain subscribed so the fake's broadcast sign-in event is
+      // observed (auto-dispose would otherwise tear it down between pumps).
+      container.listen(authStateProvider, (_, _) {});
+
+      // Signed out → login (membership is `unknown`, never a stale `none`).
+      expect(find.byType(LoginPage), findsOneWidget);
+
+      // Sign in; the account already has a household.
+      household.current = Household(
+        id: 'hh-1',
+        name: 'Lindenhof',
+        createdAt: DateTime.utc(2026),
+      );
+      auth.emit(AuthStatus.authenticated);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(HomePage), findsOneWidget);
+      expect(find.byType(OnboardingPage), findsNothing);
+    },
+  );
 
   testWidgets('an active password recovery is routed to the reset screen', (
     tester,

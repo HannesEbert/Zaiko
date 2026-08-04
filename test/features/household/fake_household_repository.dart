@@ -20,6 +20,7 @@ class FakeHouseholdRepository implements HouseholdRepository {
   final StreamController<List<HouseholdMember>> _members =
       StreamController<List<HouseholdMember>>.broadcast();
 
+  int loadCalls = 0;
   int createCalls = 0;
   int acceptCalls = 0;
   int inviteCalls = 0;
@@ -48,6 +49,7 @@ class FakeHouseholdRepository implements HouseholdRepository {
 
   @override
   Future<Household?> loadCurrentHousehold() async {
+    loadCalls++;
     final error = loadError;
     if (error != null) throw error;
     return current;

@@ -38,6 +38,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   // `redirect` on sign-in/sign-out and on gaining/leaving a household, without
   // rebuilding the router (which would drop the navigation stack).
   final authListenable = ValueNotifier<AuthStatus>(ref.read(authStateProvider));
+  // The household load is gated on auth (see [currentHouseholdProvider]), so it
+  // refetches on sign-in on its own — the router only re-runs `redirect`.
   ref.listen(authStateProvider, (_, next) => authListenable.value = next);
   final householdListenable = ValueNotifier<HouseholdMembership>(
     ref.read(householdMembershipProvider),

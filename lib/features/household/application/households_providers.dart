@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../auth/application/auth_providers.dart';
+import '../../auth/domain/auth_status.dart';
 import '../data/supabase_household_repository.dart';
 import '../domain/household.dart';
 import '../domain/household_member.dart';
@@ -22,14 +24,31 @@ HouseholdRepository householdRepository(Ref ref) =>
     SupabaseHouseholdRepository();
 
 /// The current user's household, or `null` if they have none. Re-fetched when
-/// invalidated after a create/join/leave.
+/// invalidated after a create/join/leave, and whenever the session changes.
+///
+/// Gated on [authStateProvider]: while signed out there is no household to load,
+/// so it resolves to `null` without touching the backend and refetches the
+/// moment a session appears.
 @riverpod
-Future<Household?> currentHousehold(Ref ref) =>
-    ref.watch(householdRepositoryProvider).loadCurrentHousehold();
+Future<Household?> currentHousehold(Ref ref) {
+  if (ref.watch(authStateProvider) != AuthStatus.authenticated) {
+    return Future<Household?>.value(null);
+  }
+  return ref.watch(householdRepositoryProvider).loadCurrentHousehold();
+}
 
 /// Coarse membership state the router redirect reads synchronously.
+///
+/// Gated on [authStateProvider] so it is [unknown] while signed out. This is
+/// what keeps a returning member off onboarding at sign-in: because this
+/// provider watches auth, a session change rebuilds it, and its
+/// `ref.watch(currentHouseholdProvider)` re-runs the (also auth-gated) load
+/// first — so the redirect never reads the signed-out `null` as a stale `none`.
 @riverpod
 HouseholdMembership householdMembership(Ref ref) {
+  if (ref.watch(authStateProvider) != AuthStatus.authenticated) {
+    return HouseholdMembership.unknown;
+  }
   final household = ref.watch(currentHouseholdProvider);
   return switch (household) {
     AsyncData(:final value) =>

@@ -62,13 +62,21 @@ String _$householdRepositoryHash() =>
     r'2f744add677a231dc33902e43653f5f70dac770c';
 
 /// The current user's household, or `null` if they have none. Re-fetched when
-/// invalidated after a create/join/leave.
+/// invalidated after a create/join/leave, and whenever the session changes.
+///
+/// Gated on [authStateProvider]: while signed out there is no household to load,
+/// so it resolves to `null` without touching the backend and refetches the
+/// moment a session appears.
 
 @ProviderFor(currentHousehold)
 final currentHouseholdProvider = CurrentHouseholdProvider._();
 
 /// The current user's household, or `null` if they have none. Re-fetched when
-/// invalidated after a create/join/leave.
+/// invalidated after a create/join/leave, and whenever the session changes.
+///
+/// Gated on [authStateProvider]: while signed out there is no household to load,
+/// so it resolves to `null` without touching the backend and refetches the
+/// moment a session appears.
 
 final class CurrentHouseholdProvider
     extends
@@ -79,7 +87,11 @@ final class CurrentHouseholdProvider
         >
     with $FutureModifier<Household?>, $FutureProvider<Household?> {
   /// The current user's household, or `null` if they have none. Re-fetched when
-  /// invalidated after a create/join/leave.
+  /// invalidated after a create/join/leave, and whenever the session changes.
+  ///
+  /// Gated on [authStateProvider]: while signed out there is no household to load,
+  /// so it resolves to `null` without touching the backend and refetches the
+  /// moment a session appears.
   CurrentHouseholdProvider._()
     : super(
         from: null,
@@ -105,14 +117,26 @@ final class CurrentHouseholdProvider
   }
 }
 
-String _$currentHouseholdHash() => r'f372210aef99789f64a8595f1a40f58c215305cf';
+String _$currentHouseholdHash() => r'88a4055719c49da404febad80cd485a40b12efc5';
 
 /// Coarse membership state the router redirect reads synchronously.
+///
+/// Gated on [authStateProvider] so it is [unknown] while signed out. This is
+/// what keeps a returning member off onboarding at sign-in: because this
+/// provider watches auth, a session change rebuilds it, and its
+/// `ref.watch(currentHouseholdProvider)` re-runs the (also auth-gated) load
+/// first — so the redirect never reads the signed-out `null` as a stale `none`.
 
 @ProviderFor(householdMembership)
 final householdMembershipProvider = HouseholdMembershipProvider._();
 
 /// Coarse membership state the router redirect reads synchronously.
+///
+/// Gated on [authStateProvider] so it is [unknown] while signed out. This is
+/// what keeps a returning member off onboarding at sign-in: because this
+/// provider watches auth, a session change rebuilds it, and its
+/// `ref.watch(currentHouseholdProvider)` re-runs the (also auth-gated) load
+/// first — so the redirect never reads the signed-out `null` as a stale `none`.
 
 final class HouseholdMembershipProvider
     extends
@@ -123,6 +147,12 @@ final class HouseholdMembershipProvider
         >
     with $Provider<HouseholdMembership> {
   /// Coarse membership state the router redirect reads synchronously.
+  ///
+  /// Gated on [authStateProvider] so it is [unknown] while signed out. This is
+  /// what keeps a returning member off onboarding at sign-in: because this
+  /// provider watches auth, a session change rebuilds it, and its
+  /// `ref.watch(currentHouseholdProvider)` re-runs the (also auth-gated) load
+  /// first — so the redirect never reads the signed-out `null` as a stale `none`.
   HouseholdMembershipProvider._()
     : super(
         from: null,
@@ -158,7 +188,7 @@ final class HouseholdMembershipProvider
 }
 
 String _$householdMembershipHash() =>
-    r'c7ed18d939a2fedcbd1d8e0cabbd7c3b78947431';
+    r'e65a965aac798ac7da9968d9b91e3dfc6d7401d8';
 
 /// Live roster of the given household's members.
 
