@@ -322,6 +322,24 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get inventoryAllItemsTitle => 'Alle Artikel';
+
+  @override
+  String get inventorySearchEmpty => 'Keine Treffer';
+
+  @override
+  String get inventorySortTitle => 'Sortieren';
+
+  @override
+  String get inventorySortRecent => 'Zuletzt hinzugefügt';
+
+  @override
+  String get inventorySortName => 'Name A–Z';
+
+  @override
+  String get inventorySortExpiry => 'Ablaufdatum';
+
+  @override
   String get addItemTitle => 'Artikel hinzufügen';
 
   @override

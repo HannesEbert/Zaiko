@@ -11,41 +11,33 @@ import '../../../../shared/widgets/page_header.dart';
 import '../../../../shared/widgets/search_field.dart';
 import '../../application/inventory_providers.dart';
 import '../../application/inventory_query.dart';
-import '../../domain/storage_location.dart';
-import '../inventory_labels.dart';
+import '../../application/inventory_view.dart';
 import '../widgets/inventory_item_row.dart';
 import '../widgets/inventory_message.dart';
 import '../widgets/inventory_sort_sheet.dart';
 import 'item_detail_page.dart';
 
-/// Detail view of a single storage location (e.g. the fridge): back link, title
-/// with item count, a sort action, search and the item list.
+/// Full-screen search over the whole inventory: a live text search plus the
+/// shared sort picker, listing matching items across every storage location.
 ///
-/// Declared as a go_router sub-route under both the inventory and home branches
-/// ([inventoryRouteName] / [homeRouteName]) so the location stays part of the
-/// tab's navigation stack and survives switching tabs — an imperative
-/// `Navigator.push` on a shell branch does not.
-class LocationDetailPage extends ConsumerStatefulWidget {
-  const LocationDetailPage({required this.locationId, super.key});
+/// Reached from the inventory and home search pills and the "see all" link.
+class AllItemsPage extends ConsumerStatefulWidget {
+  const AllItemsPage({super.key});
 
-  /// The storage location's id, or [StorageLocation.unassignedId] for the
-  /// synthetic bucket of items without a location.
-  final String locationId;
-
-  /// Route name when opened inside the inventory tab (`/inventory/location/:id`).
-  static const String inventoryRouteName = 'inventory-location';
-
-  /// Route name when opened inside the home tab (`/home/location/:id`).
-  static const String homeRouteName = 'home-location';
-
-  /// Sub-route segment shared by both branch registrations.
-  static const String routeSegment = 'location/:locationId';
+  /// Pushes the page onto the root navigator (over the bottom nav bar), like the
+  /// other inventory overlays.
+  static Future<void> open(BuildContext context) {
+    return Navigator.of(
+      context,
+      rootNavigator: true,
+    ).push(MaterialPageRoute<void>(builder: (_) => const AllItemsPage()));
+  }
 
   @override
-  ConsumerState<LocationDetailPage> createState() => _LocationDetailPageState();
+  ConsumerState<AllItemsPage> createState() => _AllItemsPageState();
 }
 
-class _LocationDetailPageState extends ConsumerState<LocationDetailPage> {
+class _AllItemsPageState extends ConsumerState<AllItemsPage> {
   final _controller = TextEditingController();
   String _query = '';
   InventorySortMode _sort = InventorySortMode.recentlyAdded;
@@ -61,33 +53,21 @@ class _LocationDetailPageState extends ConsumerState<LocationDetailPage> {
     if (picked != null) setState(() => _sort = picked);
   }
 
-  /// Resolves the location for the title; the synthetic "unassigned" bucket is
-  /// never persisted, so it is rebuilt here.
-  StorageLocation? _resolveLocation(Map<String, StorageLocation>? byId) {
-    if (widget.locationId == StorageLocation.unassignedId) {
-      return const StorageLocation(
-        id: StorageLocation.unassignedId,
-        householdId: '',
-        name: '',
-      );
-    }
-    return byId?[widget.locationId];
+  void _openDetail(ResolvedItem resolved) {
+    Navigator.of(
+      context,
+      rootNavigator: true,
+    ).push(MaterialPageRoute<void>(builder: (_) => ItemDetailPage(resolved)));
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final colors = context.colors;
-    final items = ref.watch(itemsForLocationProvider(widget.locationId));
-    final locationsById = ref.watch(storageLocationsByIdProvider);
-    final location = _resolveLocation(locationsById.asData?.value);
-    final locationName = location == null
-        ? ''
-        : storageLocationLabel(l10n, location);
+    final items = ref.watch(resolvedItemsProvider);
 
     return Scaffold(
       body: SafeArea(
-        bottom: false,
         child: ListView(
           padding: const EdgeInsets.fromLTRB(
             AppSpacing.pageInset,
@@ -123,7 +103,7 @@ class _LocationDetailPageState extends ConsumerState<LocationDetailPage> {
             ),
             const SizedBox(height: AppSpacing.s6),
             PageHeader(
-              title: locationName,
+              title: l10n.inventoryAllItemsTitle,
               subtitle: l10n.inventoryItemsCount(
                 items.asData?.value.length ?? 0,
               ),
@@ -135,7 +115,8 @@ class _LocationDetailPageState extends ConsumerState<LocationDetailPage> {
             const SizedBox(height: AppSpacing.s5),
             SearchField(
               controller: _controller,
-              hint: l10n.locationSearchHint(locationName),
+              hint: l10n.inventorySearchHint,
+              autofocus: true,
               onChanged: (value) => setState(() => _query = value),
             ),
             const SizedBox(height: AppSpacing.s6),
@@ -152,7 +133,7 @@ class _LocationDetailPageState extends ConsumerState<LocationDetailPage> {
                 if (results.isEmpty) {
                   return InventoryEmptyLine(
                     _query.trim().isEmpty
-                        ? l10n.inventoryLocationEmpty
+                        ? l10n.inventoryRecentlyAddedEmpty
                         : l10n.inventorySearchEmpty,
                   );
                 }
@@ -161,12 +142,8 @@ class _LocationDetailPageState extends ConsumerState<LocationDetailPage> {
                     for (final item in results)
                       InventoryItemRow(
                         item,
-                        onTap: () =>
-                            Navigator.of(context, rootNavigator: true).push(
-                              MaterialPageRoute<void>(
-                                builder: (_) => ItemDetailPage(item),
-                              ),
-                            ),
+                        showLocation: true,
+                        onTap: () => _openDetail(item),
                       ),
                   ],
                 );

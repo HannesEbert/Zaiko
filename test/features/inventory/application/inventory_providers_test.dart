@@ -158,17 +158,26 @@ void main() {
     expect(urgent.map((r) => r.item.id), ['expired-pantry', 'soon-fridge']);
   });
 
-  test('recentlyAddedItems keeps the given (newest-first) order', () async {
-    container.listen(recentlyAddedItemsProvider, (_, _) {}, onError: (_, _) {});
-    final recent = await container.read(recentlyAddedItemsProvider.future);
+  test(
+    'recentlyAddedItems keeps only the last three days, newest first',
+    () async {
+      inventory.items = [
+        item('today', location: fridgeId, daysCreatedAgo: 0),
+        item('two-days', location: fridgeId, daysCreatedAgo: 2),
+        item('long-ago', location: pantryId, daysCreatedAgo: 10),
+      ];
 
-    expect(recent.map((r) => r.item.id), [
-      'soon-fridge',
-      'fresh-fridge',
-      'expired-pantry',
-      'nodate-fridge',
-    ]);
-  });
+      container.listen(
+        recentlyAddedItemsProvider,
+        (_, _) {},
+        onError: (_, _) {},
+      );
+      final recent = await container.read(recentlyAddedItemsProvider.future);
+
+      // The 10-day-old item falls outside the window; the rest are newest-first.
+      expect(recent.map((r) => r.item.id), ['today', 'two-days']);
+    },
+  );
 
   test(
     'resolvedItems joins the category and location and computes status',

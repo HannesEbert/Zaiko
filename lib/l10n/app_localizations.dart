@@ -656,6 +656,42 @@ abstract class AppLocalizations {
   /// **'Search in {name}…'**
   String locationSearchHint(String name);
 
+  /// No description provided for @inventoryAllItemsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'All items'**
+  String get inventoryAllItemsTitle;
+
+  /// No description provided for @inventorySearchEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No matches'**
+  String get inventorySearchEmpty;
+
+  /// No description provided for @inventorySortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get inventorySortTitle;
+
+  /// No description provided for @inventorySortRecent.
+  ///
+  /// In en, this message translates to:
+  /// **'Recently added'**
+  String get inventorySortRecent;
+
+  /// No description provided for @inventorySortName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name A–Z'**
+  String get inventorySortName;
+
+  /// No description provided for @inventorySortExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiry date'**
+  String get inventorySortExpiry;
+
   /// No description provided for @addItemTitle.
   ///
   /// In en, this message translates to:

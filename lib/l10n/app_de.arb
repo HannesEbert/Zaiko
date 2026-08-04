@@ -106,6 +106,12 @@
   "inventoryStatFresh": "Frisch",
   "locationUnassignedName": "Ohne Lagerort",
   "locationSearchHint": "In {name} suchen…",
+  "inventoryAllItemsTitle": "Alle Artikel",
+  "inventorySearchEmpty": "Keine Treffer",
+  "inventorySortTitle": "Sortieren",
+  "inventorySortRecent": "Zuletzt hinzugefügt",
+  "inventorySortName": "Name A–Z",
+  "inventorySortExpiry": "Ablaufdatum",
 
   "addItemTitle": "Artikel hinzufügen",
   "addItemScanTitle": "Barcode scannen",
