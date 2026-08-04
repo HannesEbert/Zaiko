@@ -228,112 +228,110 @@ void main() {
     },
   );
 
-  testWidgets(
-    'an open location survives switching tabs and coming back',
-    (tester) async {
-      // Regression: the location detail used to be pushed imperatively on the
-      // branch navigator, so leaving the inventory tab and returning dropped it
-      // back to the inventory root. As a declared sub-route it must stay put.
-      final household = FakeHouseholdRepository()
-        ..current = Household(
-          id: 'hh-1',
-          name: 'Lindenhof',
-          createdAt: DateTime.utc(2026),
-        );
-      addTearDown(household.dispose);
-
-      final inventory = FakeInventoryRepository()
-        ..locations = const [
-          StorageLocation(id: 'fridge', householdId: 'hh-1', name: 'Fridge'),
-        ]
-        ..items = [
-          InventoryItem(
-            id: 'butter',
-            householdId: 'hh-1',
-            name: 'Butter',
-            quantity: 1,
-            storageLocationId: 'fridge',
-            createdAt: DateTime.utc(2026),
-            updatedAt: DateTime.utc(2026),
-          ),
-        ];
-      addTearDown(inventory.dispose);
-
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            authStateProvider.overrideWith((ref) => AuthStatus.authenticated),
-            householdRepositoryProvider.overrideWithValue(household),
-            inventoryRepositoryProvider.overrideWithValue(inventory),
-          ],
-          child: const ZaikoApp(),
-        ),
+  testWidgets('an open location survives switching tabs and coming back', (
+    tester,
+  ) async {
+    // Regression: the location detail used to be pushed imperatively on the
+    // branch navigator, so leaving the inventory tab and returning dropped it
+    // back to the inventory root. As a declared sub-route it must stay put.
+    final household = FakeHouseholdRepository()
+      ..current = Household(
+        id: 'hh-1',
+        name: 'Lindenhof',
+        createdAt: DateTime.utc(2026),
       );
-      await tester.pumpAndSettle();
+    addTearDown(household.dispose);
 
-      // Inventory tab → open the fridge location.
-      await tester.tap(find.text('Inventory'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Fridge'));
-      await tester.pumpAndSettle();
-      expect(find.byType(LocationDetailPage), findsOneWidget);
-      expect(find.text('Butter'), findsOneWidget);
-
-      // Switch to Shopping, then back to Inventory.
-      await tester.tap(find.text('Shopping'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Inventory'));
-      await tester.pumpAndSettle();
-
-      // The fridge location is still open — not reset to the inventory root.
-      expect(find.byType(LocationDetailPage), findsOneWidget);
-      expect(find.text('Butter'), findsOneWidget);
-    },
-  );
-
-  testWidgets(
-    're-tapping the active inventory tab returns to its root',
-    (tester) async {
-      final household = FakeHouseholdRepository()
-        ..current = Household(
-          id: 'hh-1',
-          name: 'Lindenhof',
+    final inventory = FakeInventoryRepository()
+      ..locations = const [
+        StorageLocation(id: 'fridge', householdId: 'hh-1', name: 'Fridge'),
+      ]
+      ..items = [
+        InventoryItem(
+          id: 'butter',
+          householdId: 'hh-1',
+          name: 'Butter',
+          quantity: 1,
+          storageLocationId: 'fridge',
           createdAt: DateTime.utc(2026),
-        );
-      addTearDown(household.dispose);
-
-      final inventory = FakeInventoryRepository()
-        ..locations = const [
-          StorageLocation(id: 'fridge', householdId: 'hh-1', name: 'Fridge'),
-        ];
-      addTearDown(inventory.dispose);
-
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            authStateProvider.overrideWith((ref) => AuthStatus.authenticated),
-            householdRepositoryProvider.overrideWithValue(household),
-            inventoryRepositoryProvider.overrideWithValue(inventory),
-          ],
-          child: const ZaikoApp(),
+          updatedAt: DateTime.utc(2026),
         ),
+      ];
+    addTearDown(inventory.dispose);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith((ref) => AuthStatus.authenticated),
+          householdRepositoryProvider.overrideWithValue(household),
+          inventoryRepositoryProvider.overrideWithValue(inventory),
+        ],
+        child: const ZaikoApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // Inventory tab → open the fridge location.
+    await tester.tap(find.text('Inventory'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Fridge'));
+    await tester.pumpAndSettle();
+    expect(find.byType(LocationDetailPage), findsOneWidget);
+    expect(find.text('Butter'), findsOneWidget);
+
+    // Switch to Shopping, then back to Inventory.
+    await tester.tap(find.text('Shopping'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Inventory'));
+    await tester.pumpAndSettle();
+
+    // The fridge location is still open — not reset to the inventory root.
+    expect(find.byType(LocationDetailPage), findsOneWidget);
+    expect(find.text('Butter'), findsOneWidget);
+  });
+
+  testWidgets('re-tapping the active inventory tab returns to its root', (
+    tester,
+  ) async {
+    final household = FakeHouseholdRepository()
+      ..current = Household(
+        id: 'hh-1',
+        name: 'Lindenhof',
+        createdAt: DateTime.utc(2026),
       );
-      await tester.pumpAndSettle();
+    addTearDown(household.dispose);
 
-      await tester.tap(find.text('Inventory'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Fridge'));
-      await tester.pumpAndSettle();
-      expect(find.byType(LocationDetailPage), findsOneWidget);
+    final inventory = FakeInventoryRepository()
+      ..locations = const [
+        StorageLocation(id: 'fridge', householdId: 'hh-1', name: 'Fridge'),
+      ];
+    addTearDown(inventory.dispose);
 
-      // Tapping the already-active tab pops the branch back to its root.
-      await tester.tap(find.text('Inventory'));
-      await tester.pumpAndSettle();
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith((ref) => AuthStatus.authenticated),
+          householdRepositoryProvider.overrideWithValue(household),
+          inventoryRepositoryProvider.overrideWithValue(inventory),
+        ],
+        child: const ZaikoApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
 
-      expect(find.byType(LocationDetailPage), findsNothing);
-      expect(find.byType(InventoryPage), findsOneWidget);
-    },
-  );
+    await tester.tap(find.text('Inventory'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Fridge'));
+    await tester.pumpAndSettle();
+    expect(find.byType(LocationDetailPage), findsOneWidget);
+
+    // Tapping the already-active tab pops the branch back to its root.
+    await tester.tap(find.text('Inventory'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(LocationDetailPage), findsNothing);
+    expect(find.byType(InventoryPage), findsOneWidget);
+  });
 
   testWidgets('an active password recovery is routed to the reset screen', (
     tester,
