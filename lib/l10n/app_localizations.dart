@@ -644,6 +644,12 @@ abstract class AppLocalizations {
   /// **'Fresh'**
   String get inventoryStatFresh;
 
+  /// No description provided for @locationUnassignedName.
+  ///
+  /// In en, this message translates to:
+  /// **'No location'**
+  String get locationUnassignedName;
+
   /// No description provided for @locationSearchHint.
   ///
   /// In en, this message translates to:
@@ -1285,6 +1291,330 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'pack'**
   String get unitPackage;
+
+  /// No description provided for @itemFormAddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add item'**
+  String get itemFormAddTitle;
+
+  /// No description provided for @itemFormEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit item'**
+  String get itemFormEditTitle;
+
+  /// No description provided for @itemFormNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get itemFormNameLabel;
+
+  /// No description provided for @itemFormNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Milk'**
+  String get itemFormNameHint;
+
+  /// No description provided for @itemFormNameEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a name'**
+  String get itemFormNameEmpty;
+
+  /// No description provided for @itemFormQuantityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get itemFormQuantityLabel;
+
+  /// No description provided for @itemFormQuantityInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a quantity greater than 0'**
+  String get itemFormQuantityInvalid;
+
+  /// No description provided for @itemFormUnitLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get itemFormUnitLabel;
+
+  /// No description provided for @itemFormLocationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get itemFormLocationLabel;
+
+  /// No description provided for @itemFormCategoryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get itemFormCategoryLabel;
+
+  /// No description provided for @itemFormBestBeforeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Best before'**
+  String get itemFormBestBeforeLabel;
+
+  /// No description provided for @itemFormNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get itemFormNone;
+
+  /// No description provided for @itemFormAddButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add item'**
+  String get itemFormAddButton;
+
+  /// No description provided for @itemFormSaveButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get itemFormSaveButton;
+
+  /// No description provided for @itemFormAddedSnack.
+  ///
+  /// In en, this message translates to:
+  /// **'Item added'**
+  String get itemFormAddedSnack;
+
+  /// No description provided for @itemFormSavedSnack.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes saved'**
+  String get itemFormSavedSnack;
+
+  /// No description provided for @itemMovedToTrash.
+  ///
+  /// In en, this message translates to:
+  /// **'Moved to trash'**
+  String get itemMovedToTrash;
+
+  /// No description provided for @itemRestoredSnack.
+  ///
+  /// In en, this message translates to:
+  /// **'Item restored'**
+  String get itemRestoredSnack;
+
+  /// No description provided for @pickerLocationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose location'**
+  String get pickerLocationTitle;
+
+  /// No description provided for @pickerCategoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose category'**
+  String get pickerCategoryTitle;
+
+  /// No description provided for @pickerNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get pickerNone;
+
+  /// No description provided for @pickerNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get pickerNew;
+
+  /// No description provided for @pickerManage.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage'**
+  String get pickerManage;
+
+  /// No description provided for @taxonomyNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get taxonomyNameLabel;
+
+  /// No description provided for @taxonomyColorLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get taxonomyColorLabel;
+
+  /// No description provided for @taxonomyIconLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get taxonomyIconLabel;
+
+  /// No description provided for @taxonomyNewLocationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New location'**
+  String get taxonomyNewLocationTitle;
+
+  /// No description provided for @taxonomyEditLocationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit location'**
+  String get taxonomyEditLocationTitle;
+
+  /// No description provided for @taxonomyNewCategoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New category'**
+  String get taxonomyNewCategoryTitle;
+
+  /// No description provided for @taxonomyEditCategoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit category'**
+  String get taxonomyEditCategoryTitle;
+
+  /// No description provided for @taxonomyNameEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a name'**
+  String get taxonomyNameEmpty;
+
+  /// No description provided for @taxonomyCreateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get taxonomyCreateButton;
+
+  /// No description provided for @taxonomySaveButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get taxonomySaveButton;
+
+  /// No description provided for @manageLocationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage locations'**
+  String get manageLocationsTitle;
+
+  /// No description provided for @manageCategoriesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get manageCategoriesTitle;
+
+  /// No description provided for @manageAddLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Add location'**
+  String get manageAddLocation;
+
+  /// No description provided for @manageAddCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Add category'**
+  String get manageAddCategory;
+
+  /// No description provided for @manageLocationsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No storage locations yet.'**
+  String get manageLocationsEmpty;
+
+  /// No description provided for @manageCategoriesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No custom categories yet.'**
+  String get manageCategoriesEmpty;
+
+  /// No description provided for @manageEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get manageEdit;
+
+  /// No description provided for @manageDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get manageDelete;
+
+  /// No description provided for @manageDefaultBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get manageDefaultBadge;
+
+  /// No description provided for @manageDeleteLocationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete location?'**
+  String get manageDeleteLocationTitle;
+
+  /// No description provided for @manageDeleteCategoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete category?'**
+  String get manageDeleteCategoryTitle;
+
+  /// Warning in the delete-location/category dialog, counting affected items
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{This isn\'t used by any item yet.} =1{1 item will lose this assignment.} other{{count} items will lose this assignment.}}'**
+  String manageDeleteItemsWarning(int count);
+
+  /// No description provided for @manageDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get manageDeleteConfirm;
+
+  /// No description provided for @trashTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Trash'**
+  String get trashTitle;
+
+  /// No description provided for @trashSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed items are kept for 30 days, then deleted.'**
+  String get trashSubtitle;
+
+  /// No description provided for @trashEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Trash is empty.'**
+  String get trashEmpty;
+
+  /// No description provided for @trashRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get trashRestore;
+
+  /// No description provided for @inventoryTrashTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Trash'**
+  String get inventoryTrashTooltip;
+
+  /// No description provided for @inventoryErrorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get inventoryErrorGeneric;
+
+  /// No description provided for @inventoryErrorNotMember.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have access to this household.'**
+  String get inventoryErrorNotMember;
+
+  /// No description provided for @inventoryErrorNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This item no longer exists.'**
+  String get inventoryErrorNotFound;
 }
 
 class _AppLocalizationsDelegate

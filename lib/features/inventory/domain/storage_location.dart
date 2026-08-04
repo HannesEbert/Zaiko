@@ -21,4 +21,10 @@ abstract class StorageLocation with _$StorageLocation {
 
   factory StorageLocation.fromJson(Map<String, dynamic> json) =>
       _$StorageLocationFromJson(json);
+
+  /// Sentinel id for the synthetic bucket that groups items without a real
+  /// storage location in the grid. Never persisted — the presentation layer
+  /// resolves its localized name and the inventory providers map it to
+  /// `storageLocationId == null`.
+  static const String unassignedId = '__unassigned__';
 }

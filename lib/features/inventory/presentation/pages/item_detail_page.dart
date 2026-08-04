@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/l10n/l10n_extension.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -8,25 +9,83 @@ import '../../../../shared/widgets/card_list.dart';
 import '../../../../shared/widgets/status_pill.dart';
 import '../../../../shared/widgets/zaiko_buttons.dart';
 import '../../../../shared/widgets/zaiko_card.dart';
+import '../../application/inventory_providers.dart';
 import '../../application/inventory_view.dart';
+import '../inventory_error_message.dart';
 import '../inventory_labels.dart';
+import 'item_form_page.dart';
 
 /// Full-screen detail for a single inventory article.
 ///
-/// Reads the tapped [ResolvedItem]; editing (quantity, consume, remove) lands
-/// with E1.2, so those controls are still local-only no-ops here. Pushed on the
-/// root navigator so it covers the bottom navigation bar, matching the design.
-class ItemDetailPage extends StatefulWidget {
+/// Wires the E1.2 write path: the quantity stepper persists each change (0 =
+/// used up → trash), "consumed"/"remove" move the item to the trash, and the
+/// edit button opens [ItemFormPage]. Pushed on the root navigator so it covers
+/// the bottom navigation bar, matching the design.
+class ItemDetailPage extends ConsumerStatefulWidget {
   const ItemDetailPage(this.resolved, {super.key});
 
   final ResolvedItem resolved;
 
   @override
-  State<ItemDetailPage> createState() => _ItemDetailPageState();
+  ConsumerState<ItemDetailPage> createState() => _ItemDetailPageState();
 }
 
-class _ItemDetailPageState extends State<ItemDetailPage> {
+class _ItemDetailPageState extends ConsumerState<ItemDetailPage> {
   late int _quantity = widget.resolved.item.quantity.round();
+
+  String get _itemId => widget.resolved.item.id;
+
+  Future<void> _changeQuantity(int delta) async {
+    final next = (_quantity + delta).clamp(0, 99);
+    if (next == _quantity) return;
+    // Reaching zero means "used up": move to the trash instead of storing 0.
+    if (next == 0) {
+      await _moveToTrash();
+      return;
+    }
+    setState(() => _quantity = next);
+    final ok = await ref
+        .read(inventoryItemControllerProvider.notifier)
+        .setQuantity(id: _itemId, quantity: next);
+    if (!ok && mounted) _showError();
+  }
+
+  Future<void> _moveToTrash() async {
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    final l10n = context.l10n;
+    final ok = await ref
+        .read(inventoryItemControllerProvider.notifier)
+        .consume(_itemId);
+    if (!mounted) return;
+    if (ok) {
+      navigator.pop();
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(l10n.itemMovedToTrash)));
+    } else {
+      _showError();
+    }
+  }
+
+  Future<void> _edit() async {
+    final saved = await ItemFormPage.open(
+      context,
+      item: widget.resolved.item.copyWith(quantity: _quantity),
+    );
+    // After a successful edit the list reflects the change; leave the (now
+    // stale) detail snapshot and return to it.
+    if (saved == true && mounted) Navigator.of(context).pop();
+  }
+
+  void _showError() {
+    final error = ref.read(inventoryItemControllerProvider).error;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(content: Text(inventoryErrorMessage(context.l10n, error))),
+      );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +100,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
       body: SafeArea(
         child: Column(
           children: [
-            _TopBar(title: l10n.itemDetailHeader),
+            _TopBar(title: l10n.itemDetailHeader, onEdit: _edit),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(
@@ -61,7 +120,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                   ),
                   const SizedBox(height: 3),
                   Text(
-                    formatQuantity(l10n, item.quantity, item.unit),
+                    formatQuantity(l10n, _quantity, item.unit),
                     style: AppTypography.caption.copyWith(
                       color: colors.textSecondary,
                     ),
@@ -77,15 +136,12 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                       _QuantityRow(
                         label: l10n.itemDetailQuantity,
                         quantity: _quantity,
-                        onDecrement: () => setState(
-                          () => _quantity = (_quantity - 1).clamp(0, 99),
-                        ),
-                        onIncrement: () => setState(
-                          () => _quantity = (_quantity + 1).clamp(0, 99),
-                        ),
+                        onDecrement: () => _changeQuantity(-1),
+                        onIncrement: () => _changeQuantity(1),
                       ),
                       _DetailRow(
                         label: l10n.itemDetailLocation,
+                        onTap: _edit,
                         child: _ValueWithChevron(
                           value:
                               resolved.location?.name ?? l10n.itemDetailNoDate,
@@ -93,6 +149,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                       ),
                       _DetailRow(
                         label: l10n.itemDetailCategory,
+                        onTap: _edit,
                         child: resolved.category == null
                             ? _ValueWithChevron(value: l10n.itemDetailNoDate)
                             : StatusPill(
@@ -102,6 +159,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                       ),
                       _DetailRow(
                         label: l10n.itemDetailBestBefore,
+                        onTap: _edit,
                         child: _ValueWithChevron(
                           value: item.bestBefore == null
                               ? l10n.itemDetailNoDate
@@ -114,7 +172,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                   ZaikoPrimaryButton(
                     label: l10n.itemDetailMarkConsumed,
                     icon: Icons.check,
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: _moveToTrash,
                   ),
                   const SizedBox(height: AppSpacing.s2 + 2),
                   ZaikoSecondaryButton(
@@ -124,7 +182,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                   ),
                   const SizedBox(height: AppSpacing.s1),
                   TextButton.icon(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: _moveToTrash,
                     icon: Icon(
                       Icons.delete_outline,
                       size: 16,
@@ -149,9 +207,10 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
 }
 
 class _TopBar extends StatelessWidget {
-  const _TopBar({required this.title});
+  const _TopBar({required this.title, required this.onEdit});
 
   final String title;
+  final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +235,7 @@ class _TopBar extends StatelessWidget {
               color: colors.textSecondary,
             ),
           ),
-          _CircleButton(icon: Icons.edit_outlined, onTap: () {}),
+          _CircleButton(icon: Icons.edit_outlined, onTap: onEdit),
         ],
       ),
     );
@@ -239,29 +298,33 @@ class _PhotoPlaceholder extends StatelessWidget {
 }
 
 class _DetailRow extends StatelessWidget {
-  const _DetailRow({required this.label, required this.child});
+  const _DetailRow({required this.label, required this.child, this.onTap});
 
   final String label;
   final Widget child;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.s3 + 2,
-        vertical: AppSpacing.s3 + 2,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: AppTypography.body.copyWith(
-              color: context.colors.textStrong,
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.s3 + 2,
+          vertical: AppSpacing.s3 + 2,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label,
+              style: AppTypography.body.copyWith(
+                color: context.colors.textStrong,
+              ),
             ),
-          ),
-          child,
-        ],
+            child,
+          ],
+        ),
       ),
     );
   }

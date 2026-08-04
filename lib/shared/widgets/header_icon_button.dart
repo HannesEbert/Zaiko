@@ -14,6 +14,7 @@ class HeaderIconButton extends StatelessWidget {
     this.onTap,
     this.filled = false,
     this.showDot = false,
+    this.tooltip,
     super.key,
   });
 
@@ -22,12 +23,16 @@ class HeaderIconButton extends StatelessWidget {
   final bool filled;
   final bool showDot;
 
+  /// Optional accessibility label shown on long-press / hover.
+  final String? tooltip;
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final radius = BorderRadius.circular(AppRadius.md);
+    final label = tooltip;
 
-    return Material(
+    final button = Material(
       color: filled ? colors.accent : colors.card,
       borderRadius: radius,
       child: InkWell(
@@ -66,5 +71,7 @@ class HeaderIconButton extends StatelessWidget {
         ),
       ),
     );
+
+    return label == null ? button : Tooltip(message: label, child: button);
   }
 }

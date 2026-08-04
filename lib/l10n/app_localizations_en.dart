@@ -311,6 +311,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get inventoryStatFresh => 'Fresh';
 
   @override
+  String get locationUnassignedName => 'No location';
+
+  @override
   String locationSearchHint(String name) {
     return 'Search in $name…';
   }
@@ -660,4 +663,177 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unitPackage => 'pack';
+
+  @override
+  String get itemFormAddTitle => 'Add item';
+
+  @override
+  String get itemFormEditTitle => 'Edit item';
+
+  @override
+  String get itemFormNameLabel => 'Name';
+
+  @override
+  String get itemFormNameHint => 'e.g. Milk';
+
+  @override
+  String get itemFormNameEmpty => 'Please enter a name';
+
+  @override
+  String get itemFormQuantityLabel => 'Quantity';
+
+  @override
+  String get itemFormQuantityInvalid => 'Enter a quantity greater than 0';
+
+  @override
+  String get itemFormUnitLabel => 'Unit';
+
+  @override
+  String get itemFormLocationLabel => 'Location';
+
+  @override
+  String get itemFormCategoryLabel => 'Category';
+
+  @override
+  String get itemFormBestBeforeLabel => 'Best before';
+
+  @override
+  String get itemFormNone => 'None';
+
+  @override
+  String get itemFormAddButton => 'Add item';
+
+  @override
+  String get itemFormSaveButton => 'Save changes';
+
+  @override
+  String get itemFormAddedSnack => 'Item added';
+
+  @override
+  String get itemFormSavedSnack => 'Changes saved';
+
+  @override
+  String get itemMovedToTrash => 'Moved to trash';
+
+  @override
+  String get itemRestoredSnack => 'Item restored';
+
+  @override
+  String get pickerLocationTitle => 'Choose location';
+
+  @override
+  String get pickerCategoryTitle => 'Choose category';
+
+  @override
+  String get pickerNone => 'None';
+
+  @override
+  String get pickerNew => 'New';
+
+  @override
+  String get pickerManage => 'Manage';
+
+  @override
+  String get taxonomyNameLabel => 'Name';
+
+  @override
+  String get taxonomyColorLabel => 'Color';
+
+  @override
+  String get taxonomyIconLabel => 'Icon';
+
+  @override
+  String get taxonomyNewLocationTitle => 'New location';
+
+  @override
+  String get taxonomyEditLocationTitle => 'Edit location';
+
+  @override
+  String get taxonomyNewCategoryTitle => 'New category';
+
+  @override
+  String get taxonomyEditCategoryTitle => 'Edit category';
+
+  @override
+  String get taxonomyNameEmpty => 'Please enter a name';
+
+  @override
+  String get taxonomyCreateButton => 'Create';
+
+  @override
+  String get taxonomySaveButton => 'Save';
+
+  @override
+  String get manageLocationsTitle => 'Storage locations';
+
+  @override
+  String get manageCategoriesTitle => 'Categories';
+
+  @override
+  String get manageAddLocation => 'Add location';
+
+  @override
+  String get manageAddCategory => 'Add category';
+
+  @override
+  String get manageLocationsEmpty => 'No storage locations yet.';
+
+  @override
+  String get manageCategoriesEmpty => 'No custom categories yet.';
+
+  @override
+  String get manageEdit => 'Edit';
+
+  @override
+  String get manageDelete => 'Delete';
+
+  @override
+  String get manageDefaultBadge => 'Default';
+
+  @override
+  String get manageDeleteLocationTitle => 'Delete location?';
+
+  @override
+  String get manageDeleteCategoryTitle => 'Delete category?';
+
+  @override
+  String manageDeleteItemsWarning(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items will lose this assignment.',
+      one: '1 item will lose this assignment.',
+      zero: 'This isn\'t used by any item yet.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get manageDeleteConfirm => 'Delete';
+
+  @override
+  String get trashTitle => 'Trash';
+
+  @override
+  String get trashSubtitle =>
+      'Removed items are kept for 30 days, then deleted.';
+
+  @override
+  String get trashEmpty => 'Trash is empty.';
+
+  @override
+  String get trashRestore => 'Restore';
+
+  @override
+  String get inventoryTrashTooltip => 'Trash';
+
+  @override
+  String get inventoryErrorGeneric => 'Something went wrong. Please try again.';
+
+  @override
+  String get inventoryErrorNotMember =>
+      'You don\'t have access to this household.';
+
+  @override
+  String get inventoryErrorNotFound => 'This item no longer exists.';
 }

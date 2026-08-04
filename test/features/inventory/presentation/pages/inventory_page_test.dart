@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zaiko/core/theme/app_theme.dart';
+import 'package:zaiko/features/auth/application/auth_providers.dart';
+import 'package:zaiko/features/auth/domain/auth_status.dart';
 import 'package:zaiko/features/household/application/households_providers.dart';
 import 'package:zaiko/features/household/domain/household.dart';
 import 'package:zaiko/features/inventory/application/inventory_providers.dart';
@@ -60,6 +62,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          authStateProvider.overrideWithValue(AuthStatus.authenticated),
           householdRepositoryProvider.overrideWithValue(household),
           inventoryRepositoryProvider.overrideWithValue(inventory),
         ],

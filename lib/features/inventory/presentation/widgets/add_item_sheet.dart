@@ -9,19 +9,30 @@ import '../../../../shared/widgets/card_list.dart';
 import '../../../../shared/widgets/icon_tile.dart';
 import '../../../../shared/widgets/section_label.dart';
 import '../../application/inventory_providers.dart';
+import '../pages/item_form_page.dart';
 
 /// How many quick "add again" chips the sheet shows at most.
 const int _quickAddLimit = 6;
 
+/// The sheet's outcome: open the manual item form, optionally pre-filled with a
+/// product [name] from an "add again" chip. Scan/search are E1.3 and dismiss.
+class _AddItemChoice {
+  const _AddItemChoice({this.name});
+
+  final String? name;
+}
+
 /// Shows the "Artikel hinzufügen" modal bottom sheet with the three ways to add
-/// an item plus quick "add again" chips.
-Future<void> showAddItemSheet(BuildContext context) {
-  return showModalBottomSheet<void>(
+/// an item plus quick "add again" chips, then opens the manual form when chosen.
+Future<void> showAddItemSheet(BuildContext context) async {
+  final choice = await showModalBottomSheet<_AddItemChoice>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (_) => const _AddItemSheet(),
   );
+  if (choice == null || !context.mounted) return;
+  await ItemFormPage.open(context, initialName: choice.name);
 }
 
 class _AddItemSheet extends ConsumerWidget {
@@ -104,7 +115,8 @@ class _AddItemSheet extends ConsumerWidget {
                     icon: Icons.edit_outlined,
                     title: l10n.addItemManualTitle,
                     subtitle: l10n.addItemManualSubtitle,
-                    onTap: () => Navigator.of(context).pop(),
+                    onTap: () =>
+                        Navigator.of(context).pop(const _AddItemChoice()),
                   ),
                 ],
               ),
@@ -119,7 +131,9 @@ class _AddItemSheet extends ConsumerWidget {
                     for (final product in recentNames)
                       _QuickAddChip(
                         label: product,
-                        onTap: () => Navigator.of(context).pop(),
+                        onTap: () => Navigator.of(
+                          context,
+                        ).pop(_AddItemChoice(name: product)),
                       ),
                   ],
                 ),

@@ -8,6 +8,7 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../shared/widgets/icon_tile.dart';
 import '../../../../shared/widgets/zaiko_card.dart';
 import '../../application/inventory_view.dart';
+import '../inventory_labels.dart';
 
 /// A single storage-location tile in the inventory grid: tinted icon, name,
 /// item count and — unless [showStatus] is false — a status badge summarizing
@@ -43,7 +44,7 @@ class StorageLocationCard extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.s3),
           Text(
-            summary.location.name,
+            storageLocationLabel(l10n, summary.location),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: AppTypography.headline.copyWith(color: colors.textPrimary),

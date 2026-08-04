@@ -65,6 +65,25 @@ class AppColors extends ThemeExtension<AppColors> {
   static Color categoryForKey(String? key) =>
       _categoryByKey[key] ?? categorySlate;
 
+  /// The palette keys offered when styling a category or storage location, in
+  /// display order. Every key is a value the `color` CHECK on both tables
+  /// accepts and that [categoryForKey] resolves.
+  static const List<String> paletteKeys = [
+    'blue',
+    'cyan',
+    'green',
+    'lime',
+    'amber',
+    'yellow',
+    'orange',
+    'red',
+    'pink',
+    'purple',
+    'slate',
+    'brown',
+    'beige',
+  ];
+
   static const Map<String, Color> _categoryByKey = {
     'blue': categoryBlue,
     'cyan': categoryCyan,

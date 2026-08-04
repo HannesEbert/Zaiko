@@ -12,6 +12,27 @@ abstract final class AppIcons {
   /// inventory icon for unknown or null keys.
   static IconData forKey(String? key) => _byKey[key] ?? _fallback;
 
+  /// The icon keys offered in the category / location editor, in display order.
+  /// Every key resolves through [forKey].
+  static const List<String> selectableKeys = [
+    'kitchen',
+    'ac_unit',
+    'inventory_2',
+    'local_drink',
+    'eco',
+    'set_meal',
+    'egg',
+    'bakery_dining',
+    'ramen_dining',
+    'cake',
+    'soup_kitchen',
+    'takeout_dining',
+    'cookie',
+    'coffee',
+    'local_bar',
+    'category',
+  ];
+
   static const IconData _fallback = Icons.inventory_2_outlined;
 
   static const Map<String, IconData> _byKey = {

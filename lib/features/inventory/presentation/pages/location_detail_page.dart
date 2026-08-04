@@ -11,6 +11,7 @@ import '../../../../shared/widgets/page_header.dart';
 import '../../../../shared/widgets/pill_field.dart';
 import '../../application/inventory_providers.dart';
 import '../../domain/storage_location.dart';
+import '../inventory_labels.dart';
 import '../widgets/inventory_item_row.dart';
 import '../widgets/inventory_message.dart';
 import 'item_detail_page.dart';
@@ -40,6 +41,7 @@ class LocationDetailPage extends ConsumerWidget {
     final l10n = context.l10n;
     final colors = context.colors;
     final items = ref.watch(itemsForLocationProvider(location.id));
+    final locationName = storageLocationLabel(l10n, location);
 
     return Scaffold(
       body: SafeArea(
@@ -79,7 +81,7 @@ class LocationDetailPage extends ConsumerWidget {
             ),
             const SizedBox(height: AppSpacing.s6),
             PageHeader(
-              title: location.name,
+              title: locationName,
               subtitle: l10n.inventoryItemsCount(
                 items.asData?.value.length ?? 0,
               ),
@@ -88,7 +90,7 @@ class LocationDetailPage extends ConsumerWidget {
             const SizedBox(height: AppSpacing.s5),
             PillField(
               icon: Icons.search,
-              hint: l10n.locationSearchHint(location.name),
+              hint: l10n.locationSearchHint(locationName),
               onTap: () {},
             ),
             const SizedBox(height: AppSpacing.s6),

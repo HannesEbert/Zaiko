@@ -482,12 +482,107 @@ final class RecentlyAddedItemsProvider
 String _$recentlyAddedItemsHash() =>
     r'2fadc98350cdec53831b1c96683c7a5f64e62c02';
 
-/// The items stored in [locationId].
+/// The household's soft-deleted items — the 30-day trash, newest removal first.
+
+@ProviderFor(deletedItems)
+final deletedItemsProvider = DeletedItemsProvider._();
+
+/// The household's soft-deleted items — the 30-day trash, newest removal first.
+
+final class DeletedItemsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<InventoryItem>>,
+          List<InventoryItem>,
+          FutureOr<List<InventoryItem>>
+        >
+    with
+        $FutureModifier<List<InventoryItem>>,
+        $FutureProvider<List<InventoryItem>> {
+  /// The household's soft-deleted items — the 30-day trash, newest removal first.
+  DeletedItemsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'deletedItemsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$deletedItemsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<InventoryItem>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<InventoryItem>> create(Ref ref) {
+    return deletedItems(ref);
+  }
+}
+
+String _$deletedItemsHash() => r'a3b42d77e90e753c8b371b67995d7d916a178a14';
+
+/// Trash items joined with their category and location for the trash screen.
+
+@ProviderFor(resolvedDeletedItems)
+final resolvedDeletedItemsProvider = ResolvedDeletedItemsProvider._();
+
+/// Trash items joined with their category and location for the trash screen.
+
+final class ResolvedDeletedItemsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<ResolvedItem>>,
+          List<ResolvedItem>,
+          FutureOr<List<ResolvedItem>>
+        >
+    with
+        $FutureModifier<List<ResolvedItem>>,
+        $FutureProvider<List<ResolvedItem>> {
+  /// Trash items joined with their category and location for the trash screen.
+  ResolvedDeletedItemsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'resolvedDeletedItemsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$resolvedDeletedItemsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<ResolvedItem>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<ResolvedItem>> create(Ref ref) {
+    return resolvedDeletedItems(ref);
+  }
+}
+
+String _$resolvedDeletedItemsHash() =>
+    r'22519b292520c03fa9bb39a003bdeab1aa5c6440';
+
+/// The items stored in [locationId]. [StorageLocation.unassignedId] selects the
+/// items that have no storage location.
 
 @ProviderFor(itemsForLocation)
 final itemsForLocationProvider = ItemsForLocationFamily._();
 
-/// The items stored in [locationId].
+/// The items stored in [locationId]. [StorageLocation.unassignedId] selects the
+/// items that have no storage location.
 
 final class ItemsForLocationProvider
     extends
@@ -499,7 +594,8 @@ final class ItemsForLocationProvider
     with
         $FutureModifier<List<ResolvedItem>>,
         $FutureProvider<List<ResolvedItem>> {
-  /// The items stored in [locationId].
+  /// The items stored in [locationId]. [StorageLocation.unassignedId] selects the
+  /// items that have no storage location.
   ItemsForLocationProvider._({
     required ItemsForLocationFamily super.from,
     required String super.argument,
@@ -544,9 +640,10 @@ final class ItemsForLocationProvider
   }
 }
 
-String _$itemsForLocationHash() => r'da1eeaa57be5d618bc38768adc8d6616b1b05dab';
+String _$itemsForLocationHash() => r'376f973b9d435689e37546c72e05b5bae611b5f2';
 
-/// The items stored in [locationId].
+/// The items stored in [locationId]. [StorageLocation.unassignedId] selects the
+/// items that have no storage location.
 
 final class ItemsForLocationFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<ResolvedItem>>, String> {
@@ -559,7 +656,8 @@ final class ItemsForLocationFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// The items stored in [locationId].
+  /// The items stored in [locationId]. [StorageLocation.unassignedId] selects the
+  /// items that have no storage location.
 
   ItemsForLocationProvider call(String locationId) =>
       ItemsForLocationProvider._(argument: locationId, from: this);
@@ -568,12 +666,18 @@ final class ItemsForLocationFamily extends $Family
   String toString() => r'itemsForLocationProvider';
 }
 
-/// Per-location counts + attention flags for the inventory grid.
+/// Per-location counts + attention flags for the inventory grid. Items without
+/// a storage location are gathered into a trailing synthetic "unassigned"
+/// bucket, shown only when at least one such item exists so nothing added
+/// without a location silently disappears.
 
 @ProviderFor(locationSummaries)
 final locationSummariesProvider = LocationSummariesProvider._();
 
-/// Per-location counts + attention flags for the inventory grid.
+/// Per-location counts + attention flags for the inventory grid. Items without
+/// a storage location are gathered into a trailing synthetic "unassigned"
+/// bucket, shown only when at least one such item exists so nothing added
+/// without a location silently disappears.
 
 final class LocationSummariesProvider
     extends
@@ -585,7 +689,10 @@ final class LocationSummariesProvider
     with
         $FutureModifier<List<LocationSummary>>,
         $FutureProvider<List<LocationSummary>> {
-  /// Per-location counts + attention flags for the inventory grid.
+  /// Per-location counts + attention flags for the inventory grid. Items without
+  /// a storage location are gathered into a trailing synthetic "unassigned"
+  /// bucket, shown only when at least one such item exists so nothing added
+  /// without a location silently disappears.
   LocationSummariesProvider._()
     : super(
         from: null,
@@ -612,4 +719,213 @@ final class LocationSummariesProvider
   }
 }
 
-String _$locationSummariesHash() => r'fe11dae66547f2bea49d7f351cbe30ba548c293e';
+String _$locationSummariesHash() => r'9aa9eb15227aa1ab22fc3e836e1bdc70627f34f4';
+
+/// Drives create/edit/consume/restore for inventory items with loading/error
+/// state. The item list itself refreshes through the realtime [watchItems]
+/// stream, so only the trash (a one-shot load) is invalidated after a change.
+
+@ProviderFor(InventoryItemController)
+final inventoryItemControllerProvider = InventoryItemControllerProvider._();
+
+/// Drives create/edit/consume/restore for inventory items with loading/error
+/// state. The item list itself refreshes through the realtime [watchItems]
+/// stream, so only the trash (a one-shot load) is invalidated after a change.
+final class InventoryItemControllerProvider
+    extends $AsyncNotifierProvider<InventoryItemController, void> {
+  /// Drives create/edit/consume/restore for inventory items with loading/error
+  /// state. The item list itself refreshes through the realtime [watchItems]
+  /// stream, so only the trash (a one-shot load) is invalidated after a change.
+  InventoryItemControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'inventoryItemControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$inventoryItemControllerHash();
+
+  @$internal
+  @override
+  InventoryItemController create() => InventoryItemController();
+}
+
+String _$inventoryItemControllerHash() =>
+    r'634802701faf6e5536a8f4074a056f0bb0d06e35';
+
+/// Drives create/edit/consume/restore for inventory items with loading/error
+/// state. The item list itself refreshes through the realtime [watchItems]
+/// stream, so only the trash (a one-shot load) is invalidated after a change.
+
+abstract class _$InventoryItemController extends $AsyncNotifier<void> {
+  FutureOr<void> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<void>, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, void>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Drives create/rename/delete for the household's storage locations. Each
+/// change invalidates [storageLocationsProvider]; the item views derive from it
+/// and refresh in turn.
+///
+/// Kept alive: the UI only reaches it through `ref.read(...notifier)` and never
+/// watches it, so an autoDispose controller would be disposed during the async
+/// mutation and its post-`await` `ref.invalidate` would never fire.
+
+@ProviderFor(StorageLocationController)
+final storageLocationControllerProvider = StorageLocationControllerProvider._();
+
+/// Drives create/rename/delete for the household's storage locations. Each
+/// change invalidates [storageLocationsProvider]; the item views derive from it
+/// and refresh in turn.
+///
+/// Kept alive: the UI only reaches it through `ref.read(...notifier)` and never
+/// watches it, so an autoDispose controller would be disposed during the async
+/// mutation and its post-`await` `ref.invalidate` would never fire.
+final class StorageLocationControllerProvider
+    extends $AsyncNotifierProvider<StorageLocationController, void> {
+  /// Drives create/rename/delete for the household's storage locations. Each
+  /// change invalidates [storageLocationsProvider]; the item views derive from it
+  /// and refresh in turn.
+  ///
+  /// Kept alive: the UI only reaches it through `ref.read(...notifier)` and never
+  /// watches it, so an autoDispose controller would be disposed during the async
+  /// mutation and its post-`await` `ref.invalidate` would never fire.
+  StorageLocationControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'storageLocationControllerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$storageLocationControllerHash();
+
+  @$internal
+  @override
+  StorageLocationController create() => StorageLocationController();
+}
+
+String _$storageLocationControllerHash() =>
+    r'ed435aa4a9455130fa03b9d7916b7052c6bcb6d5';
+
+/// Drives create/rename/delete for the household's storage locations. Each
+/// change invalidates [storageLocationsProvider]; the item views derive from it
+/// and refresh in turn.
+///
+/// Kept alive: the UI only reaches it through `ref.read(...notifier)` and never
+/// watches it, so an autoDispose controller would be disposed during the async
+/// mutation and its post-`await` `ref.invalidate` would never fire.
+
+abstract class _$StorageLocationController extends $AsyncNotifier<void> {
+  FutureOr<void> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<void>, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, void>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Drives create/rename/delete for the household's custom categories (the
+/// app-wide defaults are global and not editable). Each change invalidates
+/// [categoriesProvider].
+///
+/// Kept alive for the same reason as [StorageLocationController]: nothing
+/// watches it, so autoDispose would drop it mid-mutation and skip the
+/// post-`await` `ref.invalidate`.
+
+@ProviderFor(CategoryController)
+final categoryControllerProvider = CategoryControllerProvider._();
+
+/// Drives create/rename/delete for the household's custom categories (the
+/// app-wide defaults are global and not editable). Each change invalidates
+/// [categoriesProvider].
+///
+/// Kept alive for the same reason as [StorageLocationController]: nothing
+/// watches it, so autoDispose would drop it mid-mutation and skip the
+/// post-`await` `ref.invalidate`.
+final class CategoryControllerProvider
+    extends $AsyncNotifierProvider<CategoryController, void> {
+  /// Drives create/rename/delete for the household's custom categories (the
+  /// app-wide defaults are global and not editable). Each change invalidates
+  /// [categoriesProvider].
+  ///
+  /// Kept alive for the same reason as [StorageLocationController]: nothing
+  /// watches it, so autoDispose would drop it mid-mutation and skip the
+  /// post-`await` `ref.invalidate`.
+  CategoryControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'categoryControllerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$categoryControllerHash();
+
+  @$internal
+  @override
+  CategoryController create() => CategoryController();
+}
+
+String _$categoryControllerHash() =>
+    r'21983a837372417bd9bcb97925595cf0c36b1223';
+
+/// Drives create/rename/delete for the household's custom categories (the
+/// app-wide defaults are global and not editable). Each change invalidates
+/// [categoriesProvider].
+///
+/// Kept alive for the same reason as [StorageLocationController]: nothing
+/// watches it, so autoDispose would drop it mid-mutation and skip the
+/// post-`await` `ref.invalidate`.
+
+abstract class _$CategoryController extends $AsyncNotifier<void> {
+  FutureOr<void> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<void>, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, void>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
