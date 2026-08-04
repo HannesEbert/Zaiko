@@ -219,6 +219,7 @@
   "inventoryStatExpiring": "Expiring soon",
   "inventoryStatExpired": "Expired",
   "inventoryStatFresh": "Fresh",
+  "locationUnassignedName": "No location",
   "locationSearchHint": "Search in {name}…",
   "@locationSearchHint": {
     "placeholders": {
@@ -445,5 +446,72 @@
   "unitPackage": "pack",
   "@unitPackage": {
     "description": "Short unit label for a packaged item"
-  }
+  },
+
+  "itemFormAddTitle": "Add item",
+  "itemFormEditTitle": "Edit item",
+  "itemFormNameLabel": "Name",
+  "itemFormNameHint": "e.g. Milk",
+  "itemFormNameEmpty": "Please enter a name",
+  "itemFormQuantityLabel": "Quantity",
+  "itemFormQuantityInvalid": "Enter a quantity greater than 0",
+  "itemFormUnitLabel": "Unit",
+  "itemFormLocationLabel": "Location",
+  "itemFormCategoryLabel": "Category",
+  "itemFormBestBeforeLabel": "Best before",
+  "itemFormNone": "None",
+  "itemFormAddButton": "Add item",
+  "itemFormSaveButton": "Save changes",
+  "itemFormAddedSnack": "Item added",
+  "itemFormSavedSnack": "Changes saved",
+  "itemMovedToTrash": "Moved to trash",
+  "itemRestoredSnack": "Item restored",
+
+  "pickerLocationTitle": "Choose location",
+  "pickerCategoryTitle": "Choose category",
+  "pickerNone": "None",
+  "pickerNew": "New",
+  "pickerManage": "Manage",
+
+  "taxonomyNameLabel": "Name",
+  "taxonomyColorLabel": "Color",
+  "taxonomyIconLabel": "Icon",
+  "taxonomyNewLocationTitle": "New location",
+  "taxonomyEditLocationTitle": "Edit location",
+  "taxonomyNewCategoryTitle": "New category",
+  "taxonomyEditCategoryTitle": "Edit category",
+  "taxonomyNameEmpty": "Please enter a name",
+  "taxonomyCreateButton": "Create",
+  "taxonomySaveButton": "Save",
+
+  "manageLocationsTitle": "Storage locations",
+  "manageCategoriesTitle": "Categories",
+  "manageAddLocation": "Add location",
+  "manageAddCategory": "Add category",
+  "manageLocationsEmpty": "No storage locations yet.",
+  "manageCategoriesEmpty": "No custom categories yet.",
+  "manageEdit": "Edit",
+  "manageDelete": "Delete",
+  "manageDefaultBadge": "Default",
+  "manageDeleteLocationTitle": "Delete location?",
+  "manageDeleteCategoryTitle": "Delete category?",
+  "manageDeleteItemsWarning": "{count, plural, =0{This isn't used by any item yet.} =1{1 item will lose this assignment.} other{{count} items will lose this assignment.}}",
+  "@manageDeleteItemsWarning": {
+    "description": "Warning in the delete-location/category dialog, counting affected items",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "manageDeleteConfirm": "Delete",
+  "commonCancel": "Cancel",
+
+  "trashTitle": "Trash",
+  "trashSubtitle": "Removed items are kept for 30 days, then deleted.",
+  "trashEmpty": "Trash is empty.",
+  "trashRestore": "Restore",
+  "inventoryTrashTooltip": "Trash",
+
+  "inventoryErrorGeneric": "Something went wrong. Please try again.",
+  "inventoryErrorNotMember": "You don't have access to this household.",
+  "inventoryErrorNotFound": "This item no longer exists."
 }

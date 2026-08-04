@@ -23,6 +23,7 @@ import '../widgets/inventory_message.dart';
 import '../widgets/storage_location_card.dart';
 import 'item_detail_page.dart';
 import 'location_detail_page.dart';
+import 'trash_page.dart';
 
 /// Inventory tab: the household food inventory, organized by storage location,
 /// with the quick-stats strip and the "recently added" list. Data comes from
@@ -67,6 +68,12 @@ class InventoryPage extends ConsumerWidget {
               subtitle: subtitle,
               trailing: Row(
                 children: [
+                  HeaderIconButton(
+                    icon: Icons.delete_outline,
+                    onTap: () => TrashPage.open(context),
+                    tooltip: l10n.inventoryTrashTooltip,
+                  ),
+                  const SizedBox(width: AppSpacing.s3),
                   HeaderIconButton(
                     icon: Icons.notifications_none,
                     showDot: true,

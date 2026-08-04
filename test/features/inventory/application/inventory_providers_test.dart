@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:zaiko/features/auth/application/auth_providers.dart';
+import 'package:zaiko/features/auth/domain/auth_status.dart';
 import 'package:zaiko/features/household/application/households_providers.dart';
 import 'package:zaiko/features/household/domain/household.dart';
 import 'package:zaiko/features/inventory/application/inventory_providers.dart';
@@ -85,6 +87,7 @@ void main() {
 
     container = ProviderContainer(
       overrides: [
+        authStateProvider.overrideWithValue(AuthStatus.authenticated),
         householdRepositoryProvider.overrideWithValue(household),
         inventoryRepositoryProvider.overrideWithValue(inventory),
       ],
@@ -200,6 +203,54 @@ void main() {
       expect(pantry.expiredCount, 1);
     },
   );
+
+  test('locationSummaries omits the unassigned bucket when every item has a '
+      'location', () async {
+    container.listen(locationSummariesProvider, (_, _) {}, onError: (_, _) {});
+    final summaries = await container.read(locationSummariesProvider.future);
+
+    expect(
+      summaries.any((s) => s.location.id == StorageLocation.unassignedId),
+      isFalse,
+    );
+  });
+
+  test('locationSummaries gathers items without a location into a trailing '
+      'unassigned bucket', () async {
+    inventory.items = [
+      ...inventory.items,
+      item(
+        'loose-soon',
+        location: null,
+        bestBefore: now.add(const Duration(days: 2)),
+      ),
+      item('loose-nodate', location: null),
+    ];
+
+    container.listen(locationSummariesProvider, (_, _) {}, onError: (_, _) {});
+    final summaries = await container.read(locationSummariesProvider.future);
+    final unassigned = summaries.last;
+
+    expect(unassigned.location.id, StorageLocation.unassignedId);
+    expect(unassigned.itemCount, 2);
+    expect(unassigned.soonCount, 1);
+  });
+
+  test('itemsForLocation with the unassigned id returns only items without a '
+      'location', () async {
+    inventory.items = [...inventory.items, item('loose', location: null)];
+
+    container.listen(
+      itemsForLocationProvider(StorageLocation.unassignedId),
+      (_, _) {},
+      onError: (_, _) {},
+    );
+    final loose = await container.read(
+      itemsForLocationProvider(StorageLocation.unassignedId).future,
+    );
+
+    expect(loose.map((r) => r.item.id), ['loose']);
+  });
 
   test(
     'a storage-locations load failure surfaces as an InventoryFailure',

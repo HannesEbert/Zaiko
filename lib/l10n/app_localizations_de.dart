@@ -314,6 +314,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get inventoryStatFresh => 'Frisch';
 
   @override
+  String get locationUnassignedName => 'Ohne Lagerort';
+
+  @override
   String locationSearchHint(String name) {
     return 'In $name suchen…';
   }
@@ -667,4 +670,178 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get unitPackage => 'Packung';
+
+  @override
+  String get itemFormAddTitle => 'Artikel hinzufügen';
+
+  @override
+  String get itemFormEditTitle => 'Artikel bearbeiten';
+
+  @override
+  String get itemFormNameLabel => 'Name';
+
+  @override
+  String get itemFormNameHint => 'z. B. Milch';
+
+  @override
+  String get itemFormNameEmpty => 'Bitte einen Namen eingeben';
+
+  @override
+  String get itemFormQuantityLabel => 'Menge';
+
+  @override
+  String get itemFormQuantityInvalid => 'Menge größer als 0 eingeben';
+
+  @override
+  String get itemFormUnitLabel => 'Einheit';
+
+  @override
+  String get itemFormLocationLabel => 'Lagerort';
+
+  @override
+  String get itemFormCategoryLabel => 'Kategorie';
+
+  @override
+  String get itemFormBestBeforeLabel => 'Mindesthaltbarkeit';
+
+  @override
+  String get itemFormNone => 'Keine';
+
+  @override
+  String get itemFormAddButton => 'Hinzufügen';
+
+  @override
+  String get itemFormSaveButton => 'Änderungen speichern';
+
+  @override
+  String get itemFormAddedSnack => 'Artikel hinzugefügt';
+
+  @override
+  String get itemFormSavedSnack => 'Änderungen gespeichert';
+
+  @override
+  String get itemMovedToTrash => 'In den Papierkorb verschoben';
+
+  @override
+  String get itemRestoredSnack => 'Artikel wiederhergestellt';
+
+  @override
+  String get pickerLocationTitle => 'Lagerort wählen';
+
+  @override
+  String get pickerCategoryTitle => 'Kategorie wählen';
+
+  @override
+  String get pickerNone => 'Keine';
+
+  @override
+  String get pickerNew => 'Neu';
+
+  @override
+  String get pickerManage => 'Verwalten';
+
+  @override
+  String get taxonomyNameLabel => 'Name';
+
+  @override
+  String get taxonomyColorLabel => 'Farbe';
+
+  @override
+  String get taxonomyIconLabel => 'Symbol';
+
+  @override
+  String get taxonomyNewLocationTitle => 'Neuer Lagerort';
+
+  @override
+  String get taxonomyEditLocationTitle => 'Lagerort bearbeiten';
+
+  @override
+  String get taxonomyNewCategoryTitle => 'Neue Kategorie';
+
+  @override
+  String get taxonomyEditCategoryTitle => 'Kategorie bearbeiten';
+
+  @override
+  String get taxonomyNameEmpty => 'Bitte einen Namen eingeben';
+
+  @override
+  String get taxonomyCreateButton => 'Erstellen';
+
+  @override
+  String get taxonomySaveButton => 'Speichern';
+
+  @override
+  String get manageLocationsTitle => 'Lagerorte';
+
+  @override
+  String get manageCategoriesTitle => 'Kategorien';
+
+  @override
+  String get manageAddLocation => 'Lagerort hinzufügen';
+
+  @override
+  String get manageAddCategory => 'Kategorie hinzufügen';
+
+  @override
+  String get manageLocationsEmpty => 'Noch keine Lagerorte.';
+
+  @override
+  String get manageCategoriesEmpty => 'Noch keine eigenen Kategorien.';
+
+  @override
+  String get manageEdit => 'Bearbeiten';
+
+  @override
+  String get manageDelete => 'Löschen';
+
+  @override
+  String get manageDefaultBadge => 'Standard';
+
+  @override
+  String get manageDeleteLocationTitle => 'Lagerort löschen?';
+
+  @override
+  String get manageDeleteCategoryTitle => 'Kategorie löschen?';
+
+  @override
+  String manageDeleteItemsWarning(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Artikel verlieren diese Zuordnung.',
+      one: '1 Artikel verliert diese Zuordnung.',
+      zero: 'Wird noch von keinem Artikel verwendet.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get manageDeleteConfirm => 'Löschen';
+
+  @override
+  String get trashTitle => 'Papierkorb';
+
+  @override
+  String get trashSubtitle =>
+      'Entfernte Artikel werden 30 Tage aufbewahrt und dann gelöscht.';
+
+  @override
+  String get trashEmpty => 'Der Papierkorb ist leer.';
+
+  @override
+  String get trashRestore => 'Wiederherstellen';
+
+  @override
+  String get inventoryTrashTooltip => 'Papierkorb';
+
+  @override
+  String get inventoryErrorGeneric =>
+      'Etwas ist schiefgelaufen. Bitte erneut versuchen.';
+
+  @override
+  String get inventoryErrorNotMember =>
+      'Du hast keinen Zugriff auf diesen Haushalt.';
+
+  @override
+  String get inventoryErrorNotFound => 'Dieser Artikel existiert nicht mehr.';
 }

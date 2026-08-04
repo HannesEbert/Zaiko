@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/status_pill.dart';
 import '../domain/expiry.dart';
+import '../domain/inventory_unit.dart';
+import '../domain/storage_location.dart';
 
 /// Presentation-only formatting for inventory data: turns raw quantities,
 /// units and dates into the localized labels the screens render. Kept out of
@@ -24,6 +26,18 @@ String? _unitLabel(AppLocalizations l10n, String? unit) => switch (unit) {
   // g / kg / ml / l are language-neutral symbols shown as-is.
   _ => unit,
 };
+
+/// The picker label for a fixed [InventoryUnit]: the language-neutral symbol
+/// for g/kg/ml/l, the localized word for piece/package.
+String inventoryUnitLabel(AppLocalizations l10n, InventoryUnit unit) =>
+    switch (unit) {
+      InventoryUnit.piece => l10n.unitPiece,
+      InventoryUnit.package => l10n.unitPackage,
+      InventoryUnit.gram ||
+      InventoryUnit.kilogram ||
+      InventoryUnit.milliliter ||
+      InventoryUnit.liter => unit.key,
+    };
 
 /// Short expiry label for rails and list rows ("Morgen", "In 2 Tagen",
 /// "Abgelaufen"); null when the item has no best-before date.
@@ -74,6 +88,13 @@ String addedRelativeLabel(
 /// Full best-before date for the item detail screen ("17.07.2026").
 String formatBestBefore(DateTime bestBefore) =>
     DateFormat('dd.MM.yyyy').format(bestBefore);
+
+/// The display name for a storage location, resolving the synthetic
+/// "unassigned" bucket ([StorageLocation.unassignedId]) to its localized label.
+String storageLocationLabel(AppLocalizations l10n, StorageLocation location) =>
+    location.id == StorageLocation.unassignedId
+    ? l10n.locationUnassignedName
+    : location.name;
 
 /// The uppercase first letter of a household [name] for the header avatar, or
 /// "?" while the name is unknown.
