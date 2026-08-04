@@ -13,6 +13,7 @@ import '../../features/household/application/households_providers.dart';
 import '../../features/household/presentation/pages/join_household_page.dart';
 import '../../features/household/presentation/pages/onboarding_page.dart';
 import '../../features/inventory/presentation/pages/inventory_page.dart';
+import '../../features/inventory/presentation/pages/location_detail_page.dart';
 import '../../features/profile/presentation/pages/help_page.dart';
 import '../../features/profile/presentation/pages/household_link_page.dart';
 import '../../features/profile/presentation/pages/personal_data_page.dart';
@@ -155,6 +156,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path: HomePage.routePath,
                 name: HomePage.routeName,
                 builder: (context, state) => const HomePage(),
+                routes: [
+                  GoRoute(
+                    path: LocationDetailPage.routeSegment,
+                    name: LocationDetailPage.homeRouteName,
+                    builder: (context, state) => LocationDetailPage(
+                      locationId: state.pathParameters['locationId']!,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -164,6 +174,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path: InventoryPage.routePath,
                 name: InventoryPage.routeName,
                 builder: (context, state) => const InventoryPage(),
+                routes: [
+                  GoRoute(
+                    path: LocationDetailPage.routeSegment,
+                    name: LocationDetailPage.inventoryRouteName,
+                    builder: (context, state) => LocationDetailPage(
+                      locationId: state.pathParameters['locationId']!,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
