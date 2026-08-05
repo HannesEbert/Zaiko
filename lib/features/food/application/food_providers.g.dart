@@ -8,57 +8,194 @@ part of 'food_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Trivial provider that confirms the `riverpod_generator` pipeline works.
-///
-/// Returns an empty sample list for now; it is replaced by a real,
-/// repository-backed provider once the data layer lands.
+/// Resolves products from Open Food Facts. Overridden with a fake in tests.
 
-@ProviderFor(sampleFoods)
-final sampleFoodsProvider = SampleFoodsProvider._();
+@ProviderFor(foodLookupRepository)
+final foodLookupRepositoryProvider = FoodLookupRepositoryProvider._();
 
-/// Trivial provider that confirms the `riverpod_generator` pipeline works.
-///
-/// Returns an empty sample list for now; it is replaced by a real,
-/// repository-backed provider once the data layer lands.
+/// Resolves products from Open Food Facts. Overridden with a fake in tests.
 
-final class SampleFoodsProvider
-    extends $FunctionalProvider<List<Food>, List<Food>, List<Food>>
-    with $Provider<List<Food>> {
-  /// Trivial provider that confirms the `riverpod_generator` pipeline works.
-  ///
-  /// Returns an empty sample list for now; it is replaced by a real,
-  /// repository-backed provider once the data layer lands.
-  SampleFoodsProvider._()
+final class FoodLookupRepositoryProvider
+    extends
+        $FunctionalProvider<
+          FoodLookupRepository,
+          FoodLookupRepository,
+          FoodLookupRepository
+        >
+    with $Provider<FoodLookupRepository> {
+  /// Resolves products from Open Food Facts. Overridden with a fake in tests.
+  FoodLookupRepositoryProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'sampleFoodsProvider',
+        name: r'foodLookupRepositoryProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$sampleFoodsHash();
+  String debugGetCreateSourceHash() => _$foodLookupRepositoryHash();
 
   @$internal
   @override
-  $ProviderElement<List<Food>> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $ProviderElement<FoodLookupRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
-  List<Food> create(Ref ref) {
-    return sampleFoods(ref);
+  FoodLookupRepository create(Ref ref) {
+    return foodLookupRepository(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<Food> value) {
+  Override overrideWithValue(FoodLookupRepository value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<List<Food>>(value),
+      providerOverride: $SyncValueProvider<FoodLookupRepository>(value),
     );
   }
 }
 
-String _$sampleFoodsHash() => r'a47f1d2bbf745a97238915708259571fb1461255';
+String _$foodLookupRepositoryHash() =>
+    r'be5843738f4b0110b4989d73c8a37760328c3867';
+
+/// The household-visible product catalog (`foods` table). Overridden in tests.
+
+@ProviderFor(foodCatalogRepository)
+final foodCatalogRepositoryProvider = FoodCatalogRepositoryProvider._();
+
+/// The household-visible product catalog (`foods` table). Overridden in tests.
+
+final class FoodCatalogRepositoryProvider
+    extends
+        $FunctionalProvider<
+          FoodCatalogRepository,
+          FoodCatalogRepository,
+          FoodCatalogRepository
+        >
+    with $Provider<FoodCatalogRepository> {
+  /// The household-visible product catalog (`foods` table). Overridden in tests.
+  FoodCatalogRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'foodCatalogRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$foodCatalogRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<FoodCatalogRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  FoodCatalogRepository create(Ref ref) {
+    return foodCatalogRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(FoodCatalogRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<FoodCatalogRepository>(value),
+    );
+  }
+}
+
+String _$foodCatalogRepositoryHash() =>
+    r'd6c70f2ebb470efdf6f1111bb08a854a4bd600c8';
+
+/// Orchestrates product resolution for the add flow: Open Food Facts lookup
+/// plus caching into the shared `foods` catalog. Methods return the resolved
+/// [Food] (or null / an empty list on a catalog miss) and throw [FoodFailure]
+/// on transport errors, which the UI maps to a message.
+///
+/// Kept alive: it is only reached through `ref.read(...notifier)` and never
+/// watched, so an autoDispose notifier could be disposed during the OFF request
+/// and its post-`await` `ref.read` of the catalog repository would then throw.
+
+@ProviderFor(ProductResolver)
+final productResolverProvider = ProductResolverProvider._();
+
+/// Orchestrates product resolution for the add flow: Open Food Facts lookup
+/// plus caching into the shared `foods` catalog. Methods return the resolved
+/// [Food] (or null / an empty list on a catalog miss) and throw [FoodFailure]
+/// on transport errors, which the UI maps to a message.
+///
+/// Kept alive: it is only reached through `ref.read(...notifier)` and never
+/// watched, so an autoDispose notifier could be disposed during the OFF request
+/// and its post-`await` `ref.read` of the catalog repository would then throw.
+final class ProductResolverProvider
+    extends $NotifierProvider<ProductResolver, void> {
+  /// Orchestrates product resolution for the add flow: Open Food Facts lookup
+  /// plus caching into the shared `foods` catalog. Methods return the resolved
+  /// [Food] (or null / an empty list on a catalog miss) and throw [FoodFailure]
+  /// on transport errors, which the UI maps to a message.
+  ///
+  /// Kept alive: it is only reached through `ref.read(...notifier)` and never
+  /// watched, so an autoDispose notifier could be disposed during the OFF request
+  /// and its post-`await` `ref.read` of the catalog repository would then throw.
+  ProductResolverProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'productResolverProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$productResolverHash();
+
+  @$internal
+  @override
+  ProductResolver create() => ProductResolver();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+}
+
+String _$productResolverHash() => r'914801bc0906423dd4f33efb0c2eeb79d4fdbb2e';
+
+/// Orchestrates product resolution for the add flow: Open Food Facts lookup
+/// plus caching into the shared `foods` catalog. Methods return the resolved
+/// [Food] (or null / an empty list on a catalog miss) and throw [FoodFailure]
+/// on transport errors, which the UI maps to a message.
+///
+/// Kept alive: it is only reached through `ref.read(...notifier)` and never
+/// watched, so an autoDispose notifier could be disposed during the OFF request
+/// and its post-`await` `ref.read` of the catalog repository would then throw.
+
+abstract class _$ProductResolver extends $Notifier<void> {
+  void build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<void, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<void, void>,
+              void,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

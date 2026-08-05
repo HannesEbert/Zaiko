@@ -17,7 +17,7 @@ mixin _$Food {
 
 /// Client-generated UUID. Never reuse an external product's id — see
 /// [Food.create], which mints one.
- String get id; String get name; FoodSource get source; DateTime get createdAt; DateTime get updatedAt; String? get brand; String? get barcode; String? get imageUrl; String? get householdId; DateTime? get deletedAt;
+ String get id; String get name; FoodSource get source;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt; String? get brand; String? get barcode;@JsonKey(name: 'image_url') String? get imageUrl;@JsonKey(name: 'household_id') String? get householdId;@JsonKey(name: 'deleted_at') DateTime? get deletedAt;
 /// Create a copy of Food
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -50,7 +50,7 @@ abstract mixin class $FoodCopyWith<$Res>  {
   factory $FoodCopyWith(Food value, $Res Function(Food) _then) = _$FoodCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, FoodSource source, DateTime createdAt, DateTime updatedAt, String? brand, String? barcode, String? imageUrl, String? householdId, DateTime? deletedAt
+ String id, String name, FoodSource source,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt, String? brand, String? barcode,@JsonKey(name: 'image_url') String? imageUrl,@JsonKey(name: 'household_id') String? householdId,@JsonKey(name: 'deleted_at') DateTime? deletedAt
 });
 
 
@@ -164,7 +164,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  FoodSource source,  DateTime createdAt,  DateTime updatedAt,  String? brand,  String? barcode,  String? imageUrl,  String? householdId,  DateTime? deletedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  FoodSource source, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt,  String? brand,  String? barcode, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'household_id')  String? householdId, @JsonKey(name: 'deleted_at')  DateTime? deletedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Food() when $default != null:
 return $default(_that.id,_that.name,_that.source,_that.createdAt,_that.updatedAt,_that.brand,_that.barcode,_that.imageUrl,_that.householdId,_that.deletedAt);case _:
@@ -185,7 +185,7 @@ return $default(_that.id,_that.name,_that.source,_that.createdAt,_that.updatedAt
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  FoodSource source,  DateTime createdAt,  DateTime updatedAt,  String? brand,  String? barcode,  String? imageUrl,  String? householdId,  DateTime? deletedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  FoodSource source, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt,  String? brand,  String? barcode, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'household_id')  String? householdId, @JsonKey(name: 'deleted_at')  DateTime? deletedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Food():
 return $default(_that.id,_that.name,_that.source,_that.createdAt,_that.updatedAt,_that.brand,_that.barcode,_that.imageUrl,_that.householdId,_that.deletedAt);case _:
@@ -205,7 +205,7 @@ return $default(_that.id,_that.name,_that.source,_that.createdAt,_that.updatedAt
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  FoodSource source,  DateTime createdAt,  DateTime updatedAt,  String? brand,  String? barcode,  String? imageUrl,  String? householdId,  DateTime? deletedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  FoodSource source, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt,  String? brand,  String? barcode, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'household_id')  String? householdId, @JsonKey(name: 'deleted_at')  DateTime? deletedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Food() when $default != null:
 return $default(_that.id,_that.name,_that.source,_that.createdAt,_that.updatedAt,_that.brand,_that.barcode,_that.imageUrl,_that.householdId,_that.deletedAt);case _:
@@ -220,7 +220,7 @@ return $default(_that.id,_that.name,_that.source,_that.createdAt,_that.updatedAt
 @JsonSerializable()
 
 class _Food implements Food {
-  const _Food({required this.id, required this.name, required this.source, required this.createdAt, required this.updatedAt, this.brand, this.barcode, this.imageUrl, this.householdId, this.deletedAt});
+  const _Food({required this.id, required this.name, required this.source, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt, this.brand, this.barcode, @JsonKey(name: 'image_url') this.imageUrl, @JsonKey(name: 'household_id') this.householdId, @JsonKey(name: 'deleted_at') this.deletedAt});
   factory _Food.fromJson(Map<String, dynamic> json) => _$FoodFromJson(json);
 
 /// Client-generated UUID. Never reuse an external product's id — see
@@ -228,13 +228,13 @@ class _Food implements Food {
 @override final  String id;
 @override final  String name;
 @override final  FoodSource source;
-@override final  DateTime createdAt;
-@override final  DateTime updatedAt;
+@override@JsonKey(name: 'created_at') final  DateTime createdAt;
+@override@JsonKey(name: 'updated_at') final  DateTime updatedAt;
 @override final  String? brand;
 @override final  String? barcode;
-@override final  String? imageUrl;
-@override final  String? householdId;
-@override final  DateTime? deletedAt;
+@override@JsonKey(name: 'image_url') final  String? imageUrl;
+@override@JsonKey(name: 'household_id') final  String? householdId;
+@override@JsonKey(name: 'deleted_at') final  DateTime? deletedAt;
 
 /// Create a copy of Food
 /// with the given fields replaced by the non-null parameter values.
@@ -269,7 +269,7 @@ abstract mixin class _$FoodCopyWith<$Res> implements $FoodCopyWith<$Res> {
   factory _$FoodCopyWith(_Food value, $Res Function(_Food) _then) = __$FoodCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, FoodSource source, DateTime createdAt, DateTime updatedAt, String? brand, String? barcode, String? imageUrl, String? householdId, DateTime? deletedAt
+ String id, String name, FoodSource source,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt, String? brand, String? barcode,@JsonKey(name: 'image_url') String? imageUrl,@JsonKey(name: 'household_id') String? householdId,@JsonKey(name: 'deleted_at') DateTime? deletedAt
 });
 
 

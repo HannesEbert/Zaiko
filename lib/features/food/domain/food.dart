@@ -27,13 +27,13 @@ abstract class Food with _$Food {
     required String id,
     required String name,
     required FoodSource source,
-    required DateTime createdAt,
-    required DateTime updatedAt,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
+    @JsonKey(name: 'updated_at') required DateTime updatedAt,
     String? brand,
     String? barcode,
-    String? imageUrl,
-    String? householdId,
-    DateTime? deletedAt,
+    @JsonKey(name: 'image_url') String? imageUrl,
+    @JsonKey(name: 'household_id') String? householdId,
+    @JsonKey(name: 'deleted_at') DateTime? deletedAt,
   }) = _Food;
 
   /// Creates a new [Food] with a freshly generated UUID and matching

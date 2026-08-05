@@ -844,4 +844,54 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get inventoryErrorNotFound => 'Dieser Artikel existiert nicht mehr.';
+
+  @override
+  String get scannerTitle => 'Barcode scannen';
+
+  @override
+  String get scannerHint => 'Kamera auf einen Produkt-Barcode richten';
+
+  @override
+  String get scannerTorchTooltip => 'Taschenlampe';
+
+  @override
+  String get scannerResolving => 'Produkt wird gesucht…';
+
+  @override
+  String get scannerPermissionTitle => 'Kamerazugriff erforderlich';
+
+  @override
+  String get scannerPermissionBody =>
+      'Zaiko braucht Kamerazugriff, um Barcodes zu scannen. Du kannst ihn in den Einstellungen aktivieren.';
+
+  @override
+  String get scannerOpenSettings => 'Einstellungen öffnen';
+
+  @override
+  String get scanNotFoundSnack =>
+      'Produkt nicht gefunden – bitte manuell eingeben.';
+
+  @override
+  String get productSearchTitle => 'Produkt suchen';
+
+  @override
+  String get productSearchHint => 'Nach Produktname suchen…';
+
+  @override
+  String get productSearchPrompt => 'Tippe, um Open Food Facts zu durchsuchen.';
+
+  @override
+  String get productSearchEmpty => 'Keine Produkte gefunden.';
+
+  @override
+  String get foodErrorNetwork =>
+      'Keine Verbindung zu Open Food Facts. Prüfe dein Netzwerk.';
+
+  @override
+  String get foodErrorRateLimited =>
+      'Zu viele Anfragen. Bitte versuche es gleich noch einmal.';
+
+  @override
+  String get foodErrorGeneric =>
+      'Produktdatenbank nicht erreichbar. Bitte versuche es erneut.';
 }

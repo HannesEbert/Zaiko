@@ -284,5 +284,23 @@
 
   "inventoryErrorGeneric": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
   "inventoryErrorNotMember": "Du hast keinen Zugriff auf diesen Haushalt.",
-  "inventoryErrorNotFound": "Dieser Artikel existiert nicht mehr."
+  "inventoryErrorNotFound": "Dieser Artikel existiert nicht mehr.",
+
+  "scannerTitle": "Barcode scannen",
+  "scannerHint": "Kamera auf einen Produkt-Barcode richten",
+  "scannerTorchTooltip": "Taschenlampe",
+  "scannerResolving": "Produkt wird gesucht…",
+  "scannerPermissionTitle": "Kamerazugriff erforderlich",
+  "scannerPermissionBody": "Zaiko braucht Kamerazugriff, um Barcodes zu scannen. Du kannst ihn in den Einstellungen aktivieren.",
+  "scannerOpenSettings": "Einstellungen öffnen",
+  "scanNotFoundSnack": "Produkt nicht gefunden – bitte manuell eingeben.",
+
+  "productSearchTitle": "Produkt suchen",
+  "productSearchHint": "Nach Produktname suchen…",
+  "productSearchPrompt": "Tippe, um Open Food Facts zu durchsuchen.",
+  "productSearchEmpty": "Keine Produkte gefunden.",
+
+  "foodErrorNetwork": "Keine Verbindung zu Open Food Facts. Prüfe dein Netzwerk.",
+  "foodErrorRateLimited": "Zu viele Anfragen. Bitte versuche es gleich noch einmal.",
+  "foodErrorGeneric": "Produktdatenbank nicht erreichbar. Bitte versuche es erneut."
 }

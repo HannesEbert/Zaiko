@@ -1615,6 +1615,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This item no longer exists.'**
   String get inventoryErrorNotFound;
+
+  /// No description provided for @scannerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan barcode'**
+  String get scannerTitle;
+
+  /// No description provided for @scannerHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Point the camera at a product barcode'**
+  String get scannerHint;
+
+  /// No description provided for @scannerTorchTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Torch'**
+  String get scannerTorchTooltip;
+
+  /// No description provided for @scannerResolving.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking up product…'**
+  String get scannerResolving;
+
+  /// No description provided for @scannerPermissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera access needed'**
+  String get scannerPermissionTitle;
+
+  /// No description provided for @scannerPermissionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Zaiko needs camera access to scan barcodes. You can enable it in Settings.'**
+  String get scannerPermissionBody;
+
+  /// No description provided for @scannerOpenSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get scannerOpenSettings;
+
+  /// No description provided for @scanNotFoundSnack.
+  ///
+  /// In en, this message translates to:
+  /// **'Product not found — enter it manually.'**
+  String get scanNotFoundSnack;
+
+  /// No description provided for @productSearchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Search product'**
+  String get productSearchTitle;
+
+  /// No description provided for @productSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by product name…'**
+  String get productSearchHint;
+
+  /// No description provided for @productSearchPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Type to search Open Food Facts.'**
+  String get productSearchPrompt;
+
+  /// No description provided for @productSearchEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No products found.'**
+  String get productSearchEmpty;
+
+  /// No description provided for @foodErrorNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection to Open Food Facts. Check your network.'**
+  String get foodErrorNetwork;
+
+  /// No description provided for @foodErrorRateLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many requests. Please try again in a moment.'**
+  String get foodErrorRateLimited;
+
+  /// No description provided for @foodErrorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach the product database. Please try again.'**
+  String get foodErrorGeneric;
 }
 
 class _AppLocalizationsDelegate
