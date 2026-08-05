@@ -226,6 +226,12 @@
       "name": { "type": "String" }
     }
   },
+  "inventoryAllItemsTitle": "All items",
+  "inventorySearchEmpty": "No matches",
+  "inventorySortTitle": "Sort",
+  "inventorySortRecent": "Recently added",
+  "inventorySortName": "Name A–Z",
+  "inventorySortExpiry": "Expiry date",
 
   "addItemTitle": "Add item",
   "addItemScanTitle": "Scan barcode",

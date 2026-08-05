@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/l10n/l10n_extension.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -21,6 +22,7 @@ import '../widgets/add_item_sheet.dart';
 import '../widgets/inventory_item_row.dart';
 import '../widgets/inventory_message.dart';
 import '../widgets/storage_location_card.dart';
+import 'all_items_page.dart';
 import 'item_detail_page.dart';
 import 'location_detail_page.dart';
 import 'trash_page.dart';
@@ -90,7 +92,7 @@ class InventoryPage extends ConsumerWidget {
             PillField(
               icon: Icons.search,
               hint: l10n.inventorySearchHint,
-              onTap: () {},
+              onTap: () => AllItemsPage.open(context),
             ),
             const SizedBox(height: AppSpacing.s6),
             summaries.when(
@@ -109,7 +111,7 @@ class InventoryPage extends ConsumerWidget {
             const SizedBox(height: AppSpacing.s6),
             SectionLabel(
               l10n.inventoryRecentlyAdded,
-              trailing: SeeAllLink(onTap: () {}),
+              trailing: SeeAllLink(onTap: () => AllItemsPage.open(context)),
             ),
             const SizedBox(height: AppSpacing.s3),
             recent.when(
@@ -167,7 +169,10 @@ class _LocationGrid extends StatelessWidget {
         for (final summary in locations)
           StorageLocationCard(
             summary,
-            onTap: () => LocationDetailPage.open(context, summary.location),
+            onTap: () => context.pushNamed(
+              LocationDetailPage.inventoryRouteName,
+              pathParameters: {'locationId': summary.location.id},
+            ),
           ),
       ],
     );

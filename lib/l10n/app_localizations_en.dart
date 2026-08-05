@@ -319,6 +319,24 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get inventoryAllItemsTitle => 'All items';
+
+  @override
+  String get inventorySearchEmpty => 'No matches';
+
+  @override
+  String get inventorySortTitle => 'Sort';
+
+  @override
+  String get inventorySortRecent => 'Recently added';
+
+  @override
+  String get inventorySortName => 'Name A–Z';
+
+  @override
+  String get inventorySortExpiry => 'Expiry date';
+
+  @override
   String get addItemTitle => 'Add item';
 
   @override

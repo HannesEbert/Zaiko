@@ -9,6 +9,7 @@ import '../domain/expiry.dart';
 import '../domain/inventory_item.dart';
 import '../domain/inventory_repository.dart';
 import '../domain/storage_location.dart';
+import 'inventory_query.dart';
 import 'inventory_view.dart';
 
 part 'inventory_providers.g.dart';
@@ -124,11 +125,12 @@ Future<List<ResolvedItem>> expiringSoonItems(Ref ref) async {
   return urgent;
 }
 
-/// The most recently added items (already sorted newest-first upstream).
+/// The items added within the last few days, newest first — the inventory
+/// tab's "recently added" list.
 @riverpod
 Future<List<ResolvedItem>> recentlyAddedItems(Ref ref) async {
   final resolved = await ref.watch(resolvedItemsProvider.future);
-  return resolved.take(_recentlyAddedLimit).toList();
+  return recentlyAddedWithin(resolved, DateTime.now());
 }
 
 /// The household's soft-deleted items — the 30-day trash, newest removal first.
@@ -234,8 +236,6 @@ LocationSummary _countInto(
     expiredCount: expired,
   );
 }
-
-const int _recentlyAddedLimit = 5;
 
 /// The active household's id, or throws an [InventoryFailure] when there is
 /// none — the guard every create action shares. Read synchronously: a mutation

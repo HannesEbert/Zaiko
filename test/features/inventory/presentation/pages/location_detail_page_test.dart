@@ -70,7 +70,7 @@ void main() {
             theme: AppTheme.light,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: const LocationDetailPage(location: pantry),
+            home: const LocationDetailPage(locationId: 'pantry'),
           ),
         ),
       );

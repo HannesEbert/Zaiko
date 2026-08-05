@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/l10n/l10n_extension.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -18,6 +19,7 @@ import '../../../household/application/households_providers.dart';
 import '../../../inventory/application/inventory_providers.dart';
 import '../../../inventory/application/inventory_view.dart';
 import '../../../inventory/presentation/inventory_labels.dart';
+import '../../../inventory/presentation/pages/all_items_page.dart';
 import '../../../inventory/presentation/pages/location_detail_page.dart';
 import '../../../inventory/presentation/widgets/add_item_sheet.dart';
 import '../../../inventory/presentation/widgets/inventory_message.dart';
@@ -83,7 +85,7 @@ class HomePage extends ConsumerWidget {
             PillField(
               icon: Icons.search,
               hint: l10n.homeSearchHint,
-              onTap: () {},
+              onTap: () => AllItemsPage.open(context),
             ),
             const SizedBox(height: AppSpacing.s6),
             SectionLabel(
@@ -138,7 +140,10 @@ class _LocationGrid extends StatelessWidget {
           StorageLocationCard(
             summary,
             showStatus: false,
-            onTap: () => LocationDetailPage.open(context, summary.location),
+            onTap: () => context.pushNamed(
+              LocationDetailPage.homeRouteName,
+              pathParameters: {'locationId': summary.location.id},
+            ),
           ),
       ],
     );
