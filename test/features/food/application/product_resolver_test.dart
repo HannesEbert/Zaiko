@@ -66,8 +66,9 @@ void main() {
 
     final result = await resolver().resolveByBarcode('111');
 
-    // The already-cached row wins over the freshly resolved one.
-    expect(result, same(cachedRow));
+    // The already-cached row wins over the freshly resolved one (returned as a
+    // value-equal copy, since the resolver re-attaches the transient size).
+    expect(result, cachedRow);
   });
 
   test('search delegates to the lookup repository', () async {
@@ -92,7 +93,45 @@ void main() {
 
     final result = await resolver().selectSearchResult(product);
 
-    expect(result, same(product));
+    expect(result, product);
     expect(catalog.cacheCalls, 1);
+  });
+
+  test(
+    'resolveByBarcode keeps the package size on an already-cached row',
+    () async {
+      final cachedRow = Food.create(
+        name: 'Milk',
+        source: FoodSource.openFoodFacts,
+        barcode: '111',
+      );
+      catalog.cached.add(cachedRow); // pre-cached, size-agnostic
+      lookup.barcodeResult = Food.create(
+        name: 'Milk',
+        source: FoodSource.openFoodFacts,
+        barcode: '111',
+      ).copyWith(packagedAmount: 500, packagedUnit: 'g');
+
+      final result = await resolver().resolveByBarcode('111');
+
+      // The cached row (same id) is returned, but with the fresh package size
+      // re-attached for the form prefill.
+      expect(result?.id, cachedRow.id);
+      expect(result?.packagedAmount, 500);
+      expect(result?.packagedUnit, 'g');
+    },
+  );
+
+  test('selectSearchResult keeps the package size', () async {
+    final product = Food.create(
+      name: 'Bread',
+      source: FoodSource.openFoodFacts,
+      barcode: '222',
+    ).copyWith(packagedAmount: 750, packagedUnit: 'g');
+
+    final result = await resolver().selectSearchResult(product);
+
+    expect(result.packagedAmount, 750);
+    expect(result.packagedUnit, 'g');
   });
 }

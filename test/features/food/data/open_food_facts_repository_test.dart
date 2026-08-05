@@ -144,6 +144,78 @@ void main() {
     });
   });
 
+  group('package quantity', () {
+    // Resolves a barcode whose product carries the given quantity fields.
+    Future<Food?> lookupWith(Map<String, dynamic> quantityFields) {
+      final repo = _repo(
+        (_) async => http.Response(
+          jsonEncode({
+            'status': 1,
+            'product': {'code': '1', 'product_name': 'X', ...quantityFields},
+          }),
+          200,
+        ),
+      );
+      return repo.lookupByBarcode('1');
+    }
+
+    test('keeps a sub-litre volume as millilitres', () async {
+      final food = await lookupWith({
+        'product_quantity': 330,
+        'product_quantity_unit': 'ml',
+      });
+      expect(food!.packagedAmount, 330);
+      expect(food.packagedUnit, 'ml');
+    });
+
+    test('scales a full litre up to l, and a kilo up to kg', () async {
+      final litre = await lookupWith({
+        'product_quantity': 1000,
+        'product_quantity_unit': 'ml',
+      });
+      expect(litre!.packagedAmount, 1);
+      expect(litre.packagedUnit, 'l');
+
+      final kilo = await lookupWith({
+        'product_quantity': 1500,
+        'product_quantity_unit': 'g',
+      });
+      expect(kilo!.packagedAmount, 1.5);
+      expect(kilo.packagedUnit, 'kg');
+    });
+
+    test('keeps a sub-kilo weight in grams', () async {
+      final food = await lookupWith({
+        'product_quantity': '500',
+        'product_quantity_unit': 'g',
+      });
+      expect(food!.packagedAmount, 500);
+      expect(food.packagedUnit, 'g');
+    });
+
+    test('converts centilitres to millilitres', () async {
+      final food = await lookupWith({
+        'product_quantity': 33,
+        'product_quantity_unit': 'cl',
+      });
+      expect(food!.packagedAmount, 330);
+      expect(food.packagedUnit, 'ml');
+    });
+
+    test('leaves the quantity unset when absent or an unknown unit', () async {
+      final none = await lookupWith(const {});
+      expect(none!.packagedAmount, isNull);
+      expect(none.packagedUnit, isNull);
+
+      final ounces = await lookupWith({
+        'product_quantity': 12,
+        'product_quantity_unit': 'oz',
+      });
+      expect(ounces!.packagedAmount, isNull);
+      expect(ounces.packagedUnit, isNull);
+    });
+  });
+
   group('resilience', () {
     test('retries once on a transient 503, then succeeds', () async {
       var calls = 0;

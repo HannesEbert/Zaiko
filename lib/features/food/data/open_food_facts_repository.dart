@@ -27,7 +27,8 @@ class OpenFoodFactsRepository implements FoodLookupRepository {
 
   /// Product fields requested from the API — everything the add form pre-fills,
   /// nothing more, to keep responses small.
-  static const String _fields = 'code,product_name,brands,image_url';
+  static const String _fields =
+      'code,product_name,brands,image_url,product_quantity,product_quantity_unit';
 
   /// Sort search results by scan count, so the best-known products rank first.
   static const String _popularitySort = 'unique_scans_n';
@@ -146,17 +147,61 @@ class OpenFoodFactsRepository implements FoodLookupRepository {
   }
 
   /// Maps an Open Food Facts product object to a [Food], or `null` when it has
-  /// no usable name (nothing to pre-fill from).
+  /// no usable name (nothing to pre-fill from). Attaches the parsed package
+  /// size (transient, for the add-form prefill) when Open Food Facts has one.
   Food? _foodFromProduct(Map<String, dynamic> product) {
     final name = (product['product_name'] as String?)?.trim();
     if (name == null || name.isEmpty) return null;
+    final packaged = _parsePackagedQuantity(product);
     return Food.create(
       name: name,
       source: FoodSource.openFoodFacts,
       brand: _firstBrand(product['brands'] as String?),
       barcode: (product['code'] as String?)?.trim(),
       imageUrl: _nullIfEmpty(product['image_url'] as String?),
-    );
+    ).copyWith(packagedAmount: packaged?.amount, packagedUnit: packaged?.unit);
+  }
+
+  /// Parses the product's package size into a display amount plus an
+  /// [InventoryUnit] key (`g`/`kg`/`ml`/`l`), or null when Open Food Facts has
+  /// no usable value (the form then keeps its default of 1 piece).
+  ///
+  /// Uses the structured `product_quantity` (grams or millilitres) +
+  /// `product_quantity_unit` rather than the free-text `quantity` string, and
+  /// scales up to the friendlier unit (1000 ml → 1 l, 1500 g → 1.5 kg).
+  ({num amount, String unit})? _parsePackagedQuantity(
+    Map<String, dynamic> product,
+  ) {
+    final raw = product['product_quantity'];
+    final amount = raw is num
+        ? raw
+        : raw is String
+        ? num.tryParse(raw.trim().replaceAll(',', '.'))
+        : null;
+    final unit = (product['product_quantity_unit'] as String?)
+        ?.trim()
+        .toLowerCase();
+    if (amount == null || amount <= 0 || unit == null || unit.isEmpty) {
+      return null;
+    }
+    return switch (unit) {
+      'cl' => _scale(amount * 10, 'ml'),
+      'ml' => _scale(amount, 'ml'),
+      'l' || 'liter' || 'litre' => (amount: amount, unit: 'l'),
+      'g' => _scale(amount, 'g'),
+      'kg' => (amount: amount, unit: 'kg'),
+      // Unknown units (oz, lb, …) have no InventoryUnit — let the form default.
+      _ => null,
+    };
+  }
+
+  /// Scales a base-unit amount up to the friendlier unit once it reaches 1000
+  /// (1000 ml → 1 l, 1500 g → 1.5 kg); smaller amounts stay as-is.
+  ({num amount, String unit}) _scale(num amount, String baseUnit) {
+    final bigUnit = baseUnit == 'ml' ? 'l' : 'kg';
+    return amount >= 1000
+        ? (amount: amount / 1000, unit: bigUnit)
+        : (amount: amount, unit: baseUnit);
   }
 
   /// Open Food Facts stores brands as a comma-separated list; the first entry

@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:zaiko/core/theme/app_theme.dart';
 import 'package:zaiko/features/auth/application/auth_providers.dart';
 import 'package:zaiko/features/auth/domain/auth_status.dart';
+import 'package:zaiko/features/food/domain/food.dart';
 import 'package:zaiko/features/household/application/households_providers.dart';
 import 'package:zaiko/features/household/domain/household.dart';
 import 'package:zaiko/features/inventory/application/inventory_providers.dart';
@@ -28,7 +29,7 @@ void main() {
       );
   });
 
-  Future<void> pumpForm(WidgetTester tester) async {
+  Future<void> pumpForm(WidgetTester tester, {Food? product}) async {
     await tester.binding.setSurfaceSize(const Size(500, 1000));
     addTearDown(() => tester.binding.setSurfaceSize(null));
     addTearDown(inventory.dispose);
@@ -45,7 +46,7 @@ void main() {
           theme: AppTheme.light,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const ItemFormPage(),
+          home: ItemFormPage(product: product),
         ),
       ),
     );
@@ -73,5 +74,25 @@ void main() {
     expect(inventory.items.single.name, 'Brot');
     // The default unit is applied when the user does not change it.
     expect(inventory.items.single.unit, 'piece');
+  });
+
+  testWidgets('pre-fills quantity and unit from an Open Food Facts product', (
+    tester,
+  ) async {
+    final product = Food.create(
+      name: 'Weizenmehl',
+      source: FoodSource.openFoodFacts,
+    ).copyWith(packagedAmount: 500, packagedUnit: 'g');
+
+    await pumpForm(tester, product: product);
+
+    await tester.tap(find.byType(ZaikoPrimaryButton));
+    await tester.pumpAndSettle();
+
+    expect(inventory.addItemCalls, 1);
+    // Name comes from the product; quantity and unit from its package size.
+    expect(inventory.items.single.name, 'Weizenmehl');
+    expect(inventory.items.single.quantity, 500);
+    expect(inventory.items.single.unit, 'g');
   });
 }

@@ -53,7 +53,10 @@ class ProductResolver extends _$ProductResolver {
         .read(foodLookupRepositoryProvider)
         .lookupByBarcode(barcode);
     if (product == null) return null;
-    return ref.read(foodCatalogRepositoryProvider).cacheOffProduct(product);
+    final cached = await ref
+        .read(foodCatalogRepositoryProvider)
+        .cacheOffProduct(product);
+    return _withPackageSize(cached, product);
   }
 
   /// Searches Open Food Facts by product name. Results are not cached until the
@@ -63,8 +66,20 @@ class ProductResolver extends _$ProductResolver {
 
   /// Caches the [product] the user picked from search results and returns the
   /// stored catalog row.
-  Future<Food> selectSearchResult(Food product) =>
-      ref.read(foodCatalogRepositoryProvider).cacheOffProduct(product);
+  Future<Food> selectSearchResult(Food product) async {
+    final cached = await ref
+        .read(foodCatalogRepositoryProvider)
+        .cacheOffProduct(product);
+    return _withPackageSize(cached, product);
+  }
+
+  /// Re-attaches the transient package size (used for the add-form prefill)
+  /// from the freshly resolved [source] onto the [cached] catalog row, which
+  /// caching returns size-agnostic (and with a different id on a dedupe hit).
+  Food _withPackageSize(Food cached, Food source) => cached.copyWith(
+    packagedAmount: source.packagedAmount,
+    packagedUnit: source.packagedUnit,
+  );
 
   /// Fallback for an unknown scanned barcode: creates a household-owned custom
   /// product carrying [name] and [barcode], so the barcode is still persisted

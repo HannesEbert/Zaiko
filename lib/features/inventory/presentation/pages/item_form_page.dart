@@ -102,10 +102,17 @@ class _ItemFormPageState extends ConsumerState<ItemFormPage> {
     _nameController = TextEditingController(
       text: item?.name ?? widget.product?.name ?? widget.initialName ?? '',
     );
+    // In add mode, seed the quantity and unit from the resolved product's
+    // package size (e.g. 500 g) when Open Food Facts has one; otherwise fall
+    // back to a single piece.
     _quantityController = TextEditingController(
-      text: item == null ? '1' : _formatQuantity(item.quantity),
+      text: item != null
+          ? _formatQuantity(item.quantity)
+          : _formatQuantity(widget.product?.packagedAmount ?? 1),
     );
-    _unit = InventoryUnit.fromKey(item?.unit) ?? InventoryUnit.piece;
+    _unit =
+        InventoryUnit.fromKey(item?.unit ?? widget.product?.packagedUnit) ??
+        InventoryUnit.piece;
     _categoryId = item?.categoryId;
     _storageLocationId = item?.storageLocationId;
     _bestBefore = item?.bestBefore;

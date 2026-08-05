@@ -66,6 +66,11 @@ settings" path.
   `INSERT … ON CONFLICT DO NOTHING` followed by a `SELECT`, never an update:
   RLS lets an authenticated user *insert* a shared (`household_id = null`) row
   but not *update* one (`is_household_member(null)` is false).
+- **Quantity prefill.** The add form is seeded with the product's package size
+  from Open Food Facts (`product_quantity` + `product_quantity_unit`, normalized
+  to the app's units, e.g. 1000 ml → 1 l). This is carried on `Food` as two
+  transient, non-persisted fields — a prefill hint only; the shared catalog stays
+  size-agnostic.
 - **Fallback.** An unknown barcode (or being offline) drops to the manual form
   with the barcode pre-filled; on save a household-scoped `Food`
   (`source = custom`) carrying that barcode is created and linked via

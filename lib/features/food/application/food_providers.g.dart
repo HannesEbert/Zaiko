@@ -171,7 +171,7 @@ final class ProductResolverProvider
   }
 }
 
-String _$productResolverHash() => r'914801bc0906423dd4f33efb0c2eeb79d4fdbb2e';
+String _$productResolverHash() => r'e4557479a325bce7af28ec6354b76b20571489bf';
 
 /// Orchestrates product resolution for the add flow: Open Food Facts lookup
 /// plus caching into the shared `foods` catalog. Methods return the resolved

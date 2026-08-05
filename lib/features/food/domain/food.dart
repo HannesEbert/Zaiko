@@ -34,6 +34,13 @@ abstract class Food with _$Food {
     @JsonKey(name: 'image_url') String? imageUrl,
     @JsonKey(name: 'household_id') String? householdId,
     @JsonKey(name: 'deleted_at') DateTime? deletedAt,
+
+    /// Package size resolved from Open Food Facts (e.g. amount `500`, unit
+    /// `g`), used only to pre-fill a new item's quantity and unit. Transient:
+    /// the shared `foods` catalog is size-agnostic, so these are never written
+    /// to or read from the database.
+    @JsonKey(includeToJson: false, includeFromJson: false) num? packagedAmount,
+    @JsonKey(includeToJson: false, includeFromJson: false) String? packagedUnit,
   }) = _Food;
 
   /// Creates a new [Food] with a freshly generated UUID and matching
