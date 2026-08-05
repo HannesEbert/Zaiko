@@ -75,7 +75,7 @@ auth.users ─┐
 | `storage_locations` | Per-household places (fridge, freezer, …) | seeded with a default set on household creation |
 | `categories` | Item categories | hybrid: global defaults (`household_id` null, `is_default`) + per-household custom |
 | `foods` | Product catalog | shared cache (`household_id` null) + per-household products; soft-deleted; shared Open Food Facts entries deduplicated by `barcode` (partial unique index) |
-| `inventory_items` | What's in stock | household-scoped; `quantity`/`unit`, `best_before`; soft-deleted |
+| `inventory_items` | What's in stock | household-scoped; per-unit size (`quantity`/`unit`, g/kg/ml/l or none) plus `count` (how many units, e.g. a 6-pack), `best_before`; soft-deleted |
 | `shopping_items` | The shopping list | household-scoped; `checked`; hard-deleted (no `deleted_at`) |
 
 `color` on storage locations and categories stores a stable palette key (e.g.

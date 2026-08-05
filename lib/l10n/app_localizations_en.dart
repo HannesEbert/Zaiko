@@ -346,7 +346,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get itemDetailHeader => 'Item';
 
   @override
-  String get itemDetailQuantity => 'Quantity';
+  String get itemDetailQuantity => 'Count';
 
   @override
   String get itemDetailLocation => 'Location';
@@ -684,6 +684,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get itemFormQuantityInvalid => 'Enter a quantity greater than 0';
+
+  @override
+  String get itemFormCountLabel => 'Count';
+
+  @override
+  String get itemFormCountInvalid => 'Enter a count of at least 1';
 
   @override
   String get itemFormUnitLabel => 'Unit';

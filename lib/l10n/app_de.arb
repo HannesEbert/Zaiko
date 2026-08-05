@@ -117,7 +117,7 @@
   "addItemAddAgain": "Erneut hinzufügen",
 
   "itemDetailHeader": "Artikel",
-  "itemDetailQuantity": "Menge",
+  "itemDetailQuantity": "Anzahl",
   "itemDetailLocation": "Lagerort",
   "itemDetailCategory": "Kategorie",
   "itemDetailBestBefore": "Mindesthaltbarkeit",
@@ -232,6 +232,8 @@
   "itemFormNameEmpty": "Bitte einen Namen eingeben",
   "itemFormQuantityLabel": "Menge",
   "itemFormQuantityInvalid": "Menge größer als 0 eingeben",
+  "itemFormCountLabel": "Anzahl",
+  "itemFormCountInvalid": "Anzahl von mindestens 1 eingeben",
   "itemFormUnitLabel": "Einheit",
   "itemFormLocationLabel": "Lagerort",
   "itemFormCategoryLabel": "Kategorie",

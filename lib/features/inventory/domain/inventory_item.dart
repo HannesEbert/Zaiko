@@ -16,14 +16,22 @@ abstract class InventoryItem with _$InventoryItem {
     required String id,
     @JsonKey(name: 'household_id') required String householdId,
     required String name,
+
+    /// The size of one unit (e.g. `1.5` for a 1.5 L bottle); a placeholder `1`
+    /// when the item has no measurable size (a plain count). See [unit].
     required num quantity,
     @JsonKey(name: 'created_at') required DateTime createdAt,
     @JsonKey(name: 'updated_at') required DateTime updatedAt,
 
+    /// How many units are stocked (the "Anzahl"). The total is `count` ×
+    /// [quantity]; a single item is `1`. Stepped down on the detail page.
+    @Default(1) int count,
+
     /// Optional link to the product catalog (`foods`); null for ad-hoc items.
     @JsonKey(name: 'food_id') String? foodId,
 
-    /// App-owned unit key (g/kg/ml/l/piece/package); null when unitless.
+    /// App-owned unit key for the per-unit size (g/kg/ml/l); null when the item
+    /// is a plain count with no measurable size.
     String? unit,
     @JsonKey(name: 'category_id') String? categoryId,
     @JsonKey(name: 'storage_location_id') String? storageLocationId,

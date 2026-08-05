@@ -60,13 +60,15 @@ abstract interface class InventoryRepository {
 
   /// Inserts a new item into [householdId] and returns the created row.
   ///
-  /// [foodId] optionally links the item to a `foods` catalog entry (an
+  /// [quantity]+[unit] are the size of one unit; [count] is how many units are
+  /// stocked. [foodId] optionally links the item to a `foods` catalog entry (an
   /// Open Food Facts product resolved via scan/search, or a custom product);
   /// null for an ad-hoc manual item.
   Future<InventoryItem> addItem({
     required String householdId,
     required String name,
     required num quantity,
+    required int count,
     String? unit,
     String? categoryId,
     String? storageLocationId,
@@ -79,14 +81,15 @@ abstract interface class InventoryRepository {
     required String id,
     required String name,
     required num quantity,
+    required int count,
     String? unit,
     String? categoryId,
     String? storageLocationId,
     DateTime? bestBefore,
   });
 
-  /// Sets the item's [quantity] (used by the detail-page stepper).
-  Future<void> setItemQuantity({required String id, required num quantity});
+  /// Sets the item's [count] (used by the detail-page stepper).
+  Future<void> setItemCount({required String id, required int count});
 
   /// Soft-deletes the item (moves it to the 30-day trash).
   Future<void> softDeleteItem(String id);

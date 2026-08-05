@@ -80,6 +80,7 @@ class SupabaseInventoryRepository implements InventoryRepository {
     required String householdId,
     required String name,
     required num quantity,
+    required int count,
     String? unit,
     String? categoryId,
     String? storageLocationId,
@@ -93,6 +94,7 @@ class SupabaseInventoryRepository implements InventoryRepository {
             'household_id': householdId,
             'name': name,
             'quantity': quantity,
+            'count': count,
             'unit': unit,
             'category_id': categoryId,
             'storage_location_id': storageLocationId,
@@ -113,6 +115,7 @@ class SupabaseInventoryRepository implements InventoryRepository {
     required String id,
     required String name,
     required num quantity,
+    required int count,
     String? unit,
     String? categoryId,
     String? storageLocationId,
@@ -124,6 +127,7 @@ class SupabaseInventoryRepository implements InventoryRepository {
           .update({
             'name': name,
             'quantity': quantity,
+            'count': count,
             'unit': unit,
             'category_id': categoryId,
             'storage_location_id': storageLocationId,
@@ -136,14 +140,11 @@ class SupabaseInventoryRepository implements InventoryRepository {
   }
 
   @override
-  Future<void> setItemQuantity({
-    required String id,
-    required num quantity,
-  }) async {
+  Future<void> setItemCount({required String id, required int count}) async {
     try {
       await _client
           .from('inventory_items')
-          .update({'quantity': quantity})
+          .update({'count': count})
           .eq('id', id);
     } on PostgrestException catch (e) {
       throw _mapError(e);

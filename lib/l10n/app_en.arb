@@ -237,7 +237,7 @@
   "addItemAddAgain": "Add again",
 
   "itemDetailHeader": "Item",
-  "itemDetailQuantity": "Quantity",
+  "itemDetailQuantity": "Count",
   "itemDetailLocation": "Location",
   "itemDetailCategory": "Category",
   "itemDetailBestBefore": "Best before",
@@ -455,6 +455,8 @@
   "itemFormNameEmpty": "Please enter a name",
   "itemFormQuantityLabel": "Quantity",
   "itemFormQuantityInvalid": "Enter a quantity greater than 0",
+  "itemFormCountLabel": "Count",
+  "itemFormCountInvalid": "Enter a count of at least 1",
   "itemFormUnitLabel": "Unit",
   "itemFormLocationLabel": "Location",
   "itemFormCategoryLabel": "Category",

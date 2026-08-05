@@ -756,7 +756,7 @@ final class InventoryItemControllerProvider
 }
 
 String _$inventoryItemControllerHash() =>
-    r'42bf7d35059655e7c93202ab59adae0b0350fe17';
+    r'aa2ed34c046d7d59e541aeb2c54cebe2ed908fd8';
 
 /// Drives create/edit/consume/restore for inventory items with loading/error
 /// state. The item list itself refreshes through the realtime [watchItems]

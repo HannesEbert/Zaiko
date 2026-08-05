@@ -349,7 +349,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get itemDetailHeader => 'Artikel';
 
   @override
-  String get itemDetailQuantity => 'Menge';
+  String get itemDetailQuantity => 'Anzahl';
 
   @override
   String get itemDetailLocation => 'Lagerort';
@@ -691,6 +691,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get itemFormQuantityInvalid => 'Menge größer als 0 eingeben';
+
+  @override
+  String get itemFormCountLabel => 'Anzahl';
+
+  @override
+  String get itemFormCountInvalid => 'Anzahl von mindestens 1 eingeben';
 
   @override
   String get itemFormUnitLabel => 'Einheit';

@@ -87,8 +87,11 @@ class _ItemFormPageState extends ConsumerState<ItemFormPage> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
   late final TextEditingController _quantityController;
+  late final TextEditingController _countController;
 
-  late InventoryUnit _unit;
+  /// The per-unit size's unit, or null when the item has no measurable size (a
+  /// plain count).
+  InventoryUnit? _unit;
   late String? _categoryId;
   late String? _storageLocationId;
   late DateTime? _bestBefore;
@@ -102,17 +105,21 @@ class _ItemFormPageState extends ConsumerState<ItemFormPage> {
     _nameController = TextEditingController(
       text: item?.name ?? widget.product?.name ?? widget.initialName ?? '',
     );
-    // In add mode, seed the quantity and unit from the resolved product's
-    // package size (e.g. 500 g) when Open Food Facts has one; otherwise fall
-    // back to a single piece.
+    // Size (per unit): from the edited item, else the OFF product's package
+    // size (e.g. 500 g); empty when there is no measurable size.
+    _unit = InventoryUnit.fromKey(item?.unit ?? widget.product?.packagedUnit);
     _quantityController = TextEditingController(
-      text: item != null
-          ? _formatQuantity(item.quantity)
-          : _formatQuantity(widget.product?.packagedAmount ?? 1),
+      text: _unit == null
+          ? ''
+          : _formatQuantity(
+              item != null
+                  ? item.quantity
+                  : (widget.product?.packagedAmount ?? 1),
+            ),
     );
-    _unit =
-        InventoryUnit.fromKey(item?.unit ?? widget.product?.packagedUnit) ??
-        InventoryUnit.piece;
+    // Count (how many units). OFF never knows the pack count, so a new product
+    // starts at 1 and the user bumps it (e.g. a 6-pack).
+    _countController = TextEditingController(text: '${item?.count ?? 1}');
     _categoryId = item?.categoryId;
     _storageLocationId = item?.storageLocationId;
     _bestBefore = item?.bestBefore;
@@ -122,6 +129,7 @@ class _ItemFormPageState extends ConsumerState<ItemFormPage> {
   void dispose() {
     _nameController.dispose();
     _quantityController.dispose();
+    _countController.dispose();
     super.dispose();
   }
 
@@ -173,7 +181,9 @@ class _ItemFormPageState extends ConsumerState<ItemFormPage> {
                     width: 96,
                     child: TextFormField(
                       controller: _quantityController,
-                      enabled: !isBusy,
+                      // The size only applies once a unit is picked; a plain
+                      // count leaves it empty and disabled.
+                      enabled: !isBusy && _unit != null,
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
@@ -183,8 +193,10 @@ class _ItemFormPageState extends ConsumerState<ItemFormPage> {
                       style: AppTypography.body.copyWith(
                         color: colors.textPrimary,
                       ),
-                      validator: (value) =>
-                          InventoryValidators.quantity(l10n, value),
+                      validator: _unit == null
+                          ? null
+                          : (value) =>
+                                InventoryValidators.quantity(l10n, value),
                     ),
                   ),
                   const SizedBox(width: AppSpacing.s3),
@@ -192,7 +204,35 @@ class _ItemFormPageState extends ConsumerState<ItemFormPage> {
                     child: _UnitChips(
                       selected: _unit,
                       enabled: !isBusy,
-                      onSelected: (unit) => setState(() => _unit = unit),
+                      onSelected: _onUnitSelected,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.s4),
+              FieldLabel(l10n.itemFormCountLabel),
+              const SizedBox(height: AppSpacing.s1 + 2),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 96,
+                    child: TextFormField(
+                      controller: _countController,
+                      enabled: !isBusy,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      style: AppTypography.body.copyWith(
+                        color: colors.textPrimary,
+                      ),
+                      validator: (value) =>
+                          InventoryValidators.count(l10n, value),
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.s3),
+                  Text(
+                    '×',
+                    style: AppTypography.title.copyWith(
+                      color: colors.textSecondary,
                     ),
                   ),
                 ],
@@ -321,13 +361,33 @@ class _ItemFormPageState extends ConsumerState<ItemFormPage> {
     if (picked != null) setState(() => _bestBefore = picked);
   }
 
+  /// Toggles the size unit: tapping the selected one clears the size so the item
+  /// becomes a plain count; picking a unit seeds an empty size with 1.
+  void _onUnitSelected(InventoryUnit unit) {
+    setState(() {
+      if (_unit == unit) {
+        _unit = null;
+        _quantityController.clear();
+      } else {
+        _unit = unit;
+        if (_quantityController.text.trim().isEmpty) {
+          _quantityController.text = '1';
+        }
+      }
+    });
+  }
+
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     final l10n = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
-    final quantity = InventoryValidators.parseQuantity(
-      _quantityController.text,
-    )!;
+    final count = InventoryValidators.parseCount(_countController.text)!;
+    // A unit means a measurable size; without one the item is a plain count and
+    // the size is stored as a placeholder 1.
+    final unit = _unit;
+    final quantity = unit == null
+        ? 1
+        : InventoryValidators.parseQuantity(_quantityController.text)!;
     final name = _nameController.text.trim();
     final notifier = ref.read(inventoryItemControllerProvider.notifier);
 
@@ -337,7 +397,8 @@ class _ItemFormPageState extends ConsumerState<ItemFormPage> {
         id: widget.item!.id,
         name: name,
         quantity: quantity,
-        unit: _unit.key,
+        count: count,
+        unit: unit?.key,
         categoryId: _categoryId,
         storageLocationId: _storageLocationId,
         bestBefore: _bestBefore,
@@ -346,7 +407,8 @@ class _ItemFormPageState extends ConsumerState<ItemFormPage> {
       ok = await notifier.add(
         name: name,
         quantity: quantity,
-        unit: _unit.key,
+        count: count,
+        unit: unit?.key,
         categoryId: _categoryId,
         storageLocationId: _storageLocationId,
         bestBefore: _bestBefore,
@@ -482,7 +544,9 @@ String? _categoryName(List<Category> categories, String? id) {
   return null;
 }
 
-/// Row of selectable unit chips (g / kg / ml / l / pcs / pack).
+/// Row of selectable size-unit chips (g / kg / ml / l). Optional: tapping the
+/// selected chip again clears it (a plain count). [selected] is null when no
+/// unit is chosen.
 class _UnitChips extends StatelessWidget {
   const _UnitChips({
     required this.selected,
@@ -490,21 +554,19 @@ class _UnitChips extends StatelessWidget {
     required this.onSelected,
   });
 
-  final InventoryUnit selected;
+  final InventoryUnit? selected;
   final bool enabled;
   final ValueChanged<InventoryUnit> onSelected;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-
     return Wrap(
       spacing: AppSpacing.s2,
       runSpacing: AppSpacing.s2,
       children: [
         for (final unit in InventoryUnit.values)
           _Chip(
-            label: inventoryUnitLabel(l10n, unit),
+            label: inventoryUnitLabel(unit),
             selected: unit == selected,
             onTap: enabled ? () => onSelected(unit) : null,
           ),

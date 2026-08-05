@@ -713,7 +713,7 @@ abstract class AppLocalizations {
   /// No description provided for @itemDetailQuantity.
   ///
   /// In en, this message translates to:
-  /// **'Quantity'**
+  /// **'Count'**
   String get itemDetailQuantity;
 
   /// No description provided for @itemDetailLocation.
@@ -1333,6 +1333,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter a quantity greater than 0'**
   String get itemFormQuantityInvalid;
+
+  /// No description provided for @itemFormCountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Count'**
+  String get itemFormCountLabel;
+
+  /// No description provided for @itemFormCountInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a count of at least 1'**
+  String get itemFormCountInvalid;
 
   /// No description provided for @itemFormUnitLabel.
   ///

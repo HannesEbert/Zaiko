@@ -15,8 +15,13 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$InventoryItem {
 
- String get id;@JsonKey(name: 'household_id') String get householdId; String get name; num get quantity;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;/// Optional link to the product catalog (`foods`); null for ad-hoc items.
-@JsonKey(name: 'food_id') String? get foodId;/// App-owned unit key (g/kg/ml/l/piece/package); null when unitless.
+ String get id;@JsonKey(name: 'household_id') String get householdId; String get name;/// The size of one unit (e.g. `1.5` for a 1.5 L bottle); a placeholder `1`
+/// when the item has no measurable size (a plain count). See [unit].
+ num get quantity;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;/// How many units are stocked (the "Anzahl"). The total is `count` ×
+/// [quantity]; a single item is `1`. Stepped down on the detail page.
+ int get count;/// Optional link to the product catalog (`foods`); null for ad-hoc items.
+@JsonKey(name: 'food_id') String? get foodId;/// App-owned unit key for the per-unit size (g/kg/ml/l); null when the item
+/// is a plain count with no measurable size.
  String? get unit;@JsonKey(name: 'category_id') String? get categoryId;@JsonKey(name: 'storage_location_id') String? get storageLocationId;/// Best-before date. Null means the item has no expiry and shows no status.
 @JsonKey(name: 'best_before') DateTime? get bestBefore;/// The user who added the item; nulled out if their account is deleted.
 @JsonKey(name: 'added_by') String? get addedBy;@JsonKey(name: 'deleted_at') DateTime? get deletedAt;
@@ -32,16 +37,16 @@ $InventoryItemCopyWith<InventoryItem> get copyWith => _$InventoryItemCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InventoryItem&&(identical(other.id, id) || other.id == id)&&(identical(other.householdId, householdId) || other.householdId == householdId)&&(identical(other.name, name) || other.name == name)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.foodId, foodId) || other.foodId == foodId)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.storageLocationId, storageLocationId) || other.storageLocationId == storageLocationId)&&(identical(other.bestBefore, bestBefore) || other.bestBefore == bestBefore)&&(identical(other.addedBy, addedBy) || other.addedBy == addedBy)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InventoryItem&&(identical(other.id, id) || other.id == id)&&(identical(other.householdId, householdId) || other.householdId == householdId)&&(identical(other.name, name) || other.name == name)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.count, count) || other.count == count)&&(identical(other.foodId, foodId) || other.foodId == foodId)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.storageLocationId, storageLocationId) || other.storageLocationId == storageLocationId)&&(identical(other.bestBefore, bestBefore) || other.bestBefore == bestBefore)&&(identical(other.addedBy, addedBy) || other.addedBy == addedBy)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,householdId,name,quantity,createdAt,updatedAt,foodId,unit,categoryId,storageLocationId,bestBefore,addedBy,deletedAt);
+int get hashCode => Object.hash(runtimeType,id,householdId,name,quantity,createdAt,updatedAt,count,foodId,unit,categoryId,storageLocationId,bestBefore,addedBy,deletedAt);
 
 @override
 String toString() {
-  return 'InventoryItem(id: $id, householdId: $householdId, name: $name, quantity: $quantity, createdAt: $createdAt, updatedAt: $updatedAt, foodId: $foodId, unit: $unit, categoryId: $categoryId, storageLocationId: $storageLocationId, bestBefore: $bestBefore, addedBy: $addedBy, deletedAt: $deletedAt)';
+  return 'InventoryItem(id: $id, householdId: $householdId, name: $name, quantity: $quantity, createdAt: $createdAt, updatedAt: $updatedAt, count: $count, foodId: $foodId, unit: $unit, categoryId: $categoryId, storageLocationId: $storageLocationId, bestBefore: $bestBefore, addedBy: $addedBy, deletedAt: $deletedAt)';
 }
 
 
@@ -52,7 +57,7 @@ abstract mixin class $InventoryItemCopyWith<$Res>  {
   factory $InventoryItemCopyWith(InventoryItem value, $Res Function(InventoryItem) _then) = _$InventoryItemCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'household_id') String householdId, String name, num quantity,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt,@JsonKey(name: 'food_id') String? foodId, String? unit,@JsonKey(name: 'category_id') String? categoryId,@JsonKey(name: 'storage_location_id') String? storageLocationId,@JsonKey(name: 'best_before') DateTime? bestBefore,@JsonKey(name: 'added_by') String? addedBy,@JsonKey(name: 'deleted_at') DateTime? deletedAt
+ String id,@JsonKey(name: 'household_id') String householdId, String name, num quantity,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt, int count,@JsonKey(name: 'food_id') String? foodId, String? unit,@JsonKey(name: 'category_id') String? categoryId,@JsonKey(name: 'storage_location_id') String? storageLocationId,@JsonKey(name: 'best_before') DateTime? bestBefore,@JsonKey(name: 'added_by') String? addedBy,@JsonKey(name: 'deleted_at') DateTime? deletedAt
 });
 
 
@@ -69,7 +74,7 @@ class _$InventoryItemCopyWithImpl<$Res>
 
 /// Create a copy of InventoryItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? householdId = null,Object? name = null,Object? quantity = null,Object? createdAt = null,Object? updatedAt = null,Object? foodId = freezed,Object? unit = freezed,Object? categoryId = freezed,Object? storageLocationId = freezed,Object? bestBefore = freezed,Object? addedBy = freezed,Object? deletedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? householdId = null,Object? name = null,Object? quantity = null,Object? createdAt = null,Object? updatedAt = null,Object? count = null,Object? foodId = freezed,Object? unit = freezed,Object? categoryId = freezed,Object? storageLocationId = freezed,Object? bestBefore = freezed,Object? addedBy = freezed,Object? deletedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,householdId: null == householdId ? _self.householdId : householdId // ignore: cast_nullable_to_non_nullable
@@ -77,7 +82,8 @@ as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non
 as String,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
 as num,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,foodId: freezed == foodId ? _self.foodId : foodId // ignore: cast_nullable_to_non_nullable
+as DateTime,count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int,foodId: freezed == foodId ? _self.foodId : foodId // ignore: cast_nullable_to_non_nullable
 as String?,unit: freezed == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
 as String?,categoryId: freezed == categoryId ? _self.categoryId : categoryId // ignore: cast_nullable_to_non_nullable
 as String?,storageLocationId: freezed == storageLocationId ? _self.storageLocationId : storageLocationId // ignore: cast_nullable_to_non_nullable
@@ -169,10 +175,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'household_id')  String householdId,  String name,  num quantity, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt, @JsonKey(name: 'food_id')  String? foodId,  String? unit, @JsonKey(name: 'category_id')  String? categoryId, @JsonKey(name: 'storage_location_id')  String? storageLocationId, @JsonKey(name: 'best_before')  DateTime? bestBefore, @JsonKey(name: 'added_by')  String? addedBy, @JsonKey(name: 'deleted_at')  DateTime? deletedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'household_id')  String householdId,  String name,  num quantity, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt,  int count, @JsonKey(name: 'food_id')  String? foodId,  String? unit, @JsonKey(name: 'category_id')  String? categoryId, @JsonKey(name: 'storage_location_id')  String? storageLocationId, @JsonKey(name: 'best_before')  DateTime? bestBefore, @JsonKey(name: 'added_by')  String? addedBy, @JsonKey(name: 'deleted_at')  DateTime? deletedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InventoryItem() when $default != null:
-return $default(_that.id,_that.householdId,_that.name,_that.quantity,_that.createdAt,_that.updatedAt,_that.foodId,_that.unit,_that.categoryId,_that.storageLocationId,_that.bestBefore,_that.addedBy,_that.deletedAt);case _:
+return $default(_that.id,_that.householdId,_that.name,_that.quantity,_that.createdAt,_that.updatedAt,_that.count,_that.foodId,_that.unit,_that.categoryId,_that.storageLocationId,_that.bestBefore,_that.addedBy,_that.deletedAt);case _:
   return orElse();
 
 }
@@ -190,10 +196,10 @@ return $default(_that.id,_that.householdId,_that.name,_that.quantity,_that.creat
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'household_id')  String householdId,  String name,  num quantity, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt, @JsonKey(name: 'food_id')  String? foodId,  String? unit, @JsonKey(name: 'category_id')  String? categoryId, @JsonKey(name: 'storage_location_id')  String? storageLocationId, @JsonKey(name: 'best_before')  DateTime? bestBefore, @JsonKey(name: 'added_by')  String? addedBy, @JsonKey(name: 'deleted_at')  DateTime? deletedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'household_id')  String householdId,  String name,  num quantity, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt,  int count, @JsonKey(name: 'food_id')  String? foodId,  String? unit, @JsonKey(name: 'category_id')  String? categoryId, @JsonKey(name: 'storage_location_id')  String? storageLocationId, @JsonKey(name: 'best_before')  DateTime? bestBefore, @JsonKey(name: 'added_by')  String? addedBy, @JsonKey(name: 'deleted_at')  DateTime? deletedAt)  $default,) {final _that = this;
 switch (_that) {
 case _InventoryItem():
-return $default(_that.id,_that.householdId,_that.name,_that.quantity,_that.createdAt,_that.updatedAt,_that.foodId,_that.unit,_that.categoryId,_that.storageLocationId,_that.bestBefore,_that.addedBy,_that.deletedAt);case _:
+return $default(_that.id,_that.householdId,_that.name,_that.quantity,_that.createdAt,_that.updatedAt,_that.count,_that.foodId,_that.unit,_that.categoryId,_that.storageLocationId,_that.bestBefore,_that.addedBy,_that.deletedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -210,10 +216,10 @@ return $default(_that.id,_that.householdId,_that.name,_that.quantity,_that.creat
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'household_id')  String householdId,  String name,  num quantity, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt, @JsonKey(name: 'food_id')  String? foodId,  String? unit, @JsonKey(name: 'category_id')  String? categoryId, @JsonKey(name: 'storage_location_id')  String? storageLocationId, @JsonKey(name: 'best_before')  DateTime? bestBefore, @JsonKey(name: 'added_by')  String? addedBy, @JsonKey(name: 'deleted_at')  DateTime? deletedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'household_id')  String householdId,  String name,  num quantity, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt,  int count, @JsonKey(name: 'food_id')  String? foodId,  String? unit, @JsonKey(name: 'category_id')  String? categoryId, @JsonKey(name: 'storage_location_id')  String? storageLocationId, @JsonKey(name: 'best_before')  DateTime? bestBefore, @JsonKey(name: 'added_by')  String? addedBy, @JsonKey(name: 'deleted_at')  DateTime? deletedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _InventoryItem() when $default != null:
-return $default(_that.id,_that.householdId,_that.name,_that.quantity,_that.createdAt,_that.updatedAt,_that.foodId,_that.unit,_that.categoryId,_that.storageLocationId,_that.bestBefore,_that.addedBy,_that.deletedAt);case _:
+return $default(_that.id,_that.householdId,_that.name,_that.quantity,_that.createdAt,_that.updatedAt,_that.count,_that.foodId,_that.unit,_that.categoryId,_that.storageLocationId,_that.bestBefore,_that.addedBy,_that.deletedAt);case _:
   return null;
 
 }
@@ -225,18 +231,24 @@ return $default(_that.id,_that.householdId,_that.name,_that.quantity,_that.creat
 @JsonSerializable()
 
 class _InventoryItem implements InventoryItem {
-  const _InventoryItem({required this.id, @JsonKey(name: 'household_id') required this.householdId, required this.name, required this.quantity, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt, @JsonKey(name: 'food_id') this.foodId, this.unit, @JsonKey(name: 'category_id') this.categoryId, @JsonKey(name: 'storage_location_id') this.storageLocationId, @JsonKey(name: 'best_before') this.bestBefore, @JsonKey(name: 'added_by') this.addedBy, @JsonKey(name: 'deleted_at') this.deletedAt});
+  const _InventoryItem({required this.id, @JsonKey(name: 'household_id') required this.householdId, required this.name, required this.quantity, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt, this.count = 1, @JsonKey(name: 'food_id') this.foodId, this.unit, @JsonKey(name: 'category_id') this.categoryId, @JsonKey(name: 'storage_location_id') this.storageLocationId, @JsonKey(name: 'best_before') this.bestBefore, @JsonKey(name: 'added_by') this.addedBy, @JsonKey(name: 'deleted_at') this.deletedAt});
   factory _InventoryItem.fromJson(Map<String, dynamic> json) => _$InventoryItemFromJson(json);
 
 @override final  String id;
 @override@JsonKey(name: 'household_id') final  String householdId;
 @override final  String name;
+/// The size of one unit (e.g. `1.5` for a 1.5 L bottle); a placeholder `1`
+/// when the item has no measurable size (a plain count). See [unit].
 @override final  num quantity;
 @override@JsonKey(name: 'created_at') final  DateTime createdAt;
 @override@JsonKey(name: 'updated_at') final  DateTime updatedAt;
+/// How many units are stocked (the "Anzahl"). The total is `count` ×
+/// [quantity]; a single item is `1`. Stepped down on the detail page.
+@override@JsonKey() final  int count;
 /// Optional link to the product catalog (`foods`); null for ad-hoc items.
 @override@JsonKey(name: 'food_id') final  String? foodId;
-/// App-owned unit key (g/kg/ml/l/piece/package); null when unitless.
+/// App-owned unit key for the per-unit size (g/kg/ml/l); null when the item
+/// is a plain count with no measurable size.
 @override final  String? unit;
 @override@JsonKey(name: 'category_id') final  String? categoryId;
 @override@JsonKey(name: 'storage_location_id') final  String? storageLocationId;
@@ -259,16 +271,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InventoryItem&&(identical(other.id, id) || other.id == id)&&(identical(other.householdId, householdId) || other.householdId == householdId)&&(identical(other.name, name) || other.name == name)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.foodId, foodId) || other.foodId == foodId)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.storageLocationId, storageLocationId) || other.storageLocationId == storageLocationId)&&(identical(other.bestBefore, bestBefore) || other.bestBefore == bestBefore)&&(identical(other.addedBy, addedBy) || other.addedBy == addedBy)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InventoryItem&&(identical(other.id, id) || other.id == id)&&(identical(other.householdId, householdId) || other.householdId == householdId)&&(identical(other.name, name) || other.name == name)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.count, count) || other.count == count)&&(identical(other.foodId, foodId) || other.foodId == foodId)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.storageLocationId, storageLocationId) || other.storageLocationId == storageLocationId)&&(identical(other.bestBefore, bestBefore) || other.bestBefore == bestBefore)&&(identical(other.addedBy, addedBy) || other.addedBy == addedBy)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,householdId,name,quantity,createdAt,updatedAt,foodId,unit,categoryId,storageLocationId,bestBefore,addedBy,deletedAt);
+int get hashCode => Object.hash(runtimeType,id,householdId,name,quantity,createdAt,updatedAt,count,foodId,unit,categoryId,storageLocationId,bestBefore,addedBy,deletedAt);
 
 @override
 String toString() {
-  return 'InventoryItem(id: $id, householdId: $householdId, name: $name, quantity: $quantity, createdAt: $createdAt, updatedAt: $updatedAt, foodId: $foodId, unit: $unit, categoryId: $categoryId, storageLocationId: $storageLocationId, bestBefore: $bestBefore, addedBy: $addedBy, deletedAt: $deletedAt)';
+  return 'InventoryItem(id: $id, householdId: $householdId, name: $name, quantity: $quantity, createdAt: $createdAt, updatedAt: $updatedAt, count: $count, foodId: $foodId, unit: $unit, categoryId: $categoryId, storageLocationId: $storageLocationId, bestBefore: $bestBefore, addedBy: $addedBy, deletedAt: $deletedAt)';
 }
 
 
@@ -279,7 +291,7 @@ abstract mixin class _$InventoryItemCopyWith<$Res> implements $InventoryItemCopy
   factory _$InventoryItemCopyWith(_InventoryItem value, $Res Function(_InventoryItem) _then) = __$InventoryItemCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'household_id') String householdId, String name, num quantity,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt,@JsonKey(name: 'food_id') String? foodId, String? unit,@JsonKey(name: 'category_id') String? categoryId,@JsonKey(name: 'storage_location_id') String? storageLocationId,@JsonKey(name: 'best_before') DateTime? bestBefore,@JsonKey(name: 'added_by') String? addedBy,@JsonKey(name: 'deleted_at') DateTime? deletedAt
+ String id,@JsonKey(name: 'household_id') String householdId, String name, num quantity,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt, int count,@JsonKey(name: 'food_id') String? foodId, String? unit,@JsonKey(name: 'category_id') String? categoryId,@JsonKey(name: 'storage_location_id') String? storageLocationId,@JsonKey(name: 'best_before') DateTime? bestBefore,@JsonKey(name: 'added_by') String? addedBy,@JsonKey(name: 'deleted_at') DateTime? deletedAt
 });
 
 
@@ -296,7 +308,7 @@ class __$InventoryItemCopyWithImpl<$Res>
 
 /// Create a copy of InventoryItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? householdId = null,Object? name = null,Object? quantity = null,Object? createdAt = null,Object? updatedAt = null,Object? foodId = freezed,Object? unit = freezed,Object? categoryId = freezed,Object? storageLocationId = freezed,Object? bestBefore = freezed,Object? addedBy = freezed,Object? deletedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? householdId = null,Object? name = null,Object? quantity = null,Object? createdAt = null,Object? updatedAt = null,Object? count = null,Object? foodId = freezed,Object? unit = freezed,Object? categoryId = freezed,Object? storageLocationId = freezed,Object? bestBefore = freezed,Object? addedBy = freezed,Object? deletedAt = freezed,}) {
   return _then(_InventoryItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,householdId: null == householdId ? _self.householdId : householdId // ignore: cast_nullable_to_non_nullable
@@ -304,7 +316,8 @@ as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non
 as String,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
 as num,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,foodId: freezed == foodId ? _self.foodId : foodId // ignore: cast_nullable_to_non_nullable
+as DateTime,count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int,foodId: freezed == foodId ? _self.foodId : foodId // ignore: cast_nullable_to_non_nullable
 as String?,unit: freezed == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
 as String?,categoryId: freezed == categoryId ? _self.categoryId : categoryId // ignore: cast_nullable_to_non_nullable
 as String?,storageLocationId: freezed == storageLocationId ? _self.storageLocationId : storageLocationId // ignore: cast_nullable_to_non_nullable

@@ -72,8 +72,9 @@ void main() {
 
     expect(inventory.addItemCalls, 1);
     expect(inventory.items.single.name, 'Brot');
-    // The default unit is applied when the user does not change it.
-    expect(inventory.items.single.unit, 'piece');
+    // A new manual item defaults to a plain count of one, no measurable size.
+    expect(inventory.items.single.unit, isNull);
+    expect(inventory.items.single.count, 1);
   });
 
   testWidgets('pre-fills quantity and unit from an Open Food Facts product', (
@@ -90,9 +91,28 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(inventory.addItemCalls, 1);
-    // Name comes from the product; quantity and unit from its package size.
+    // Name comes from the product; size from its package; count defaults to 1.
     expect(inventory.items.single.name, 'Weizenmehl');
     expect(inventory.items.single.quantity, 500);
     expect(inventory.items.single.unit, 'g');
+    expect(inventory.items.single.count, 1);
+  });
+
+  testWidgets('stores the entered count for a multipack', (tester) async {
+    final product = Food.create(
+      name: 'Wasser',
+      source: FoodSource.openFoodFacts,
+    ).copyWith(packagedAmount: 1.5, packagedUnit: 'l');
+
+    await pumpForm(tester, product: product);
+
+    // Fields: name (0), size (1), count (2). Bump the count to a 6-pack.
+    await tester.enterText(find.byType(TextFormField).at(2), '6');
+    await tester.tap(find.byType(ZaikoPrimaryButton));
+    await tester.pumpAndSettle();
+
+    expect(inventory.items.single.count, 6);
+    expect(inventory.items.single.quantity, 1.5);
+    expect(inventory.items.single.unit, 'l');
   });
 }

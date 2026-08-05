@@ -26,7 +26,7 @@ class FakeInventoryRepository implements InventoryRepository {
 
   int addItemCalls = 0;
   int updateItemCalls = 0;
-  int setQuantityCalls = 0;
+  int setCountCalls = 0;
   int softDeleteCalls = 0;
   int restoreCalls = 0;
   int addLocationCalls = 0;
@@ -81,6 +81,7 @@ class FakeInventoryRepository implements InventoryRepository {
     required String householdId,
     required String name,
     required num quantity,
+    required int count,
     String? unit,
     String? categoryId,
     String? storageLocationId,
@@ -95,6 +96,7 @@ class FakeInventoryRepository implements InventoryRepository {
       householdId: householdId,
       name: name,
       quantity: quantity,
+      count: count,
       createdAt: now,
       updatedAt: now,
       foodId: foodId,
@@ -112,6 +114,7 @@ class FakeInventoryRepository implements InventoryRepository {
     required String id,
     required String name,
     required num quantity,
+    required int count,
     String? unit,
     String? categoryId,
     String? storageLocationId,
@@ -125,6 +128,7 @@ class FakeInventoryRepository implements InventoryRepository {
           item.copyWith(
             name: name,
             quantity: quantity,
+            count: count,
             unit: unit,
             categoryId: categoryId,
             storageLocationId: storageLocationId,
@@ -136,15 +140,12 @@ class FakeInventoryRepository implements InventoryRepository {
   }
 
   @override
-  Future<void> setItemQuantity({
-    required String id,
-    required num quantity,
-  }) async {
-    setQuantityCalls++;
+  Future<void> setItemCount({required String id, required int count}) async {
+    setCountCalls++;
     _throwIfScripted();
     emit([
       for (final item in items)
-        if (item.id == id) item.copyWith(quantity: quantity) else item,
+        if (item.id == id) item.copyWith(count: count) else item,
     ]);
   }
 

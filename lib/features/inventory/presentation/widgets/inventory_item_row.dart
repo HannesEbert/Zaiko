@@ -49,13 +49,16 @@ class InventoryItemRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final l10n = context.l10n;
     final item = resolved.item;
 
     final icon = AppIcons.forKey(resolved.category?.icon);
     final color = AppColors.categoryForKey(resolved.category?.color);
 
-    var subtitle = formatQuantity(l10n, item.quantity, item.unit);
+    var subtitle = formatQuantity(
+      count: item.count,
+      quantity: item.quantity,
+      unit: item.unit,
+    );
     if (showLocation && resolved.location != null) {
       subtitle = '$subtitle · ${resolved.location!.name}';
     }
