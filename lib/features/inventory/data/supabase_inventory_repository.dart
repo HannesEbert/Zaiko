@@ -84,6 +84,7 @@ class SupabaseInventoryRepository implements InventoryRepository {
     String? categoryId,
     String? storageLocationId,
     DateTime? bestBefore,
+    String? foodId,
   }) async {
     try {
       final row = await _client
@@ -96,6 +97,7 @@ class SupabaseInventoryRepository implements InventoryRepository {
             'category_id': categoryId,
             'storage_location_id': storageLocationId,
             'best_before': _dateOnly(bestBefore),
+            'food_id': foodId,
             'added_by': _client.auth.currentUser?.id,
           })
           .select()

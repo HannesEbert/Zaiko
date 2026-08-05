@@ -59,6 +59,10 @@ abstract interface class InventoryRepository {
   // --- Item mutations -------------------------------------------------------
 
   /// Inserts a new item into [householdId] and returns the created row.
+  ///
+  /// [foodId] optionally links the item to a `foods` catalog entry (an
+  /// Open Food Facts product resolved via scan/search, or a custom product);
+  /// null for an ad-hoc manual item.
   Future<InventoryItem> addItem({
     required String householdId,
     required String name,
@@ -67,6 +71,7 @@ abstract interface class InventoryRepository {
     String? categoryId,
     String? storageLocationId,
     DateTime? bestBefore,
+    String? foodId,
   });
 
   /// Overwrites the editable fields of the item with [id].

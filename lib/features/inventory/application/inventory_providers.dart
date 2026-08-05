@@ -260,6 +260,9 @@ class InventoryItemController extends _$InventoryItemController {
   FutureOr<void> build() {}
 
   /// Adds a new item to the active household. Returns whether it succeeded.
+  ///
+  /// [foodId] links the item to a `foods` catalog entry when it was created
+  /// from a scanned/searched or custom product; null for a manual item.
   Future<bool> add({
     required String name,
     required num quantity,
@@ -267,6 +270,7 @@ class InventoryItemController extends _$InventoryItemController {
     String? categoryId,
     String? storageLocationId,
     DateTime? bestBefore,
+    String? foodId,
   }) => _run(
     () => ref
         .read(inventoryRepositoryProvider)
@@ -278,6 +282,7 @@ class InventoryItemController extends _$InventoryItemController {
           categoryId: categoryId,
           storageLocationId: storageLocationId,
           bestBefore: bestBefore,
+          foodId: foodId,
         ),
   );
 

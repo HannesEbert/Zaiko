@@ -85,6 +85,7 @@ class FakeInventoryRepository implements InventoryRepository {
     String? categoryId,
     String? storageLocationId,
     DateTime? bestBefore,
+    String? foodId,
   }) async {
     addItemCalls++;
     _throwIfScripted();
@@ -96,6 +97,7 @@ class FakeInventoryRepository implements InventoryRepository {
       quantity: quantity,
       createdAt: now,
       updatedAt: now,
+      foodId: foodId,
       unit: unit,
       categoryId: categoryId,
       storageLocationId: storageLocationId,
