@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zaiko/features/food/application/food_providers.dart';
 import 'package:zaiko/features/food/domain/food.dart';
+import 'package:zaiko/features/food/domain/food_failure.dart';
 
 import '../fake_food_catalog_repository.dart';
 import '../fake_food_lookup_repository.dart';
@@ -82,6 +83,39 @@ void main() {
     expect(lookup.lastQuery, 'bread');
     // Search results are not cached until one is picked.
     expect(catalog.cacheCalls, 0);
+  });
+
+  test('search caches a settled query and skips the repeat request', () async {
+    lookup.searchResults = [
+      Food.create(name: 'Bread', source: FoodSource.openFoodFacts),
+    ];
+    final r = resolver();
+
+    await r.search('Bread');
+    // Same term (case-insensitive) is served from the cache.
+    final second = await r.search('bread');
+
+    expect(second, hasLength(1));
+    expect(lookup.searchCalls, 1);
+  });
+
+  test('search does not cache failures, so a retry re-queries', () async {
+    lookup.searchError = const FoodFailure(
+      FoodFailureReason.network,
+      'offline',
+    );
+    final r = resolver();
+
+    await expectLater(r.search('bread'), throwsA(isA<FoodFailure>()));
+
+    lookup.searchError = null;
+    lookup.searchResults = [
+      Food.create(name: 'Bread', source: FoodSource.openFoodFacts),
+    ];
+    final retry = await r.search('bread');
+
+    expect(retry, hasLength(1));
+    expect(lookup.searchCalls, 2);
   });
 
   test('selectSearchResult caches the chosen product', () async {

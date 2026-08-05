@@ -98,12 +98,16 @@ void main() {
   });
 
   group('searchByName', () {
-    test('maps results and drops entries without a name', () async {
+    test('maps hits and drops entries without a name', () async {
       final repo = _repo(
         (_) async => http.Response(
           jsonEncode({
-            'products': [
-              {'code': '1', 'product_name': 'Bread', 'brands': 'Baker'},
+            'hits': [
+              {
+                'code': '1',
+                'product_name': 'Bread',
+                'brands': ['Baker', 'Other'],
+              },
               {'code': '2', 'product_name': ''},
               {'code': '3', 'product_name': 'Butter'},
             ],
@@ -112,35 +116,93 @@ void main() {
         ),
       );
 
-      final results = await repo.searchByName('br');
+      final results = await repo.searchByName('bread');
 
       expect(results.map((f) => f.name), ['Bread', 'Butter']);
+      // The search endpoint returns brands as a list; the first is kept.
       expect(results.first.brand, 'Baker');
     });
 
-    test('returns an empty list when there are no products', () async {
+    test('returns an empty list when there are no hits', () async {
       final repo = _repo(
-        (_) async => http.Response(jsonEncode({'products': <dynamic>[]}), 200),
+        (_) async => http.Response(jsonEncode({'hits': <dynamic>[]}), 200),
       );
 
       expect(await repo.searchByName('zzz'), isEmpty);
     });
 
-    test('restricts to Germany and sorts by popularity', () async {
+    test('hits the search endpoint, restricts to Germany, sorts by '
+        'popularity', () async {
       late Uri requested;
       final repo = _repo((request) async {
         requested = request.url;
-        return http.Response(jsonEncode({'products': <dynamic>[]}), 200);
+        return http.Response(jsonEncode({'hits': <dynamic>[]}), 200);
       });
 
       await repo.searchByName('wasser');
 
+      expect(requested.host, 'search.openfoodfacts.org');
+      expect(requested.path, '/search');
       final params = requested.queryParameters;
-      expect(params['sort_by'], 'unique_scans_n');
-      expect(params['tagtype_0'], 'countries');
-      expect(params['tag_0'], 'germany');
-      expect(params['cc'], 'de');
-      expect(params['lc'], 'de');
+      expect(params['q'], contains('wasser'));
+      expect(params['q'], contains('countries_tags:"en:germany"'));
+      expect(params['sort_by'], '-unique_scans_n');
+      expect(params['langs'], 'de');
+    });
+
+    test('strips Lucene control characters from the query', () async {
+      late Uri requested;
+      final repo = _repo((request) async {
+        requested = request.url;
+        return http.Response(jsonEncode({'hits': <dynamic>[]}), 200);
+      });
+
+      await repo.searchByName('cola: (0,5l)');
+
+      // The user's punctuation must not leak into the Lucene expression, or it
+      // would break the trailing country filter.
+      final q = requested.queryParameters['q']!;
+      expect(q, contains('countries_tags:"en:germany"'));
+      expect(q, isNot(contains('(')));
+      expect(q, isNot(contains(')')));
+    });
+
+    test('parses a search hit free-text quantity for the prefill', () async {
+      final repo = _repo(
+        (_) async => http.Response(
+          jsonEncode({
+            'hits': [
+              {'code': '1', 'product_name': 'Water', 'quantity': '1,5 L'},
+            ],
+          }),
+          200,
+        ),
+      );
+
+      final food = (await repo.searchByName('water')).single;
+
+      expect(food.packagedAmount, 1.5);
+      expect(food.packagedUnit, 'l');
+    });
+
+    test('leaves the prefill unset for an ambiguous search quantity', () async {
+      final repo = _repo(
+        (_) async => http.Response(
+          jsonEncode({
+            'hits': [
+              // Bare number and multipack: neither is a safe single size.
+              {'code': '1', 'product_name': 'A', 'quantity': '0,75'},
+              {'code': '2', 'product_name': 'B', 'quantity': '6 x 1,5 L'},
+            ],
+          }),
+          200,
+        ),
+      );
+
+      final results = await repo.searchByName('x');
+
+      expect(results.every((f) => f.packagedAmount == null), isTrue);
+      expect(results.every((f) => f.packagedUnit == null), isTrue);
     });
   });
 
@@ -222,7 +284,7 @@ void main() {
       final repo = _repo((_) async {
         calls++;
         if (calls == 1) return http.Response('', 503);
-        return http.Response(jsonEncode({'products': <dynamic>[]}), 200);
+        return http.Response(jsonEncode({'hits': <dynamic>[]}), 200);
       });
 
       await repo.searchByName('wasser');

@@ -45,6 +45,16 @@ class ProductResolver extends _$ProductResolver {
   @override
   void build() {}
 
+  /// In-memory cache of settled searches, keyed by normalized query. The
+  /// back-and-forth typing that made search feel flaky no longer re-hits the
+  /// network for a term already resolved this session. Failures are never
+  /// cached, so a transient error is retried on the next attempt.
+  final Map<String, List<Food>> _searchCache = {};
+
+  /// Caps the session-lived cache; cleared wholesale on overflow (simpler than
+  /// an LRU and fine at this size).
+  static const int _maxSearchCacheEntries = 50;
+
   /// Resolves [barcode] against Open Food Facts and, on a hit, caches it in the
   /// shared catalog. Returns the stored [Food], or null when Open Food Facts
   /// has no product (the caller falls back to manual entry).
@@ -59,10 +69,20 @@ class ProductResolver extends _$ProductResolver {
     return _withPackageSize(cached, product);
   }
 
-  /// Searches Open Food Facts by product name. Results are not cached until the
-  /// user picks one via [selectSearchResult].
-  Future<List<Food>> search(String query) =>
-      ref.read(foodLookupRepositoryProvider).searchByName(query);
+  /// Searches Open Food Facts by product name, serving a repeated query from
+  /// the in-memory [_searchCache]. Results are not persisted to the shared
+  /// catalog until the user picks one via [selectSearchResult].
+  Future<List<Food>> search(String query) async {
+    final key = query.trim().toLowerCase();
+    final cached = _searchCache[key];
+    if (cached != null) return cached;
+    final results = await ref
+        .read(foodLookupRepositoryProvider)
+        .searchByName(query);
+    if (_searchCache.length >= _maxSearchCacheEntries) _searchCache.clear();
+    _searchCache[key] = results;
+    return results;
+  }
 
   /// Caches the [product] the user picked from search results and returns the
   /// stored catalog row.
