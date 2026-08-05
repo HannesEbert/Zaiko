@@ -22,7 +22,10 @@ dependencies:
   intl: ^0.20.2
   json_annotation: ^4.11.0
   mobile_scanner: ^7.4.0
-  permission_handler: ^13.0.0
+  # Pinned to 12.x: 13.x pulls permission_handler_android 14.0.0, whose Gradle
+  # script needs AGP 9 / Kotlin 2.3. Lift back to ^13.0.0 when Flutter (and thus
+  # AGP/Kotlin) is next upgraded.
+  permission_handler: ^12.0.0
   qr_flutter: ^4.1.0
   riverpod_annotation: ^4.0.2
   supabase_flutter: ^2.16.0
