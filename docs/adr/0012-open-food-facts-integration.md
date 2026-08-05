@@ -45,18 +45,28 @@ settings" path.
 - **Two repositories, two responsibilities.** `FoodLookupRepository` (OFF over
   HTTP) resolves a barcode or a search term to `Food` objects.
   `FoodCatalogRepository` (Supabase `foods` table) persists them.
-- **Search focuses on Germany, ranked by popularity.** Text search restricts to
-  products sold in Germany (`tag_0=germany`, `cc/lc=de`) and sorts by scan count
-  (`sort_by=unique_scans_n`), so the DACH audience sees mainstream local brands
+- **Search focuses on Germany, ranked by popularity.** Text search uses the
+  dedicated Search-a-licious service (`search.openfoodfacts.org/search`), which
+  is far faster and more reliable than the legacy `cgi/search.pl`. It restricts
+  to products sold in Germany via a Lucene filter inside `q`
+  (`countries_tags:"en:germany"`), sets `langs=de`, and sorts by scan count
+  (`sort_by=-unique_scans_n`), so the DACH audience sees mainstream local brands
   first instead of global imports. Germany is the pragmatic DACH proxy — the big
-  Austrian/Swiss brands are listed there too and `cgi/search.pl` cannot OR
-  several countries cleanly. Barcode lookup stays global (a barcode is
-  worldwide-unique). The UI only searches from two characters on, since a single
-  letter is a wildcard.
-- **Resilience.** `cgi/search.pl` is slow and returns transient 5xx under load,
-  so both requests use a 15s timeout and one automatic retry; a persistent
-  timeout or 5xx surfaces as a temporary-unavailability message rather than a
-  "check your connection" one.
+  Austrian/Swiss brands are listed there too. User input is stripped of Lucene
+  control characters before it is embedded, so it can never break the query.
+  Barcode lookup stays on the global v2 endpoint (a barcode is
+  worldwide-unique). The UI only searches from three characters on, since a very
+  short query is effectively a wildcard.
+- **Client-side search cache.** Settled searches are cached in memory per
+  normalized query (in `ProductResolver`), so the rapid add/remove typing that
+  made search feel flaky no longer re-hits the network for a term already
+  resolved this session. Failures are never cached, so a transient error is
+  retried on the next attempt. On a failed refresh the UI keeps the previous
+  results on screen instead of flickering to an error.
+- **Resilience.** OFF can return transient 5xx and slow responses under load, so
+  both requests use an 8s timeout and one automatic retry; a persistent timeout
+  or 5xx surfaces as a temporary-unavailability message rather than a "check
+  your connection" one.
 - **Cache as a shared catalog.** Resolved OFF products are written to `foods`
   with `household_id = null` (the shared cache) and `source = openFoodFacts`, so
   a scan by one household benefits all of them and a re-scan resolves offline.
@@ -67,9 +77,13 @@ settings" path.
   RLS lets an authenticated user *insert* a shared (`household_id = null`) row
   but not *update* one (`is_household_member(null)` is false).
 - **Quantity prefill.** The add form is seeded with the product's package size
-  from Open Food Facts (`product_quantity` + `product_quantity_unit`, normalized
-  to the app's units, e.g. 1000 ml → 1 l). This is carried on `Food` as two
-  transient, non-persisted fields — a prefill hint only; the shared catalog stays
+  from Open Food Facts, normalized to the app's units (e.g. 1000 ml → 1 l).
+  Barcode lookups use the structured `product_quantity` + `product_quantity_unit`;
+  the search endpoint exposes only the free-text `quantity` string, so that is
+  parsed as a fallback — but only an unambiguous single `<number> <unit>` is
+  accepted (bare numbers and multipacks are ignored), so the form is never
+  seeded with a misread size. The size is carried on `Food` as two transient,
+  non-persisted fields — a prefill hint only; the shared catalog stays
   size-agnostic.
 - **Fallback.** An unknown barcode (or being offline) drops to the manual form
   with the barcode pre-filled; on save a household-scoped `Food`
@@ -102,8 +116,11 @@ settings" path.
   update their own rows), but duplicates the same product across households and
   loses the "someone already scanned this" offline win. The shared catalog with
   insert-only caching was chosen instead.
-- **A live/full-text OFF search backend (search-a-licious).** The stable
-  `cgi/search.pl` endpoint is enough for name search in this scope.
+- **Legacy `cgi/search.pl` for text search.** Initially adopted for name search,
+  but it proved slow and unreliable (frequent timeouts and throttling, worst in
+  the web build where the browser drops the User-Agent). Superseded by the
+  Search-a-licious endpoint plus a client-side cache; the barcode path was always
+  on the fast v2 endpoint and is unchanged.
 
 ## Consequences
 
@@ -117,3 +134,10 @@ settings" path.
   is kept even though the app is iOS-first.
 - `mobile_scanner` pulls in the platform barcode engines, increasing binary
   size — accepted for a core add-item path.
+- **Text search does not work in the web build.** The Search-a-licious host
+  (`search.openfoodfacts.org`) does not send an `Access-Control-Allow-Origin`
+  header, so a browser blocks the request via CORS. This is accepted: the app is
+  iOS-first and search works on the native targets (where CORS does not apply);
+  the barcode endpoint (`world.openfoodfacts.org`) does send `*` and keeps
+  working everywhere. If web search is needed later, the fix is a thin backend
+  proxy (e.g. a Supabase Edge Function) that calls the search host server-side.

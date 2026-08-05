@@ -40,12 +40,13 @@ class _ProductSearchPageState extends ConsumerState<ProductSearchPage> {
   List<Food> _results = const [];
 
   /// Wait for typing to settle before hitting the network, to respect the
-  /// Open Food Facts API and avoid a request per keystroke.
-  static const Duration _debounceDelay = Duration(milliseconds: 350);
+  /// Open Food Facts API and avoid a request per keystroke. Kept generous so
+  /// the rapid add/remove of letters no longer fires a request each time.
+  static const Duration _debounceDelay = Duration(milliseconds: 600);
 
-  /// A single letter is effectively a wildcard: it floods the (slow) endpoint
-  /// and surfaces popular imports, so only search from this length on.
-  static const int _minQueryLength = 2;
+  /// Very short queries are effectively wildcards: they flood the endpoint and
+  /// surface popular imports, so only search from this length on.
+  static const int _minQueryLength = 3;
 
   @override
   void dispose() {
@@ -86,10 +87,19 @@ class _ProductSearchPageState extends ConsumerState<ProductSearchPage> {
       });
     } on FoodFailure catch (e) {
       if (!mounted || _controller.text.trim() != query) return;
-      setState(() {
-        _loading = false;
-        _error = e;
-      });
+      setState(() => _loading = false);
+      // Keep the previous results on screen when a refresh fails — the list
+      // must not flicker away. Only fall back to a full-screen error when there
+      // is nothing to show yet.
+      if (_results.isEmpty) {
+        setState(() => _error = e);
+      } else {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(content: Text(foodErrorMessage(context.l10n, e))),
+          );
+      }
     }
   }
 
@@ -142,25 +152,40 @@ class _ProductSearchPageState extends ConsumerState<ProductSearchPage> {
   }
 
   Widget _body() {
-    if (_loading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-    if (_error != null) {
-      return _CenteredHint(text: foodErrorMessage(context.l10n, _error));
-    }
-    if (_controller.text.trim().length < _minQueryLength) {
-      return _CenteredHint(text: context.l10n.productSearchPrompt);
-    }
+    // With nothing on screen yet, the state is shown full-screen.
     if (_results.isEmpty) {
+      if (_loading) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      if (_error != null) {
+        return _CenteredHint(text: foodErrorMessage(context.l10n, _error));
+      }
+      if (_controller.text.trim().length < _minQueryLength) {
+        return _CenteredHint(text: context.l10n.productSearchPrompt);
+      }
       return _CenteredHint(text: context.l10n.productSearchEmpty);
     }
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pageInset),
-      itemCount: _results.length,
-      itemBuilder: (context, index) => _ResultTile(
-        food: _results[index],
-        onTap: () => _select(_results[index]),
-      ),
+    // Results are on screen: keep them, and show a slim bar while a newer
+    // search refreshes them in the background.
+    return Column(
+      children: [
+        SizedBox(
+          height: 2,
+          child: _loading ? const LinearProgressIndicator(minHeight: 2) : null,
+        ),
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.pageInset,
+            ),
+            itemCount: _results.length,
+            itemBuilder: (context, index) => _ResultTile(
+              food: _results[index],
+              onTap: () => _select(_results[index]),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

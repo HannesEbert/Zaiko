@@ -21,29 +21,39 @@ class OpenFoodFactsRepository implements FoodLookupRepository {
 
   final http.Client _client;
 
-  /// Open Food Facts world instance. The `.net` staging host mirrors it but
-  /// production data lives here.
+  /// Open Food Facts world instance, used for the fast v2 barcode lookup. The
+  /// `.net` staging host mirrors it but production data lives here.
   static const String _host = 'world.openfoodfacts.org';
 
-  /// Product fields requested from the API — everything the add form pre-fills,
-  /// nothing more, to keep responses small.
+  /// Dedicated full-text search service (Search-a-licious). It replaces the
+  /// legacy, slow `cgi/search.pl` and is markedly faster and more reliable
+  /// (see ADR-0012).
+  static const String _searchHost = 'search.openfoodfacts.org';
+
+  /// Product fields requested from the v2 barcode endpoint — everything the add
+  /// form pre-fills, nothing more, to keep responses small.
   static const String _fields =
       'code,product_name,brands,image_url,product_quantity,product_quantity_unit';
 
+  /// Fields requested from the search endpoint. It does not expose the
+  /// structured `product_quantity`, only the free-text `quantity` string, and
+  /// returns `brands` as a list.
+  static const String _searchFields =
+      'code,product_name,brands,image_url,quantity';
+
   /// Sort search results by scan count, so the best-known products rank first.
+  /// The search endpoint expects a leading `-` for descending order.
   static const String _popularitySort = 'unique_scans_n';
 
-  /// DACH focus: restrict text search to products sold in Germany and set the
-  /// German country/language context (see ADR-0012). Germany is the pragmatic
-  /// proxy — the major Austrian/Swiss brands are listed there too, and
-  /// `search.pl` cannot OR several countries cleanly.
-  static const String _country = 'germany';
-  static const String _countryCode = 'de';
+  /// DACH focus: restrict text search to products sold in Germany (see
+  /// ADR-0012). Germany is the pragmatic proxy — the major Austrian/Swiss
+  /// brands are listed there too. Applied as a Lucene filter inside `q`.
+  static const String _countryTag = 'en:germany';
   static const String _languageCode = 'de';
 
-  /// The `cgi/search.pl` endpoint is slow, so allow more time before treating a
-  /// request as failed.
-  static const Duration _timeout = Duration(seconds: 15);
+  /// Both endpoints answer quickly in the normal case; cap the wait so a hung
+  /// request surfaces as an error promptly instead of blocking the search UI.
+  static const Duration _timeout = Duration(seconds: 8);
 
   /// Open Food Facts returns transient 5xx/timeouts under load; retry this many
   /// times before surfacing a failure.
@@ -67,30 +77,29 @@ class OpenFoodFactsRepository implements FoodLookupRepository {
 
   @override
   Future<List<Food>> searchByName(String query) => _guard(() async {
-    final uri = Uri.https(_host, '/cgi/search.pl', {
-      'search_terms': query,
-      'search_simple': '1',
-      'action': 'process',
-      'json': '1',
+    final uri = Uri.https(_searchHost, '/search', {
+      // Lucene syntax: the sanitized term plus a country filter, so the DACH
+      // audience sees mainstream local products instead of global imports.
+      'q': '${_sanitizeQuery(query)} countries_tags:"$_countryTag"',
+      'langs': _languageCode,
       'page_size': '20',
-      'fields': _fields,
-      // Focus on Germany, best-known products first, so the DACH audience sees
-      // mainstream local brands instead of global imports.
-      'sort_by': _popularitySort,
-      'tagtype_0': 'countries',
-      'tag_contains_0': 'contains',
-      'tag_0': _country,
-      'cc': _countryCode,
-      'lc': _languageCode,
+      'fields': _searchFields,
+      // Best-known products first (descending scan count).
+      'sort_by': '-$_popularitySort',
     });
     final json = await _getJson(uri);
-    final products = json['products'];
-    if (products is! List) return const [];
+    final hits = json['hits'];
+    if (hits is! List) return const [];
     return [
-      for (final product in products)
+      for (final product in hits)
         if (product is Map<String, dynamic>) ?_foodFromProduct(product),
     ];
   });
+
+  /// Strips Lucene control characters from the user's query so free-text input
+  /// can never break the search expression it is embedded into.
+  String _sanitizeQuery(String query) =>
+      query.replaceAll(RegExp(r'[+\-!(){}\[\]^"~*?:\\/&|<>=]'), ' ').trim();
 
   /// Performs the GET and decodes a JSON object, mapping HTTP status codes to
   /// failures. A timeout or a transient 5xx is retried once before failing; 429
@@ -152,23 +161,24 @@ class OpenFoodFactsRepository implements FoodLookupRepository {
   Food? _foodFromProduct(Map<String, dynamic> product) {
     final name = (product['product_name'] as String?)?.trim();
     if (name == null || name.isEmpty) return null;
-    final packaged = _parsePackagedQuantity(product);
+    // Barcode lookups carry the structured quantity; search hits expose only
+    // the free-text `quantity`, so fall back to parsing that.
+    final packaged =
+        _parsePackagedQuantity(product) ??
+        _parseQuantityText(product['quantity']);
     return Food.create(
       name: name,
       source: FoodSource.openFoodFacts,
-      brand: _firstBrand(product['brands'] as String?),
+      brand: _firstBrand(product['brands']),
       barcode: (product['code'] as String?)?.trim(),
       imageUrl: _nullIfEmpty(product['image_url'] as String?),
     ).copyWith(packagedAmount: packaged?.amount, packagedUnit: packaged?.unit);
   }
 
-  /// Parses the product's package size into a display amount plus an
-  /// [InventoryUnit] key (`g`/`kg`/`ml`/`l`), or null when Open Food Facts has
-  /// no usable value (the form then keeps its default of 1 piece).
-  ///
-  /// Uses the structured `product_quantity` (grams or millilitres) +
-  /// `product_quantity_unit` rather than the free-text `quantity` string, and
-  /// scales up to the friendlier unit (1000 ml → 1 l, 1500 g → 1.5 kg).
+  /// Parses the structured package size (`product_quantity` in grams or
+  /// millilitres + `product_quantity_unit`) into a display amount plus an
+  /// [InventoryUnit] key, or null when there is no usable value (the form then
+  /// keeps its default of 1 piece). Returned by the v2 barcode endpoint.
   ({num amount, String unit})? _parsePackagedQuantity(
     Map<String, dynamic> product,
   ) {
@@ -184,16 +194,43 @@ class OpenFoodFactsRepository implements FoodLookupRepository {
     if (amount == null || amount <= 0 || unit == null || unit.isEmpty) {
       return null;
     }
-    return switch (unit) {
-      'cl' => _scale(amount * 10, 'ml'),
-      'ml' => _scale(amount, 'ml'),
-      'l' || 'liter' || 'litre' => (amount: amount, unit: 'l'),
-      'g' => _scale(amount, 'g'),
-      'kg' => (amount: amount, unit: 'kg'),
-      // Unknown units (oz, lb, …) have no InventoryUnit — let the form default.
-      _ => null,
-    };
+    return _normalizeUnit(amount, unit);
   }
+
+  /// Parses the search endpoint's free-text `quantity` (e.g. `"1,5 L"`,
+  /// `"330 ml"`, `"500 g"`) into an amount plus [InventoryUnit] key. Only a
+  /// single, unambiguous `<number> <metric-unit>` is accepted — bare numbers,
+  /// multipacks (`"6 x 1,5 L"`) and non-metric values yield null, so the form
+  /// is never pre-filled with a misread size.
+  ({num amount, String unit})? _parseQuantityText(Object? quantity) {
+    if (quantity is! String) return null;
+    final match = _quantityPattern.firstMatch(quantity.trim());
+    if (match == null) return null;
+    final amount = num.tryParse(match.group(1)!.replaceAll(',', '.'));
+    if (amount == null || amount <= 0) return null;
+    return _normalizeUnit(amount, match.group(2)!.toLowerCase());
+  }
+
+  /// Matches a lone `<number> <unit>` (optional decimal comma/point, optional
+  /// space). Anchored on both ends so anything extra — a leading `6 x`, a
+  /// trailing `℮`, a second value — fails to match.
+  static final RegExp _quantityPattern = RegExp(
+    r'^(\d+(?:[.,]\d+)?)\s*(g|kg|ml|cl|l|liter|litre)$',
+    caseSensitive: false,
+  );
+
+  /// Maps a raw amount + unit onto an [InventoryUnit] key, scaling up to the
+  /// friendlier unit (1000 ml → 1 l, 1500 g → 1.5 kg) and converting
+  /// centilitres to millilitres. Unknown units (oz, lb, …) yield null.
+  ({num amount, String unit})? _normalizeUnit(num amount, String unit) =>
+      switch (unit) {
+        'cl' => _scale(amount * 10, 'ml'),
+        'ml' => _scale(amount, 'ml'),
+        'l' || 'liter' || 'litre' => (amount: amount, unit: 'l'),
+        'g' => _scale(amount, 'g'),
+        'kg' => (amount: amount, unit: 'kg'),
+        _ => null,
+      };
 
   /// Scales a base-unit amount up to the friendlier unit once it reaches 1000
   /// (1000 ml → 1 l, 1500 g → 1.5 kg); smaller amounts stay as-is.
@@ -204,11 +241,18 @@ class OpenFoodFactsRepository implements FoodLookupRepository {
         : (amount: amount, unit: baseUnit);
   }
 
-  /// Open Food Facts stores brands as a comma-separated list; the first entry
-  /// is the primary brand.
-  String? _firstBrand(String? brands) {
-    final first = brands?.split(',').first.trim();
-    return _nullIfEmpty(first);
+  /// The primary brand. Open Food Facts returns brands as a comma-separated
+  /// string (v2 barcode endpoint) or a list (search endpoint); the first entry
+  /// is the primary brand in both cases.
+  String? _firstBrand(Object? brands) {
+    if (brands is List) {
+      final first = brands.isEmpty ? null : brands.first?.toString().trim();
+      return _nullIfEmpty(first);
+    }
+    if (brands is String) {
+      return _nullIfEmpty(brands.split(',').first.trim());
+    }
+    return null;
   }
 
   String? _nullIfEmpty(String? value) =>
