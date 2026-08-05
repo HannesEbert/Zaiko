@@ -172,67 +172,82 @@ class _ItemFormPageState extends ConsumerState<ItemFormPage> {
                 validator: (value) => InventoryValidators.name(l10n, value),
               ),
               const SizedBox(height: AppSpacing.s4),
-              FieldLabel(l10n.itemFormQuantityLabel),
-              const SizedBox(height: AppSpacing.s1 + 2),
+              // Size (left) and count (right) sit on one line as one block: the
+              // per-unit size and how many of them there are.
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    width: 96,
-                    child: TextFormField(
-                      controller: _quantityController,
-                      // The size only applies once a unit is picked; a plain
-                      // count leaves it empty and disabled.
-                      enabled: !isBusy && _unit != null,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
-                      ],
-                      style: AppTypography.body.copyWith(
-                        color: colors.textPrimary,
-                      ),
-                      validator: _unit == null
-                          ? null
-                          : (value) =>
-                                InventoryValidators.quantity(l10n, value),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.s3),
                   Expanded(
-                    child: _UnitChips(
-                      selected: _unit,
-                      enabled: !isBusy,
-                      onSelected: _onUnitSelected,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FieldLabel(l10n.itemFormQuantityLabel),
+                        const SizedBox(height: AppSpacing.s1 + 2),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 72,
+                              child: TextFormField(
+                                controller: _quantityController,
+                                // The size only applies once a unit is picked; a
+                                // plain count leaves it empty and disabled.
+                                enabled: !isBusy && _unit != null,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'[0-9.,]'),
+                                  ),
+                                ],
+                                style: AppTypography.body.copyWith(
+                                  color: colors.textPrimary,
+                                ),
+                                validator: _unit == null
+                                    ? null
+                                    : (value) => InventoryValidators.quantity(
+                                        l10n,
+                                        value,
+                                      ),
+                              ),
+                            ),
+                            const SizedBox(width: AppSpacing.s3),
+                            Expanded(
+                              child: _UnitChips(
+                                selected: _unit,
+                                enabled: !isBusy,
+                                onSelected: _onUnitSelected,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.s4),
-              FieldLabel(l10n.itemFormCountLabel),
-              const SizedBox(height: AppSpacing.s1 + 2),
-              Row(
-                children: [
+                  const SizedBox(width: AppSpacing.s4),
                   SizedBox(
-                    width: 96,
-                    child: TextFormField(
-                      controller: _countController,
-                      enabled: !isBusy,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      style: AppTypography.body.copyWith(
-                        color: colors.textPrimary,
-                      ),
-                      validator: (value) =>
-                          InventoryValidators.count(l10n, value),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.s3),
-                  Text(
-                    '×',
-                    style: AppTypography.title.copyWith(
-                      color: colors.textSecondary,
+                    width: 80,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FieldLabel(l10n.itemFormCountLabel),
+                        const SizedBox(height: AppSpacing.s1 + 2),
+                        TextFormField(
+                          controller: _countController,
+                          enabled: !isBusy,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          style: AppTypography.body.copyWith(
+                            color: colors.textPrimary,
+                          ),
+                          validator: (value) =>
+                              InventoryValidators.count(l10n, value),
+                        ),
+                      ],
                     ),
                   ),
                 ],
