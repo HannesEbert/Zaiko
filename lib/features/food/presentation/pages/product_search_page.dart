@@ -43,6 +43,10 @@ class _ProductSearchPageState extends ConsumerState<ProductSearchPage> {
   /// Open Food Facts API and avoid a request per keystroke.
   static const Duration _debounceDelay = Duration(milliseconds: 350);
 
+  /// A single letter is effectively a wildcard: it floods the (slow) endpoint
+  /// and surfaces popular imports, so only search from this length on.
+  static const int _minQueryLength = 2;
+
   @override
   void dispose() {
     _debounce?.cancel();
@@ -53,7 +57,7 @@ class _ProductSearchPageState extends ConsumerState<ProductSearchPage> {
   void _onQueryChanged(String value) {
     _debounce?.cancel();
     final query = value.trim();
-    if (query.isEmpty) {
+    if (query.length < _minQueryLength) {
       setState(() {
         _loading = false;
         _error = null;
@@ -144,7 +148,7 @@ class _ProductSearchPageState extends ConsumerState<ProductSearchPage> {
     if (_error != null) {
       return _CenteredHint(text: foodErrorMessage(context.l10n, _error));
     }
-    if (_controller.text.trim().isEmpty) {
+    if (_controller.text.trim().length < _minQueryLength) {
       return _CenteredHint(text: context.l10n.productSearchPrompt);
     }
     if (_results.isEmpty) {

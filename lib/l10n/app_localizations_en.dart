@@ -876,7 +876,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get foodErrorNetwork =>
-      'No connection to Open Food Facts. Check your network.';
+      'Open Food Facts is temporarily unavailable. Please try again shortly.';
 
   @override
   String get foodErrorRateLimited =>

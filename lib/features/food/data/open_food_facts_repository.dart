@@ -29,9 +29,27 @@ class OpenFoodFactsRepository implements FoodLookupRepository {
   /// nothing more, to keep responses small.
   static const String _fields = 'code,product_name,brands,image_url';
 
-  /// Guards against a hung connection so being offline surfaces promptly as a
-  /// [FoodFailureReason.network] rather than blocking the scan flow.
-  static const Duration _timeout = Duration(seconds: 10);
+  /// Sort search results by scan count, so the best-known products rank first.
+  static const String _popularitySort = 'unique_scans_n';
+
+  /// DACH focus: restrict text search to products sold in Germany and set the
+  /// German country/language context (see ADR-0012). Germany is the pragmatic
+  /// proxy — the major Austrian/Swiss brands are listed there too, and
+  /// `search.pl` cannot OR several countries cleanly.
+  static const String _country = 'germany';
+  static const String _countryCode = 'de';
+  static const String _languageCode = 'de';
+
+  /// The `cgi/search.pl` endpoint is slow, so allow more time before treating a
+  /// request as failed.
+  static const Duration _timeout = Duration(seconds: 15);
+
+  /// Open Food Facts returns transient 5xx/timeouts under load; retry this many
+  /// times before surfacing a failure.
+  static const int _maxRetries = 1;
+
+  /// Backoff between attempts.
+  static const Duration _retryDelay = Duration(milliseconds: 400);
 
   @override
   Future<Food?> lookupByBarcode(String barcode) => _guard(() async {
@@ -55,6 +73,14 @@ class OpenFoodFactsRepository implements FoodLookupRepository {
       'json': '1',
       'page_size': '20',
       'fields': _fields,
+      // Focus on Germany, best-known products first, so the DACH audience sees
+      // mainstream local brands instead of global imports.
+      'sort_by': _popularitySort,
+      'tagtype_0': 'countries',
+      'tag_contains_0': 'contains',
+      'tag_0': _country,
+      'cc': _countryCode,
+      'lc': _languageCode,
     });
     final json = await _getJson(uri);
     final products = json['products'];
@@ -66,31 +92,57 @@ class OpenFoodFactsRepository implements FoodLookupRepository {
   });
 
   /// Performs the GET and decodes a JSON object, mapping HTTP status codes to
-  /// failures. 429 is surfaced distinctly so the UI can suggest retrying later.
+  /// failures. A timeout or a transient 5xx is retried once before failing; 429
+  /// is surfaced distinctly so the UI can suggest retrying later.
   Future<Map<String, dynamic>> _getJson(Uri uri) async {
-    final response = await _client
-        .get(uri, headers: {'User-Agent': AppConfig.offUserAgent})
-        .timeout(_timeout);
-    if (response.statusCode == 429) {
-      throw const FoodFailure(
-        FoodFailureReason.rateLimited,
-        'Open Food Facts rate limit reached.',
-      );
+    for (var attempt = 0; ; attempt++) {
+      final http.Response response;
+      try {
+        response = await _client
+            .get(uri, headers: {'User-Agent': AppConfig.offUserAgent})
+            .timeout(_timeout);
+      } on TimeoutException {
+        if (attempt < _maxRetries) {
+          await Future<void>.delayed(_retryDelay);
+          continue;
+        }
+        rethrow; // Mapped to a network failure in _guard.
+      }
+
+      if (response.statusCode == 429) {
+        throw const FoodFailure(
+          FoodFailureReason.rateLimited,
+          'Open Food Facts rate limit reached.',
+        );
+      }
+      // Transient server errors (e.g. 503 under load): retry, then surface as a
+      // temporary-unavailability network failure.
+      if (response.statusCode >= 500) {
+        if (attempt < _maxRetries) {
+          await Future<void>.delayed(_retryDelay);
+          continue;
+        }
+        throw FoodFailure(
+          FoodFailureReason.network,
+          'Open Food Facts is unavailable (HTTP ${response.statusCode}).',
+        );
+      }
+      if (response.statusCode != 200) {
+        throw FoodFailure(
+          FoodFailureReason.unknown,
+          'Open Food Facts returned HTTP ${response.statusCode}.',
+        );
+      }
+
+      final decoded = jsonDecode(response.body);
+      if (decoded is! Map<String, dynamic>) {
+        throw const FoodFailure(
+          FoodFailureReason.unknown,
+          'Unexpected Open Food Facts response shape.',
+        );
+      }
+      return decoded;
     }
-    if (response.statusCode != 200) {
-      throw FoodFailure(
-        FoodFailureReason.unknown,
-        'Open Food Facts returned HTTP ${response.statusCode}.',
-      );
-    }
-    final decoded = jsonDecode(response.body);
-    if (decoded is! Map<String, dynamic>) {
-      throw const FoodFailure(
-        FoodFailureReason.unknown,
-        'Unexpected Open Food Facts response shape.',
-      );
-    }
-    return decoded;
   }
 
   /// Maps an Open Food Facts product object to a [Food], or `null` when it has

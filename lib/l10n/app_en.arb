@@ -529,7 +529,7 @@
   "productSearchPrompt": "Type to search Open Food Facts.",
   "productSearchEmpty": "No products found.",
 
-  "foodErrorNetwork": "No connection to Open Food Facts. Check your network.",
+  "foodErrorNetwork": "Open Food Facts is temporarily unavailable. Please try again shortly.",
   "foodErrorRateLimited": "Too many requests. Please try again in a moment.",
   "foodErrorGeneric": "Couldn't reach the product database. Please try again."
 }

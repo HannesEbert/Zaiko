@@ -125,5 +125,58 @@ void main() {
 
       expect(await repo.searchByName('zzz'), isEmpty);
     });
+
+    test('restricts to Germany and sorts by popularity', () async {
+      late Uri requested;
+      final repo = _repo((request) async {
+        requested = request.url;
+        return http.Response(jsonEncode({'products': <dynamic>[]}), 200);
+      });
+
+      await repo.searchByName('wasser');
+
+      final params = requested.queryParameters;
+      expect(params['sort_by'], 'unique_scans_n');
+      expect(params['tagtype_0'], 'countries');
+      expect(params['tag_0'], 'germany');
+      expect(params['cc'], 'de');
+      expect(params['lc'], 'de');
+    });
+  });
+
+  group('resilience', () {
+    test('retries once on a transient 503, then succeeds', () async {
+      var calls = 0;
+      final repo = _repo((_) async {
+        calls++;
+        if (calls == 1) return http.Response('', 503);
+        return http.Response(jsonEncode({'products': <dynamic>[]}), 200);
+      });
+
+      await repo.searchByName('wasser');
+
+      expect(calls, 2);
+    });
+
+    test('maps a persistent 5xx to a network failure', () async {
+      var calls = 0;
+      final repo = _repo((_) async {
+        calls++;
+        return http.Response('', 503);
+      });
+
+      await expectLater(
+        repo.searchByName('wasser'),
+        throwsA(
+          isA<FoodFailure>().having(
+            (e) => e.reason,
+            'reason',
+            FoodFailureReason.network,
+          ),
+        ),
+      );
+      // One retry after the first failure.
+      expect(calls, 2);
+    });
   });
 }

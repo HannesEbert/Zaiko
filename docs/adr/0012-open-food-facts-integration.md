@@ -45,6 +45,18 @@ settings" path.
 - **Two repositories, two responsibilities.** `FoodLookupRepository` (OFF over
   HTTP) resolves a barcode or a search term to `Food` objects.
   `FoodCatalogRepository` (Supabase `foods` table) persists them.
+- **Search focuses on Germany, ranked by popularity.** Text search restricts to
+  products sold in Germany (`tag_0=germany`, `cc/lc=de`) and sorts by scan count
+  (`sort_by=unique_scans_n`), so the DACH audience sees mainstream local brands
+  first instead of global imports. Germany is the pragmatic DACH proxy — the big
+  Austrian/Swiss brands are listed there too and `cgi/search.pl` cannot OR
+  several countries cleanly. Barcode lookup stays global (a barcode is
+  worldwide-unique). The UI only searches from two characters on, since a single
+  letter is a wildcard.
+- **Resilience.** `cgi/search.pl` is slow and returns transient 5xx under load,
+  so both requests use a 15s timeout and one automatic retry; a persistent
+  timeout or 5xx surfaces as a temporary-unavailability message rather than a
+  "check your connection" one.
 - **Cache as a shared catalog.** Resolved OFF products are written to `foods`
   with `household_id = null` (the shared cache) and `source = openFoodFacts`, so
   a scan by one household benefits all of them and a re-scan resolves offline.

@@ -300,7 +300,7 @@
   "productSearchPrompt": "Tippe, um Open Food Facts zu durchsuchen.",
   "productSearchEmpty": "Keine Produkte gefunden.",
 
-  "foodErrorNetwork": "Keine Verbindung zu Open Food Facts. Prüfe dein Netzwerk.",
+  "foodErrorNetwork": "Open Food Facts ist gerade nicht erreichbar. Bitte versuche es gleich erneut.",
   "foodErrorRateLimited": "Zu viele Anfragen. Bitte versuche es gleich noch einmal.",
   "foodErrorGeneric": "Produktdatenbank nicht erreichbar. Bitte versuche es erneut."
 }

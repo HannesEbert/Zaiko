@@ -1691,7 +1691,7 @@ abstract class AppLocalizations {
   /// No description provided for @foodErrorNetwork.
   ///
   /// In en, this message translates to:
-  /// **'No connection to Open Food Facts. Check your network.'**
+  /// **'Open Food Facts is temporarily unavailable. Please try again shortly.'**
   String get foodErrorNetwork;
 
   /// No description provided for @foodErrorRateLimited.

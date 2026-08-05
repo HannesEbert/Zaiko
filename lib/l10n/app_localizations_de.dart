@@ -885,7 +885,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get foodErrorNetwork =>
-      'Keine Verbindung zu Open Food Facts. Prüfe dein Netzwerk.';
+      'Open Food Facts ist gerade nicht erreichbar. Bitte versuche es gleich erneut.';
 
   @override
   String get foodErrorRateLimited =>
