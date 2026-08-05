@@ -396,6 +396,42 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get shoppingAddTitle => 'Add to list';
+
+  @override
+  String get shoppingEditTitle => 'Edit item';
+
+  @override
+  String get shoppingQuantityLabel => 'Quantity';
+
+  @override
+  String get shoppingQuantityHint => 'e.g. 2 × 1 l';
+
+  @override
+  String get shoppingAddButton => 'Add';
+
+  @override
+  String get shoppingSaveButton => 'Save';
+
+  @override
+  String get shoppingClearCheckedTooltip => 'Clear bought items';
+
+  @override
+  String get shoppingDoneSection => 'Bought';
+
+  @override
+  String get shoppingLoadError => 'Couldn\'t load your shopping list.';
+
+  @override
+  String get shoppingErrorGeneric => 'Something went wrong. Please try again.';
+
+  @override
+  String get shoppingErrorNotMember => 'You don\'t have access to this list.';
+
+  @override
+  String get shoppingErrorNotFound => 'This item no longer exists.';
+
+  @override
   String get recipesSubtitle => 'Cookable with your stock';
 
   @override

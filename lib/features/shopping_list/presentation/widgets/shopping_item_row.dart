@@ -1,32 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
-import '../shopping_demo_data.dart';
+import '../../application/shopping_providers.dart';
+import '../../application/shopping_view.dart';
+import '../shopping_error_message.dart';
 
 /// A shopping-list row with a tappable round checkbox, as in the design.
-/// Toggling is local (demo); checked items show a filled circle and a
-/// struck-through name.
-class ShoppingItemRow extends StatefulWidget {
-  const ShoppingItemRow(this.item, {super.key});
+///
+/// Ticking the checkbox persists through the [ShoppingListController] and the
+/// realtime stream re-emits, so every member sees the change. Checked items show
+/// a filled circle and a struck-through name. Tapping the row opens the edit
+/// sheet via [onTap].
+class ShoppingItemRow extends ConsumerWidget {
+  const ShoppingItemRow(this.resolved, {this.onTap, super.key});
 
-  final ShoppingItem item;
-
-  @override
-  State<ShoppingItemRow> createState() => _ShoppingItemRowState();
-}
-
-class _ShoppingItemRowState extends State<ShoppingItemRow> {
-  late bool _checked = widget.item.checked;
+  final ResolvedShoppingItem resolved;
+  final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
-    final item = widget.item;
+    final item = resolved.item;
+    final subtitle = _subtitle();
 
     return InkWell(
-      onTap: () => setState(() => _checked = !_checked),
+      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.s4,
@@ -34,7 +35,10 @@ class _ShoppingItemRowState extends State<ShoppingItemRow> {
         ),
         child: Row(
           children: [
-            _Checkbox(checked: _checked),
+            _CheckboxButton(
+              checked: item.checked,
+              onTap: () => _toggle(context, ref),
+            ),
             const SizedBox(width: AppSpacing.s4),
             Expanded(
               child: Column(
@@ -45,21 +49,24 @@ class _ShoppingItemRowState extends State<ShoppingItemRow> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.bodyMedium.copyWith(
-                      color: _checked
+                      color: item.checked
                           ? colors.textTertiary
                           : colors.textPrimary,
-                      decoration: _checked ? TextDecoration.lineThrough : null,
+                      decoration: item.checked
+                          ? TextDecoration.lineThrough
+                          : null,
                       decorationColor: colors.textTertiary,
                     ),
                   ),
-                  Text(
-                    '${item.detail} · ${item.category}',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTypography.caption.copyWith(
-                      color: colors.textSecondary,
+                  if (subtitle != null)
+                    Text(
+                      subtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.caption.copyWith(
+                        color: colors.textSecondary,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -68,32 +75,54 @@ class _ShoppingItemRowState extends State<ShoppingItemRow> {
       ),
     );
   }
+
+  /// The subtitle line: the quantity and category name joined by a dot,
+  /// whichever are present; null when the item has neither.
+  String? _subtitle() {
+    final parts = [
+      ?resolved.item.quantity,
+      ?resolved.category?.name,
+    ].where((part) => part.isNotEmpty).toList();
+    return parts.isEmpty ? null : parts.join(' · ');
+  }
+
+  Future<void> _toggle(BuildContext context, WidgetRef ref) async {
+    final ok = await ref
+        .read(shoppingListControllerProvider.notifier)
+        .toggle(id: resolved.item.id, checked: !resolved.item.checked);
+    if (!ok && context.mounted) showShoppingErrorSnackBar(context, ref);
+  }
 }
 
-class _Checkbox extends StatelessWidget {
-  const _Checkbox({required this.checked});
+class _CheckboxButton extends StatelessWidget {
+  const _CheckboxButton({required this.checked, required this.onTap});
 
   final bool checked;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 120),
-      width: 24,
-      height: 24,
-      decoration: BoxDecoration(
-        color: checked ? colors.accent : Colors.transparent,
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: checked ? colors.accent : colors.textTertiary,
-          width: 2,
+    return InkResponse(
+      onTap: onTap,
+      radius: 22,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 120),
+        width: 24,
+        height: 24,
+        decoration: BoxDecoration(
+          color: checked ? colors.accent : Colors.transparent,
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: checked ? colors.accent : colors.textTertiary,
+            width: 2,
+          ),
         ),
+        child: checked
+            ? Icon(Icons.check, size: 14, color: colors.onAccent)
+            : null,
       ),
-      child: checked
-          ? Icon(Icons.check, size: 14, color: colors.onAccent)
-          : null,
     );
   }
 }

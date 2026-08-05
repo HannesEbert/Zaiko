@@ -399,6 +399,44 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get shoppingAddTitle => 'Zur Liste hinzufügen';
+
+  @override
+  String get shoppingEditTitle => 'Artikel bearbeiten';
+
+  @override
+  String get shoppingQuantityLabel => 'Menge';
+
+  @override
+  String get shoppingQuantityHint => 'z. B. 2 × 1 l';
+
+  @override
+  String get shoppingAddButton => 'Hinzufügen';
+
+  @override
+  String get shoppingSaveButton => 'Speichern';
+
+  @override
+  String get shoppingClearCheckedTooltip => 'Gekaufte entfernen';
+
+  @override
+  String get shoppingDoneSection => 'Gekauft';
+
+  @override
+  String get shoppingLoadError => 'Einkaufsliste konnte nicht geladen werden.';
+
+  @override
+  String get shoppingErrorGeneric =>
+      'Etwas ist schiefgelaufen. Bitte erneut versuchen.';
+
+  @override
+  String get shoppingErrorNotMember =>
+      'Du hast keinen Zugriff auf diese Liste.';
+
+  @override
+  String get shoppingErrorNotFound => 'Dieser Artikel existiert nicht mehr.';
+
+  @override
   String get recipesSubtitle => 'Kochbar mit deinem Vorrat';
 
   @override

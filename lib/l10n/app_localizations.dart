@@ -806,6 +806,78 @@ abstract class AppLocalizations {
   /// **'{count} items on the list'**
   String shoppingListCount(int count);
 
+  /// No description provided for @shoppingAddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to list'**
+  String get shoppingAddTitle;
+
+  /// No description provided for @shoppingEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit item'**
+  String get shoppingEditTitle;
+
+  /// No description provided for @shoppingQuantityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get shoppingQuantityLabel;
+
+  /// No description provided for @shoppingQuantityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 2 × 1 l'**
+  String get shoppingQuantityHint;
+
+  /// No description provided for @shoppingAddButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get shoppingAddButton;
+
+  /// No description provided for @shoppingSaveButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get shoppingSaveButton;
+
+  /// No description provided for @shoppingClearCheckedTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear bought items'**
+  String get shoppingClearCheckedTooltip;
+
+  /// No description provided for @shoppingDoneSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Bought'**
+  String get shoppingDoneSection;
+
+  /// No description provided for @shoppingLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load your shopping list.'**
+  String get shoppingLoadError;
+
+  /// No description provided for @shoppingErrorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get shoppingErrorGeneric;
+
+  /// No description provided for @shoppingErrorNotMember.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have access to this list.'**
+  String get shoppingErrorNotMember;
+
+  /// No description provided for @shoppingErrorNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This item no longer exists.'**
+  String get shoppingErrorNotFound;
+
   /// No description provided for @recipesSubtitle.
   ///
   /// In en, this message translates to:
