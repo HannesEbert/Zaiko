@@ -8,22 +8,32 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../shared/widgets/card_list.dart';
 import '../../../../shared/widgets/icon_tile.dart';
 import '../../../../shared/widgets/section_label.dart';
+import '../../../food/presentation/food_error_message.dart';
+import '../../../food/presentation/pages/barcode_scanner_page.dart';
+import '../../../food/presentation/pages/product_search_page.dart';
 import '../../application/inventory_providers.dart';
 import '../pages/item_form_page.dart';
 
 /// How many quick "add again" chips the sheet shows at most.
 const int _quickAddLimit = 6;
 
-/// The sheet's outcome: open the manual item form, optionally pre-filled with a
-/// product [name] from an "add again" chip. Scan/search are E1.3 and dismiss.
-class _AddItemChoice {
-  const _AddItemChoice({this.name});
+/// How the user chose to add an item: scan a barcode, search the product
+/// database, or enter it manually (optionally pre-filled with a [name] from an
+/// "add again" chip).
+enum _AddItemAction { scan, search, manual }
 
+/// The sheet's outcome — the chosen [action] plus the optional quick-add
+/// [name].
+class _AddItemChoice {
+  const _AddItemChoice(this.action, {this.name});
+
+  final _AddItemAction action;
   final String? name;
 }
 
 /// Shows the "Artikel hinzufügen" modal bottom sheet with the three ways to add
-/// an item plus quick "add again" chips, then opens the manual form when chosen.
+/// an item plus quick "add again" chips, then runs the chosen flow: barcode
+/// scan, product search, or the manual form.
 Future<void> showAddItemSheet(BuildContext context) async {
   final choice = await showModalBottomSheet<_AddItemChoice>(
     context: context,
@@ -32,7 +42,42 @@ Future<void> showAddItemSheet(BuildContext context) async {
     builder: (_) => const _AddItemSheet(),
   );
   if (choice == null || !context.mounted) return;
-  await ItemFormPage.open(context, initialName: choice.name);
+  switch (choice.action) {
+    case _AddItemAction.manual:
+      await ItemFormPage.open(context, initialName: choice.name);
+    case _AddItemAction.scan:
+      await _runScanFlow(context);
+    case _AddItemAction.search:
+      await _runSearchFlow(context);
+  }
+}
+
+/// Scans a barcode, then opens the add form pre-filled from the resolved
+/// product — or, on a miss or lookup error, falls back to the manual form with
+/// the barcode retained and a short explanation.
+Future<void> _runScanFlow(BuildContext context) async {
+  final outcome = await BarcodeScannerPage.open(context);
+  if (outcome == null || !context.mounted) return;
+  if (outcome.product != null) {
+    await ItemFormPage.open(context, product: outcome.product);
+    return;
+  }
+  final l10n = context.l10n;
+  final message = outcome.failure != null
+      ? foodErrorMessage(l10n, outcome.failure)
+      : l10n.scanNotFoundSnack;
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
+  await ItemFormPage.open(context, scannedBarcode: outcome.barcode);
+}
+
+/// Searches the product database, then opens the add form pre-filled from the
+/// chosen product.
+Future<void> _runSearchFlow(BuildContext context) async {
+  final product = await ProductSearchPage.open(context);
+  if (product == null || !context.mounted) return;
+  await ItemFormPage.open(context, product: product);
 }
 
 class _AddItemSheet extends ConsumerWidget {
@@ -103,20 +148,25 @@ class _AddItemSheet extends ConsumerWidget {
                     icon: Icons.qr_code_scanner_outlined,
                     title: l10n.addItemScanTitle,
                     subtitle: l10n.addItemScanSubtitle,
-                    onTap: () => Navigator.of(context).pop(),
+                    onTap: () => Navigator.of(
+                      context,
+                    ).pop(const _AddItemChoice(_AddItemAction.scan)),
                   ),
                   _AddOption(
                     icon: Icons.search_outlined,
                     title: l10n.addItemSearchTitle,
                     subtitle: l10n.addItemSearchSubtitle,
-                    onTap: () => Navigator.of(context).pop(),
+                    onTap: () => Navigator.of(
+                      context,
+                    ).pop(const _AddItemChoice(_AddItemAction.search)),
                   ),
                   _AddOption(
                     icon: Icons.edit_outlined,
                     title: l10n.addItemManualTitle,
                     subtitle: l10n.addItemManualSubtitle,
-                    onTap: () =>
-                        Navigator.of(context).pop(const _AddItemChoice()),
+                    onTap: () => Navigator.of(
+                      context,
+                    ).pop(const _AddItemChoice(_AddItemAction.manual)),
                   ),
                 ],
               ),
@@ -131,9 +181,9 @@ class _AddItemSheet extends ConsumerWidget {
                     for (final product in recentNames)
                       _QuickAddChip(
                         label: product,
-                        onTap: () => Navigator.of(
-                          context,
-                        ).pop(_AddItemChoice(name: product)),
+                        onTap: () => Navigator.of(context).pop(
+                          _AddItemChoice(_AddItemAction.manual, name: product),
+                        ),
                       ),
                   ],
                 ),

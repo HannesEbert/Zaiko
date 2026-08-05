@@ -31,22 +31,22 @@ class ItemDetailPage extends ConsumerStatefulWidget {
 }
 
 class _ItemDetailPageState extends ConsumerState<ItemDetailPage> {
-  late int _quantity = widget.resolved.item.quantity.round();
+  late int _count = widget.resolved.item.count;
 
   String get _itemId => widget.resolved.item.id;
 
-  Future<void> _changeQuantity(int delta) async {
-    final next = (_quantity + delta).clamp(0, 99);
-    if (next == _quantity) return;
+  Future<void> _changeCount(int delta) async {
+    final next = (_count + delta).clamp(0, 99);
+    if (next == _count) return;
     // Reaching zero means "used up": move to the trash instead of storing 0.
     if (next == 0) {
       await _moveToTrash();
       return;
     }
-    setState(() => _quantity = next);
+    setState(() => _count = next);
     final ok = await ref
         .read(inventoryItemControllerProvider.notifier)
-        .setQuantity(id: _itemId, quantity: next);
+        .setCount(id: _itemId, count: next);
     if (!ok && mounted) _showError();
   }
 
@@ -71,7 +71,7 @@ class _ItemDetailPageState extends ConsumerState<ItemDetailPage> {
   Future<void> _edit() async {
     final saved = await ItemFormPage.open(
       context,
-      item: widget.resolved.item.copyWith(quantity: _quantity),
+      item: widget.resolved.item.copyWith(count: _count),
     );
     // After a successful edit the list reflects the change; leave the (now
     // stale) detail snapshot and return to it.
@@ -120,7 +120,11 @@ class _ItemDetailPageState extends ConsumerState<ItemDetailPage> {
                   ),
                   const SizedBox(height: 3),
                   Text(
-                    formatQuantity(l10n, _quantity, item.unit),
+                    formatQuantity(
+                      count: _count,
+                      quantity: item.quantity,
+                      unit: item.unit,
+                    ),
                     style: AppTypography.caption.copyWith(
                       color: colors.textSecondary,
                     ),
@@ -135,9 +139,9 @@ class _ItemDetailPageState extends ConsumerState<ItemDetailPage> {
                     children: [
                       _QuantityRow(
                         label: l10n.itemDetailQuantity,
-                        quantity: _quantity,
-                        onDecrement: () => _changeQuantity(-1),
-                        onIncrement: () => _changeQuantity(1),
+                        count: _count,
+                        onDecrement: () => _changeCount(-1),
+                        onIncrement: () => _changeCount(1),
                       ),
                       _DetailRow(
                         label: l10n.itemDetailLocation,
@@ -358,13 +362,13 @@ class _ValueWithChevron extends StatelessWidget {
 class _QuantityRow extends StatelessWidget {
   const _QuantityRow({
     required this.label,
-    required this.quantity,
+    required this.count,
     required this.onDecrement,
     required this.onIncrement,
   });
 
   final String label;
-  final int quantity;
+  final int count;
   final VoidCallback onDecrement;
   final VoidCallback onIncrement;
 
@@ -396,7 +400,7 @@ class _QuantityRow extends StatelessWidget {
                 SizedBox(
                   width: 24,
                   child: Text(
-                    '$quantity',
+                    '$count',
                     textAlign: TextAlign.center,
                     style: AppTypography.bodyMedium.copyWith(
                       fontWeight: FontWeight.w600,

@@ -8,6 +8,9 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../shared/widgets/zaiko_buttons.dart';
 import '../../../auth/presentation/widgets/field_label.dart';
+import '../../../food/application/food_providers.dart';
+import '../../../food/domain/food.dart';
+import '../../../food/domain/food_failure.dart';
 import '../../application/inventory_providers.dart';
 import '../../domain/category.dart';
 import '../../domain/inventory_item.dart';
@@ -27,8 +30,19 @@ import 'manage_storage_locations_page.dart';
 /// A null [item] is "add" mode; a non-null [item] pre-fills the fields for
 /// editing. Both modes drive [InventoryItemController]; on success the page
 /// pops and the realtime item stream reflects the change on its own.
+///
+/// The add mode can be seeded from the Open Food Facts flow: [product] links a
+/// resolved catalog entry (its name pre-fills the field and its id is saved as
+/// `food_id`), while [scannedBarcode] is the fallback for an unknown barcode —
+/// on save a custom catalog product carrying it is created and linked.
 class ItemFormPage extends ConsumerStatefulWidget {
-  const ItemFormPage({this.item, this.initialName, super.key});
+  const ItemFormPage({
+    this.item,
+    this.initialName,
+    this.product,
+    this.scannedBarcode,
+    super.key,
+  });
 
   /// The item being edited, or null when adding a new one.
   final InventoryItem? item;
@@ -36,16 +50,31 @@ class ItemFormPage extends ConsumerStatefulWidget {
   /// Pre-filled name for "add again" quick-add from the add sheet.
   final String? initialName;
 
+  /// The catalog product this item was resolved from (scan hit or search
+  /// selection); its name pre-fills the form and its id is linked.
+  final Food? product;
+
+  /// A scanned barcode with no catalog match — the fallback path. Retained so a
+  /// custom product carrying it can be created and linked on save.
+  final String? scannedBarcode;
+
   /// Pushes the form onto the root navigator (over the bottom nav bar).
   /// Resolves to true once the item was saved, otherwise null (dismissed).
   static Future<bool?> open(
     BuildContext context, {
     InventoryItem? item,
     String? initialName,
+    Food? product,
+    String? scannedBarcode,
   }) {
     return Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute<bool>(
-        builder: (_) => ItemFormPage(item: item, initialName: initialName),
+        builder: (_) => ItemFormPage(
+          item: item,
+          initialName: initialName,
+          product: product,
+          scannedBarcode: scannedBarcode,
+        ),
       ),
     );
   }
@@ -58,8 +87,11 @@ class _ItemFormPageState extends ConsumerState<ItemFormPage> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
   late final TextEditingController _quantityController;
+  late final TextEditingController _countController;
 
-  late InventoryUnit _unit;
+  /// The per-unit size's unit, or null when the item has no measurable size (a
+  /// plain count).
+  InventoryUnit? _unit;
   late String? _categoryId;
   late String? _storageLocationId;
   late DateTime? _bestBefore;
@@ -71,12 +103,23 @@ class _ItemFormPageState extends ConsumerState<ItemFormPage> {
     super.initState();
     final item = widget.item;
     _nameController = TextEditingController(
-      text: item?.name ?? widget.initialName ?? '',
+      text: item?.name ?? widget.product?.name ?? widget.initialName ?? '',
     );
+    // Size (per unit): from the edited item, else the OFF product's package
+    // size (e.g. 500 g); empty when there is no measurable size.
+    _unit = InventoryUnit.fromKey(item?.unit ?? widget.product?.packagedUnit);
     _quantityController = TextEditingController(
-      text: item == null ? '1' : _formatQuantity(item.quantity),
+      text: _unit == null
+          ? ''
+          : _formatQuantity(
+              item != null
+                  ? item.quantity
+                  : (widget.product?.packagedAmount ?? 1),
+            ),
     );
-    _unit = InventoryUnit.fromKey(item?.unit) ?? InventoryUnit.piece;
+    // Count (how many units). OFF never knows the pack count, so a new product
+    // starts at 1 and the user bumps it (e.g. a 6-pack).
+    _countController = TextEditingController(text: '${item?.count ?? 1}');
     _categoryId = item?.categoryId;
     _storageLocationId = item?.storageLocationId;
     _bestBefore = item?.bestBefore;
@@ -86,6 +129,7 @@ class _ItemFormPageState extends ConsumerState<ItemFormPage> {
   void dispose() {
     _nameController.dispose();
     _quantityController.dispose();
+    _countController.dispose();
     super.dispose();
   }
 
@@ -111,6 +155,10 @@ class _ItemFormPageState extends ConsumerState<ItemFormPage> {
           child: ListView(
             padding: const EdgeInsets.all(AppSpacing.pageInset),
             children: [
+              if (widget.product case final product?) ...[
+                _ProductHeader(product: product),
+                const SizedBox(height: AppSpacing.s4),
+              ],
               FieldLabel(l10n.itemFormNameLabel),
               const SizedBox(height: AppSpacing.s1 + 2),
               TextFormField(
@@ -124,35 +172,82 @@ class _ItemFormPageState extends ConsumerState<ItemFormPage> {
                 validator: (value) => InventoryValidators.name(l10n, value),
               ),
               const SizedBox(height: AppSpacing.s4),
-              FieldLabel(l10n.itemFormQuantityLabel),
-              const SizedBox(height: AppSpacing.s1 + 2),
+              // Size (left) and count (right) sit on one line as one block: the
+              // per-unit size and how many of them there are.
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    width: 96,
-                    child: TextFormField(
-                      controller: _quantityController,
-                      enabled: !isBusy,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FieldLabel(l10n.itemFormQuantityLabel),
+                        const SizedBox(height: AppSpacing.s1 + 2),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 72,
+                              child: TextFormField(
+                                controller: _quantityController,
+                                // The size only applies once a unit is picked; a
+                                // plain count leaves it empty and disabled.
+                                enabled: !isBusy && _unit != null,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'[0-9.,]'),
+                                  ),
+                                ],
+                                style: AppTypography.body.copyWith(
+                                  color: colors.textPrimary,
+                                ),
+                                validator: _unit == null
+                                    ? null
+                                    : (value) => InventoryValidators.quantity(
+                                        l10n,
+                                        value,
+                                      ),
+                              ),
+                            ),
+                            const SizedBox(width: AppSpacing.s3),
+                            Expanded(
+                              child: _UnitChips(
+                                selected: _unit,
+                                enabled: !isBusy,
+                                onSelected: _onUnitSelected,
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
-                      style: AppTypography.body.copyWith(
-                        color: colors.textPrimary,
-                      ),
-                      validator: (value) =>
-                          InventoryValidators.quantity(l10n, value),
                     ),
                   ),
-                  const SizedBox(width: AppSpacing.s3),
-                  Expanded(
-                    child: _UnitChips(
-                      selected: _unit,
-                      enabled: !isBusy,
-                      onSelected: (unit) => setState(() => _unit = unit),
+                  const SizedBox(width: AppSpacing.s4),
+                  SizedBox(
+                    width: 80,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FieldLabel(l10n.itemFormCountLabel),
+                        const SizedBox(height: AppSpacing.s1 + 2),
+                        TextFormField(
+                          controller: _countController,
+                          enabled: !isBusy,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          style: AppTypography.body.copyWith(
+                            color: colors.textPrimary,
+                          ),
+                          validator: (value) =>
+                              InventoryValidators.count(l10n, value),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -281,34 +376,60 @@ class _ItemFormPageState extends ConsumerState<ItemFormPage> {
     if (picked != null) setState(() => _bestBefore = picked);
   }
 
+  /// Toggles the size unit: tapping the selected one clears the size so the item
+  /// becomes a plain count; picking a unit seeds an empty size with 1.
+  void _onUnitSelected(InventoryUnit unit) {
+    setState(() {
+      if (_unit == unit) {
+        _unit = null;
+        _quantityController.clear();
+      } else {
+        _unit = unit;
+        if (_quantityController.text.trim().isEmpty) {
+          _quantityController.text = '1';
+        }
+      }
+    });
+  }
+
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     final l10n = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
-    final quantity = InventoryValidators.parseQuantity(
-      _quantityController.text,
-    )!;
+    final count = InventoryValidators.parseCount(_countController.text)!;
+    // A unit means a measurable size; without one the item is a plain count and
+    // the size is stored as a placeholder 1.
+    final unit = _unit;
+    final quantity = unit == null
+        ? 1
+        : InventoryValidators.parseQuantity(_quantityController.text)!;
     final name = _nameController.text.trim();
     final notifier = ref.read(inventoryItemControllerProvider.notifier);
 
-    final ok = _isEdit
-        ? await notifier.save(
-            id: widget.item!.id,
-            name: name,
-            quantity: quantity,
-            unit: _unit.key,
-            categoryId: _categoryId,
-            storageLocationId: _storageLocationId,
-            bestBefore: _bestBefore,
-          )
-        : await notifier.add(
-            name: name,
-            quantity: quantity,
-            unit: _unit.key,
-            categoryId: _categoryId,
-            storageLocationId: _storageLocationId,
-            bestBefore: _bestBefore,
-          );
+    final bool ok;
+    if (_isEdit) {
+      ok = await notifier.save(
+        id: widget.item!.id,
+        name: name,
+        quantity: quantity,
+        count: count,
+        unit: unit?.key,
+        categoryId: _categoryId,
+        storageLocationId: _storageLocationId,
+        bestBefore: _bestBefore,
+      );
+    } else {
+      ok = await notifier.add(
+        name: name,
+        quantity: quantity,
+        count: count,
+        unit: unit?.key,
+        categoryId: _categoryId,
+        storageLocationId: _storageLocationId,
+        bestBefore: _bestBefore,
+        foodId: await _linkedFoodId(name),
+      );
+    }
 
     if (!mounted) return;
     if (ok) {
@@ -331,6 +452,92 @@ class _ItemFormPageState extends ConsumerState<ItemFormPage> {
         );
     }
   }
+
+  /// The `food_id` to link when adding: the resolved product's id, or — for the
+  /// unknown-barcode fallback — a freshly created custom product carrying the
+  /// barcode. Best-effort: if creating the custom product fails, the item is
+  /// still added, just without a catalog link.
+  Future<String?> _linkedFoodId(String name) async {
+    final product = widget.product;
+    if (product != null) return product.id;
+    final barcode = widget.scannedBarcode;
+    if (barcode == null) return null;
+    try {
+      final custom = await ref
+          .read(productResolverProvider.notifier)
+          .createCustom(name: name, barcode: barcode);
+      return custom.id;
+    } on FoodFailure {
+      return null;
+    }
+  }
+}
+
+/// A compact header shown above the form when adding from a resolved catalog
+/// product: its image (when available) and brand, confirming the scan/search
+/// hit at a glance.
+class _ProductHeader extends StatelessWidget {
+  const _ProductHeader({required this.product});
+
+  final Food product;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final imageUrl = product.imageUrl;
+    final placeholder = Icon(
+      Icons.inventory_2_outlined,
+      size: 22,
+      color: colors.textTertiary,
+    );
+
+    return Row(
+      children: [
+        Container(
+          width: 56,
+          height: 56,
+          decoration: BoxDecoration(
+            color: colors.sunken,
+            borderRadius: BorderRadius.circular(AppRadius.md),
+          ),
+          clipBehavior: Clip.antiAlias,
+          alignment: Alignment.center,
+          child: imageUrl == null
+              ? placeholder
+              : Image.network(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, _, _) => placeholder,
+                ),
+        ),
+        const SizedBox(width: AppSpacing.s3),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                product.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.bodyMedium.copyWith(
+                  color: colors.textPrimary,
+                ),
+              ),
+              if (product.brand != null)
+                Text(
+                  product.brand!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.caption.copyWith(
+                    color: colors.textSecondary,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 String _formatQuantity(num quantity) =>
@@ -352,7 +559,9 @@ String? _categoryName(List<Category> categories, String? id) {
   return null;
 }
 
-/// Row of selectable unit chips (g / kg / ml / l / pcs / pack).
+/// Row of selectable size-unit chips (g / kg / ml / l). Optional: tapping the
+/// selected chip again clears it (a plain count). [selected] is null when no
+/// unit is chosen.
 class _UnitChips extends StatelessWidget {
   const _UnitChips({
     required this.selected,
@@ -360,21 +569,19 @@ class _UnitChips extends StatelessWidget {
     required this.onSelected,
   });
 
-  final InventoryUnit selected;
+  final InventoryUnit? selected;
   final bool enabled;
   final ValueChanged<InventoryUnit> onSelected;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-
     return Wrap(
       spacing: AppSpacing.s2,
       runSpacing: AppSpacing.s2,
       children: [
         for (final unit in InventoryUnit.values)
           _Chip(
-            label: inventoryUnitLabel(l10n, unit),
+            label: inventoryUnitLabel(unit),
             selected: unit == selected,
             onTap: enabled ? () => onSelected(unit) : null,
           ),

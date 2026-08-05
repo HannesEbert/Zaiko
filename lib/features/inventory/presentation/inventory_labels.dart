@@ -10,34 +10,25 @@ import '../domain/storage_location.dart';
 /// units and dates into the localized labels the screens render. Kept out of
 /// the widgets so the strings are computed in one place and unit-testable.
 
-/// "1 l", "6 Stück", or just "2" when the item has no unit.
-String formatQuantity(AppLocalizations l10n, num quantity, String? unit) {
+/// The stocked amount: `"6 × 1.5 l"` for a multipack, `"500 g"` for a single
+/// sized item, or just `"3"` when the item has no measurable size (a plain
+/// count). [unit] is a language-neutral symbol (g/kg/ml/l), shown as-is.
+String formatQuantity({
+  required int count,
+  required num quantity,
+  String? unit,
+}) {
+  if (unit == null || unit.isEmpty) return '$count';
   final amount = quantity % 1 == 0
       ? quantity.toInt().toString()
       : quantity.toString();
-  final label = _unitLabel(l10n, unit);
-  return label == null ? amount : '$amount $label';
+  final size = '$amount $unit';
+  return count == 1 ? size : '$count × $size';
 }
 
-String? _unitLabel(AppLocalizations l10n, String? unit) => switch (unit) {
-  null || '' => null,
-  'piece' => l10n.unitPiece,
-  'package' => l10n.unitPackage,
-  // g / kg / ml / l are language-neutral symbols shown as-is.
-  _ => unit,
-};
-
-/// The picker label for a fixed [InventoryUnit]: the language-neutral symbol
-/// for g/kg/ml/l, the localized word for piece/package.
-String inventoryUnitLabel(AppLocalizations l10n, InventoryUnit unit) =>
-    switch (unit) {
-      InventoryUnit.piece => l10n.unitPiece,
-      InventoryUnit.package => l10n.unitPackage,
-      InventoryUnit.gram ||
-      InventoryUnit.kilogram ||
-      InventoryUnit.milliliter ||
-      InventoryUnit.liter => unit.key,
-    };
+/// The picker-chip label for a fixed [InventoryUnit] — the language-neutral
+/// symbol (g/kg/ml/l).
+String inventoryUnitLabel(InventoryUnit unit) => unit.key;
 
 /// Short expiry label for rails and list rows ("Morgen", "In 2 Tagen",
 /// "Abgelaufen"); null when the item has no best-before date.

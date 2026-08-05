@@ -364,7 +364,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get itemDetailHeader => 'Item';
 
   @override
-  String get itemDetailQuantity => 'Quantity';
+  String get itemDetailQuantity => 'Count';
 
   @override
   String get itemDetailLocation => 'Location';
@@ -704,6 +704,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get itemFormQuantityInvalid => 'Enter a quantity greater than 0';
 
   @override
+  String get itemFormCountLabel => 'Count';
+
+  @override
+  String get itemFormCountInvalid => 'Enter a count of at least 1';
+
+  @override
   String get itemFormUnitLabel => 'Unit';
 
   @override
@@ -854,4 +860,53 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get inventoryErrorNotFound => 'This item no longer exists.';
+
+  @override
+  String get scannerTitle => 'Scan barcode';
+
+  @override
+  String get scannerHint => 'Point the camera at a product barcode';
+
+  @override
+  String get scannerTorchTooltip => 'Torch';
+
+  @override
+  String get scannerResolving => 'Looking up product…';
+
+  @override
+  String get scannerPermissionTitle => 'Camera access needed';
+
+  @override
+  String get scannerPermissionBody =>
+      'Zaiko needs camera access to scan barcodes. You can enable it in Settings.';
+
+  @override
+  String get scannerOpenSettings => 'Open Settings';
+
+  @override
+  String get scanNotFoundSnack => 'Product not found — enter it manually.';
+
+  @override
+  String get productSearchTitle => 'Search product';
+
+  @override
+  String get productSearchHint => 'Search by product name…';
+
+  @override
+  String get productSearchPrompt => 'Type to search Open Food Facts.';
+
+  @override
+  String get productSearchEmpty => 'No products found.';
+
+  @override
+  String get foodErrorNetwork =>
+      'Open Food Facts is temporarily unavailable. Please try again shortly.';
+
+  @override
+  String get foodErrorRateLimited =>
+      'Too many requests. Please try again in a moment.';
+
+  @override
+  String get foodErrorGeneric =>
+      'Couldn\'t reach the product database. Please try again.';
 }

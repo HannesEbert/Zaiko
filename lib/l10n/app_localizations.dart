@@ -749,7 +749,7 @@ abstract class AppLocalizations {
   /// No description provided for @itemDetailQuantity.
   ///
   /// In en, this message translates to:
-  /// **'Quantity'**
+  /// **'Count'**
   String get itemDetailQuantity;
 
   /// No description provided for @itemDetailLocation.
@@ -1370,6 +1370,18 @@ abstract class AppLocalizations {
   /// **'Enter a quantity greater than 0'**
   String get itemFormQuantityInvalid;
 
+  /// No description provided for @itemFormCountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Count'**
+  String get itemFormCountLabel;
+
+  /// No description provided for @itemFormCountInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a count of at least 1'**
+  String get itemFormCountInvalid;
+
   /// No description provided for @itemFormUnitLabel.
   ///
   /// In en, this message translates to:
@@ -1651,6 +1663,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This item no longer exists.'**
   String get inventoryErrorNotFound;
+
+  /// No description provided for @scannerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan barcode'**
+  String get scannerTitle;
+
+  /// No description provided for @scannerHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Point the camera at a product barcode'**
+  String get scannerHint;
+
+  /// No description provided for @scannerTorchTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Torch'**
+  String get scannerTorchTooltip;
+
+  /// No description provided for @scannerResolving.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking up product…'**
+  String get scannerResolving;
+
+  /// No description provided for @scannerPermissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera access needed'**
+  String get scannerPermissionTitle;
+
+  /// No description provided for @scannerPermissionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Zaiko needs camera access to scan barcodes. You can enable it in Settings.'**
+  String get scannerPermissionBody;
+
+  /// No description provided for @scannerOpenSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get scannerOpenSettings;
+
+  /// No description provided for @scanNotFoundSnack.
+  ///
+  /// In en, this message translates to:
+  /// **'Product not found — enter it manually.'**
+  String get scanNotFoundSnack;
+
+  /// No description provided for @productSearchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Search product'**
+  String get productSearchTitle;
+
+  /// No description provided for @productSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by product name…'**
+  String get productSearchHint;
+
+  /// No description provided for @productSearchPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Type to search Open Food Facts.'**
+  String get productSearchPrompt;
+
+  /// No description provided for @productSearchEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No products found.'**
+  String get productSearchEmpty;
+
+  /// No description provided for @foodErrorNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Food Facts is temporarily unavailable. Please try again shortly.'**
+  String get foodErrorNetwork;
+
+  /// No description provided for @foodErrorRateLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many requests. Please try again in a moment.'**
+  String get foodErrorRateLimited;
+
+  /// No description provided for @foodErrorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach the product database. Please try again.'**
+  String get foodErrorGeneric;
 }
 
 class _AppLocalizationsDelegate

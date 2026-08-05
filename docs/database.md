@@ -74,8 +74,8 @@ auth.users ─┐
 | `household_invites` | Short-lived join tokens | unique `token`, `expires_at`; a QR code encodes the token link |
 | `storage_locations` | Per-household places (fridge, freezer, …) | seeded with a default set on household creation |
 | `categories` | Item categories | hybrid: global defaults (`household_id` null, `is_default`) + per-household custom |
-| `foods` | Product catalog | shared cache (`household_id` null) + per-household products; soft-deleted |
-| `inventory_items` | What's in stock | household-scoped; `quantity`/`unit`, `best_before`; soft-deleted |
+| `foods` | Product catalog | shared cache (`household_id` null) + per-household products; soft-deleted; shared Open Food Facts entries deduplicated by `barcode` (partial unique index) |
+| `inventory_items` | What's in stock | household-scoped; per-unit size (`quantity`/`unit`, g/kg/ml/l or none) plus `count` (how many units, e.g. a 6-pack), `best_before`; soft-deleted |
 | `shopping_items` | The shopping list | household-scoped; `checked`; hard-deleted (no `deleted_at`) |
 
 `color` on storage locations and categories stores a stable palette key (e.g.
@@ -105,7 +105,12 @@ with `search_path` pinned to `public`.
 owning household; the same for `insert`/`update`/`delete`. Owner-only actions
 (rename/delete a household, remove members) use `is_household_owner`. Global rows
 (default categories, the shared food catalog, `household_id null`) are readable
-by every authenticated user but not writable by them.
+by every authenticated user. Default categories are otherwise read-only, but the
+shared food catalog is **insert-only**: authenticated users may add a resolved
+Open Food Facts product (the `foods_insert` policy allows a null `household_id`)
+so a scan populates the shared cache, while `update`/`delete` on shared rows stay
+blocked (`is_household_member(null)` is false). Caching therefore inserts and
+re-reads, never updates.
 
 **Membership changes bypass RLS deliberately.** There is no member `INSERT`
 policy. The creator is enrolled by the `on_household_created` trigger, and

@@ -129,7 +129,11 @@ class _TrashRow extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  formatQuantity(l10n, item.quantity, item.unit),
+                  formatQuantity(
+                    count: item.count,
+                    quantity: item.quantity,
+                    unit: item.unit,
+                  ),
                   style: AppTypography.caption.copyWith(
                     color: colors.textSecondary,
                   ),

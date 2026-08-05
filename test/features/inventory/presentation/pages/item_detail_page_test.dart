@@ -14,15 +14,15 @@ import '../../fake_inventory_repository.dart';
 void main() {
   late FakeInventoryRepository inventory;
 
-  ResolvedItem resolvedItem({required int quantity}) {
+  ResolvedItem resolvedItem({required int count}) {
     final now = DateTime.now();
     return ResolvedItem(
       item: InventoryItem(
         id: 'milk',
         householdId: 'hh-1',
         name: 'Milch',
-        quantity: quantity,
-        unit: 'piece',
+        quantity: 1,
+        count: count,
         createdAt: now,
         updatedAt: now,
       ),
@@ -51,13 +51,13 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('stepping the quantity to zero moves the item to the trash', (
+  testWidgets('stepping the count to zero moves the item to the trash', (
     tester,
   ) async {
-    inventory.items = [resolvedItem(quantity: 1).item];
-    await pumpDetail(tester, resolvedItem(quantity: 1));
+    inventory.items = [resolvedItem(count: 1).item];
+    await pumpDetail(tester, resolvedItem(count: 1));
 
-    // One decrement takes quantity 1 -> 0, which soft-deletes the item.
+    // One decrement takes the count 1 -> 0, which soft-deletes the item.
     await tester.tap(find.byIcon(Icons.remove));
     await tester.pumpAndSettle();
 
@@ -66,8 +66,8 @@ void main() {
   });
 
   testWidgets('the consumed button removes the item', (tester) async {
-    inventory.items = [resolvedItem(quantity: 3).item];
-    await pumpDetail(tester, resolvedItem(quantity: 3));
+    inventory.items = [resolvedItem(count: 3).item];
+    await pumpDetail(tester, resolvedItem(count: 3));
 
     await tester.tap(find.text('Mark as consumed'));
     await tester.pumpAndSettle();

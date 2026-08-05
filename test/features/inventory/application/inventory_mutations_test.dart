@@ -73,6 +73,7 @@ void main() {
       final ok = await controller.add(
         name: 'Milch',
         quantity: 2,
+        count: 1,
         unit: 'l',
         categoryId: 'cat-1',
         storageLocationId: 'loc-1',
@@ -84,27 +85,27 @@ void main() {
       expect(inventory.items.single.householdId, 'hh-1');
     });
 
-    test('setQuantity above zero updates and keeps the item', () async {
+    test('setCount above zero updates and keeps the item', () async {
       inventory.items = [seedItem('x')];
       final controller = await ready();
 
-      final ok = await controller.setQuantity(id: 'x', quantity: 3);
+      final ok = await controller.setCount(id: 'x', count: 3);
 
       expect(ok, isTrue);
-      expect(inventory.setQuantityCalls, 1);
+      expect(inventory.setCountCalls, 1);
       expect(inventory.softDeleteCalls, 0);
-      expect(inventory.items.single.quantity, 3);
+      expect(inventory.items.single.count, 3);
     });
 
-    test('setQuantity of zero moves the item to the trash', () async {
+    test('setCount of zero moves the item to the trash', () async {
       inventory.items = [seedItem('x')];
       final controller = await ready();
 
-      final ok = await controller.setQuantity(id: 'x', quantity: 0);
+      final ok = await controller.setCount(id: 'x', count: 0);
 
       expect(ok, isTrue);
       expect(inventory.softDeleteCalls, 1);
-      expect(inventory.setQuantityCalls, 0);
+      expect(inventory.setCountCalls, 0);
       expect(inventory.items, isEmpty);
       expect(inventory.deletedItems.single.id, 'x');
     });
@@ -139,7 +140,7 @@ void main() {
       );
       final controller = await ready();
 
-      final ok = await controller.add(name: 'Milch', quantity: 1);
+      final ok = await controller.add(name: 'Milch', quantity: 1, count: 1);
 
       expect(ok, isFalse);
       expect(

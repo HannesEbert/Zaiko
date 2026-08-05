@@ -17,7 +17,11 @@ mixin _$Food {
 
 /// Client-generated UUID. Never reuse an external product's id — see
 /// [Food.create], which mints one.
- String get id; String get name; FoodSource get source; DateTime get createdAt; DateTime get updatedAt; String? get brand; String? get barcode; String? get imageUrl; String? get householdId; DateTime? get deletedAt;
+ String get id; String get name; FoodSource get source;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt; String? get brand; String? get barcode;@JsonKey(name: 'image_url') String? get imageUrl;@JsonKey(name: 'household_id') String? get householdId;@JsonKey(name: 'deleted_at') DateTime? get deletedAt;/// Package size resolved from Open Food Facts (e.g. amount `500`, unit
+/// `g`), used only to pre-fill a new item's quantity and unit. Transient:
+/// the shared `foods` catalog is size-agnostic, so these are never written
+/// to or read from the database.
+@JsonKey(includeToJson: false, includeFromJson: false) num? get packagedAmount;@JsonKey(includeToJson: false, includeFromJson: false) String? get packagedUnit;
 /// Create a copy of Food
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,16 +34,16 @@ $FoodCopyWith<Food> get copyWith => _$FoodCopyWithImpl<Food>(this as Food, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Food&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.source, source) || other.source == source)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.brand, brand) || other.brand == brand)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.householdId, householdId) || other.householdId == householdId)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Food&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.source, source) || other.source == source)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.brand, brand) || other.brand == brand)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.householdId, householdId) || other.householdId == householdId)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.packagedAmount, packagedAmount) || other.packagedAmount == packagedAmount)&&(identical(other.packagedUnit, packagedUnit) || other.packagedUnit == packagedUnit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,source,createdAt,updatedAt,brand,barcode,imageUrl,householdId,deletedAt);
+int get hashCode => Object.hash(runtimeType,id,name,source,createdAt,updatedAt,brand,barcode,imageUrl,householdId,deletedAt,packagedAmount,packagedUnit);
 
 @override
 String toString() {
-  return 'Food(id: $id, name: $name, source: $source, createdAt: $createdAt, updatedAt: $updatedAt, brand: $brand, barcode: $barcode, imageUrl: $imageUrl, householdId: $householdId, deletedAt: $deletedAt)';
+  return 'Food(id: $id, name: $name, source: $source, createdAt: $createdAt, updatedAt: $updatedAt, brand: $brand, barcode: $barcode, imageUrl: $imageUrl, householdId: $householdId, deletedAt: $deletedAt, packagedAmount: $packagedAmount, packagedUnit: $packagedUnit)';
 }
 
 
@@ -50,7 +54,7 @@ abstract mixin class $FoodCopyWith<$Res>  {
   factory $FoodCopyWith(Food value, $Res Function(Food) _then) = _$FoodCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, FoodSource source, DateTime createdAt, DateTime updatedAt, String? brand, String? barcode, String? imageUrl, String? householdId, DateTime? deletedAt
+ String id, String name, FoodSource source,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt, String? brand, String? barcode,@JsonKey(name: 'image_url') String? imageUrl,@JsonKey(name: 'household_id') String? householdId,@JsonKey(name: 'deleted_at') DateTime? deletedAt,@JsonKey(includeToJson: false, includeFromJson: false) num? packagedAmount,@JsonKey(includeToJson: false, includeFromJson: false) String? packagedUnit
 });
 
 
@@ -67,7 +71,7 @@ class _$FoodCopyWithImpl<$Res>
 
 /// Create a copy of Food
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? source = null,Object? createdAt = null,Object? updatedAt = null,Object? brand = freezed,Object? barcode = freezed,Object? imageUrl = freezed,Object? householdId = freezed,Object? deletedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? source = null,Object? createdAt = null,Object? updatedAt = null,Object? brand = freezed,Object? barcode = freezed,Object? imageUrl = freezed,Object? householdId = freezed,Object? deletedAt = freezed,Object? packagedAmount = freezed,Object? packagedUnit = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -79,7 +83,9 @@ as String?,barcode: freezed == barcode ? _self.barcode : barcode // ignore: cast
 as String?,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
 as String?,householdId: freezed == householdId ? _self.householdId : householdId // ignore: cast_nullable_to_non_nullable
 as String?,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,packagedAmount: freezed == packagedAmount ? _self.packagedAmount : packagedAmount // ignore: cast_nullable_to_non_nullable
+as num?,packagedUnit: freezed == packagedUnit ? _self.packagedUnit : packagedUnit // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -164,10 +170,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  FoodSource source,  DateTime createdAt,  DateTime updatedAt,  String? brand,  String? barcode,  String? imageUrl,  String? householdId,  DateTime? deletedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  FoodSource source, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt,  String? brand,  String? barcode, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'household_id')  String? householdId, @JsonKey(name: 'deleted_at')  DateTime? deletedAt, @JsonKey(includeToJson: false, includeFromJson: false)  num? packagedAmount, @JsonKey(includeToJson: false, includeFromJson: false)  String? packagedUnit)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Food() when $default != null:
-return $default(_that.id,_that.name,_that.source,_that.createdAt,_that.updatedAt,_that.brand,_that.barcode,_that.imageUrl,_that.householdId,_that.deletedAt);case _:
+return $default(_that.id,_that.name,_that.source,_that.createdAt,_that.updatedAt,_that.brand,_that.barcode,_that.imageUrl,_that.householdId,_that.deletedAt,_that.packagedAmount,_that.packagedUnit);case _:
   return orElse();
 
 }
@@ -185,10 +191,10 @@ return $default(_that.id,_that.name,_that.source,_that.createdAt,_that.updatedAt
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  FoodSource source,  DateTime createdAt,  DateTime updatedAt,  String? brand,  String? barcode,  String? imageUrl,  String? householdId,  DateTime? deletedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  FoodSource source, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt,  String? brand,  String? barcode, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'household_id')  String? householdId, @JsonKey(name: 'deleted_at')  DateTime? deletedAt, @JsonKey(includeToJson: false, includeFromJson: false)  num? packagedAmount, @JsonKey(includeToJson: false, includeFromJson: false)  String? packagedUnit)  $default,) {final _that = this;
 switch (_that) {
 case _Food():
-return $default(_that.id,_that.name,_that.source,_that.createdAt,_that.updatedAt,_that.brand,_that.barcode,_that.imageUrl,_that.householdId,_that.deletedAt);case _:
+return $default(_that.id,_that.name,_that.source,_that.createdAt,_that.updatedAt,_that.brand,_that.barcode,_that.imageUrl,_that.householdId,_that.deletedAt,_that.packagedAmount,_that.packagedUnit);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -205,10 +211,10 @@ return $default(_that.id,_that.name,_that.source,_that.createdAt,_that.updatedAt
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  FoodSource source,  DateTime createdAt,  DateTime updatedAt,  String? brand,  String? barcode,  String? imageUrl,  String? householdId,  DateTime? deletedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  FoodSource source, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt,  String? brand,  String? barcode, @JsonKey(name: 'image_url')  String? imageUrl, @JsonKey(name: 'household_id')  String? householdId, @JsonKey(name: 'deleted_at')  DateTime? deletedAt, @JsonKey(includeToJson: false, includeFromJson: false)  num? packagedAmount, @JsonKey(includeToJson: false, includeFromJson: false)  String? packagedUnit)?  $default,) {final _that = this;
 switch (_that) {
 case _Food() when $default != null:
-return $default(_that.id,_that.name,_that.source,_that.createdAt,_that.updatedAt,_that.brand,_that.barcode,_that.imageUrl,_that.householdId,_that.deletedAt);case _:
+return $default(_that.id,_that.name,_that.source,_that.createdAt,_that.updatedAt,_that.brand,_that.barcode,_that.imageUrl,_that.householdId,_that.deletedAt,_that.packagedAmount,_that.packagedUnit);case _:
   return null;
 
 }
@@ -220,7 +226,7 @@ return $default(_that.id,_that.name,_that.source,_that.createdAt,_that.updatedAt
 @JsonSerializable()
 
 class _Food implements Food {
-  const _Food({required this.id, required this.name, required this.source, required this.createdAt, required this.updatedAt, this.brand, this.barcode, this.imageUrl, this.householdId, this.deletedAt});
+  const _Food({required this.id, required this.name, required this.source, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt, this.brand, this.barcode, @JsonKey(name: 'image_url') this.imageUrl, @JsonKey(name: 'household_id') this.householdId, @JsonKey(name: 'deleted_at') this.deletedAt, @JsonKey(includeToJson: false, includeFromJson: false) this.packagedAmount, @JsonKey(includeToJson: false, includeFromJson: false) this.packagedUnit});
   factory _Food.fromJson(Map<String, dynamic> json) => _$FoodFromJson(json);
 
 /// Client-generated UUID. Never reuse an external product's id — see
@@ -228,13 +234,19 @@ class _Food implements Food {
 @override final  String id;
 @override final  String name;
 @override final  FoodSource source;
-@override final  DateTime createdAt;
-@override final  DateTime updatedAt;
+@override@JsonKey(name: 'created_at') final  DateTime createdAt;
+@override@JsonKey(name: 'updated_at') final  DateTime updatedAt;
 @override final  String? brand;
 @override final  String? barcode;
-@override final  String? imageUrl;
-@override final  String? householdId;
-@override final  DateTime? deletedAt;
+@override@JsonKey(name: 'image_url') final  String? imageUrl;
+@override@JsonKey(name: 'household_id') final  String? householdId;
+@override@JsonKey(name: 'deleted_at') final  DateTime? deletedAt;
+/// Package size resolved from Open Food Facts (e.g. amount `500`, unit
+/// `g`), used only to pre-fill a new item's quantity and unit. Transient:
+/// the shared `foods` catalog is size-agnostic, so these are never written
+/// to or read from the database.
+@override@JsonKey(includeToJson: false, includeFromJson: false) final  num? packagedAmount;
+@override@JsonKey(includeToJson: false, includeFromJson: false) final  String? packagedUnit;
 
 /// Create a copy of Food
 /// with the given fields replaced by the non-null parameter values.
@@ -249,16 +261,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Food&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.source, source) || other.source == source)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.brand, brand) || other.brand == brand)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.householdId, householdId) || other.householdId == householdId)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Food&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.source, source) || other.source == source)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.brand, brand) || other.brand == brand)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.householdId, householdId) || other.householdId == householdId)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.packagedAmount, packagedAmount) || other.packagedAmount == packagedAmount)&&(identical(other.packagedUnit, packagedUnit) || other.packagedUnit == packagedUnit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,source,createdAt,updatedAt,brand,barcode,imageUrl,householdId,deletedAt);
+int get hashCode => Object.hash(runtimeType,id,name,source,createdAt,updatedAt,brand,barcode,imageUrl,householdId,deletedAt,packagedAmount,packagedUnit);
 
 @override
 String toString() {
-  return 'Food(id: $id, name: $name, source: $source, createdAt: $createdAt, updatedAt: $updatedAt, brand: $brand, barcode: $barcode, imageUrl: $imageUrl, householdId: $householdId, deletedAt: $deletedAt)';
+  return 'Food(id: $id, name: $name, source: $source, createdAt: $createdAt, updatedAt: $updatedAt, brand: $brand, barcode: $barcode, imageUrl: $imageUrl, householdId: $householdId, deletedAt: $deletedAt, packagedAmount: $packagedAmount, packagedUnit: $packagedUnit)';
 }
 
 
@@ -269,7 +281,7 @@ abstract mixin class _$FoodCopyWith<$Res> implements $FoodCopyWith<$Res> {
   factory _$FoodCopyWith(_Food value, $Res Function(_Food) _then) = __$FoodCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, FoodSource source, DateTime createdAt, DateTime updatedAt, String? brand, String? barcode, String? imageUrl, String? householdId, DateTime? deletedAt
+ String id, String name, FoodSource source,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt, String? brand, String? barcode,@JsonKey(name: 'image_url') String? imageUrl,@JsonKey(name: 'household_id') String? householdId,@JsonKey(name: 'deleted_at') DateTime? deletedAt,@JsonKey(includeToJson: false, includeFromJson: false) num? packagedAmount,@JsonKey(includeToJson: false, includeFromJson: false) String? packagedUnit
 });
 
 
@@ -286,7 +298,7 @@ class __$FoodCopyWithImpl<$Res>
 
 /// Create a copy of Food
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? source = null,Object? createdAt = null,Object? updatedAt = null,Object? brand = freezed,Object? barcode = freezed,Object? imageUrl = freezed,Object? householdId = freezed,Object? deletedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? source = null,Object? createdAt = null,Object? updatedAt = null,Object? brand = freezed,Object? barcode = freezed,Object? imageUrl = freezed,Object? householdId = freezed,Object? deletedAt = freezed,Object? packagedAmount = freezed,Object? packagedUnit = freezed,}) {
   return _then(_Food(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -298,7 +310,9 @@ as String?,barcode: freezed == barcode ? _self.barcode : barcode // ignore: cast
 as String?,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
 as String?,householdId: freezed == householdId ? _self.householdId : householdId // ignore: cast_nullable_to_non_nullable
 as String?,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,packagedAmount: freezed == packagedAmount ? _self.packagedAmount : packagedAmount // ignore: cast_nullable_to_non_nullable
+as num?,packagedUnit: freezed == packagedUnit ? _self.packagedUnit : packagedUnit // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

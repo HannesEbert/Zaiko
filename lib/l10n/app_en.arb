@@ -243,7 +243,7 @@
   "addItemAddAgain": "Add again",
 
   "itemDetailHeader": "Item",
-  "itemDetailQuantity": "Quantity",
+  "itemDetailQuantity": "Count",
   "itemDetailLocation": "Location",
   "itemDetailCategory": "Category",
   "itemDetailBestBefore": "Best before",
@@ -461,6 +461,8 @@
   "itemFormNameEmpty": "Please enter a name",
   "itemFormQuantityLabel": "Quantity",
   "itemFormQuantityInvalid": "Enter a quantity greater than 0",
+  "itemFormCountLabel": "Count",
+  "itemFormCountInvalid": "Enter a count of at least 1",
   "itemFormUnitLabel": "Unit",
   "itemFormLocationLabel": "Location",
   "itemFormCategoryLabel": "Category",
@@ -519,5 +521,23 @@
 
   "inventoryErrorGeneric": "Something went wrong. Please try again.",
   "inventoryErrorNotMember": "You don't have access to this household.",
-  "inventoryErrorNotFound": "This item no longer exists."
+  "inventoryErrorNotFound": "This item no longer exists.",
+
+  "scannerTitle": "Scan barcode",
+  "scannerHint": "Point the camera at a product barcode",
+  "scannerTorchTooltip": "Torch",
+  "scannerResolving": "Looking up product…",
+  "scannerPermissionTitle": "Camera access needed",
+  "scannerPermissionBody": "Zaiko needs camera access to scan barcodes. You can enable it in Settings.",
+  "scannerOpenSettings": "Open Settings",
+  "scanNotFoundSnack": "Product not found — enter it manually.",
+
+  "productSearchTitle": "Search product",
+  "productSearchHint": "Search by product name…",
+  "productSearchPrompt": "Type to search Open Food Facts.",
+  "productSearchEmpty": "No products found.",
+
+  "foodErrorNetwork": "Open Food Facts is temporarily unavailable. Please try again shortly.",
+  "foodErrorRateLimited": "Too many requests. Please try again in a moment.",
+  "foodErrorGeneric": "Couldn't reach the product database. Please try again."
 }

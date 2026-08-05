@@ -260,13 +260,19 @@ class InventoryItemController extends _$InventoryItemController {
   FutureOr<void> build() {}
 
   /// Adds a new item to the active household. Returns whether it succeeded.
+  ///
+  /// [quantity]+[unit] are the per-unit size; [count] is how many units.
+  /// [foodId] links the item to a `foods` catalog entry when it was created
+  /// from a scanned/searched or custom product; null for a manual item.
   Future<bool> add({
     required String name,
     required num quantity,
+    required int count,
     String? unit,
     String? categoryId,
     String? storageLocationId,
     DateTime? bestBefore,
+    String? foodId,
   }) => _run(
     () => ref
         .read(inventoryRepositoryProvider)
@@ -274,10 +280,12 @@ class InventoryItemController extends _$InventoryItemController {
           householdId: _requireActiveHouseholdId(ref),
           name: name,
           quantity: quantity,
+          count: count,
           unit: unit,
           categoryId: categoryId,
           storageLocationId: storageLocationId,
           bestBefore: bestBefore,
+          foodId: foodId,
         ),
   );
 
@@ -286,6 +294,7 @@ class InventoryItemController extends _$InventoryItemController {
     required String id,
     required String name,
     required num quantity,
+    required int count,
     String? unit,
     String? categoryId,
     String? storageLocationId,
@@ -297,6 +306,7 @@ class InventoryItemController extends _$InventoryItemController {
           id: id,
           name: name,
           quantity: quantity,
+          count: count,
           unit: unit,
           categoryId: categoryId,
           storageLocationId: storageLocationId,
@@ -304,17 +314,17 @@ class InventoryItemController extends _$InventoryItemController {
         ),
   );
 
-  /// Sets the item's quantity. A [quantity] of 0 or less means "used up": the
-  /// item is soft-deleted into the trash instead of stored as an empty stock.
-  Future<bool> setQuantity({required String id, required num quantity}) =>
+  /// Sets the item's count. A [count] of 0 or less means "used up": the item is
+  /// soft-deleted into the trash instead of stored as an empty stock.
+  Future<bool> setCount({required String id, required int count}) =>
       _run(() async {
-        if (quantity <= 0) {
+        if (count <= 0) {
           await ref.read(inventoryRepositoryProvider).softDeleteItem(id);
           ref.invalidate(deletedItemsProvider);
         } else {
           await ref
               .read(inventoryRepositoryProvider)
-              .setItemQuantity(id: id, quantity: quantity);
+              .setItemCount(id: id, count: count);
         }
       });
 

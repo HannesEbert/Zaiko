@@ -1,16 +1,16 @@
-/// The fixed set of units an inventory item's quantity can be measured in.
+/// The fixed set of units the *size* of one inventory unit can be measured in.
 ///
-/// The app owns this enum; `inventory_items.unit` stores the [key] as plain
-/// text (deliberately unconstrained in the schema so the enum can grow without
-/// a migration). [InventoryItem.unit] stays a nullable `String` — legacy or
-/// unitless rows map to a null [InventoryUnit] via [fromKey].
+/// Only measurable amounts (g/kg/ml/l); how many units are stocked is the
+/// separate `InventoryItem.count`. The app owns this enum; `inventory_items.unit`
+/// stores the [key] as plain text (deliberately unconstrained in the schema so
+/// the enum can grow without a migration). [InventoryItem.unit] stays a nullable
+/// `String` — an item with no measurable size (a plain count) has a null unit,
+/// and legacy or unknown values map to a null [InventoryUnit] via [fromKey].
 enum InventoryUnit {
   gram('g'),
   kilogram('kg'),
   milliliter('ml'),
-  liter('l'),
-  piece('piece'),
-  package('package');
+  liter('l');
 
   const InventoryUnit(this.key);
 

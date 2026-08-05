@@ -23,3 +23,4 @@ supersedes the old one and the old one is marked as superseded.
 | [0009](0009-code-generation.md) | Code generation for models and providers | Accepted |
 | [0010](0010-database-migrations-workflow.md) | Database schema and migrations workflow | Accepted |
 | [0011](0011-database-schema-design.md) | Database schema design | Accepted |
+| [0012](0012-open-food-facts-integration.md) | Open Food Facts integration (barcode scan + product lookup) | Accepted |

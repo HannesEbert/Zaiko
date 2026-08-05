@@ -11,18 +11,19 @@ void main() {
   setUpAll(WidgetsFlutterBinding.ensureInitialized);
 
   group('formatQuantity', () {
-    test('drops the trailing .0 on whole numbers', () {
-      expect(formatQuantity(l10n, 1, 'l'), '1 l');
-      expect(formatQuantity(l10n, 6, 'piece'), '6 pcs');
+    test('shows a single sized item without a count prefix', () {
+      expect(formatQuantity(count: 1, quantity: 1, unit: 'l'), '1 l');
+      expect(formatQuantity(count: 1, quantity: 250, unit: 'g'), '250 g');
     });
 
-    test('localizes piece and package but passes symbols through', () {
-      expect(formatQuantity(l10n, 2, 'package'), '2 pack');
-      expect(formatQuantity(l10n, 250, 'g'), '250 g');
+    test('prefixes the count for a multipack', () {
+      expect(formatQuantity(count: 6, quantity: 1.5, unit: 'l'), '6 × 1.5 l');
+      expect(formatQuantity(count: 5, quantity: 500, unit: 'ml'), '5 × 500 ml');
     });
 
-    test('omits the unit when there is none', () {
-      expect(formatQuantity(l10n, 3, null), '3');
+    test('shows just the count when there is no measurable size', () {
+      expect(formatQuantity(count: 3, quantity: 1, unit: null), '3');
+      expect(formatQuantity(count: 1, quantity: 1, unit: null), '1');
     });
   });
 
