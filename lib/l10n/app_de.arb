@@ -134,6 +134,18 @@
 
   "shoppingAddHint": "Artikel hinzufügen…",
   "shoppingListCount": "{count} Artikel auf der Liste",
+  "shoppingAddTitle": "Zur Liste hinzufügen",
+  "shoppingEditTitle": "Artikel bearbeiten",
+  "shoppingQuantityLabel": "Menge",
+  "shoppingQuantityHint": "z. B. 2 × 1 l",
+  "shoppingAddButton": "Hinzufügen",
+  "shoppingSaveButton": "Speichern",
+  "shoppingClearCheckedTooltip": "Gekaufte entfernen",
+  "shoppingDoneSection": "Gekauft",
+  "shoppingLoadError": "Einkaufsliste konnte nicht geladen werden.",
+  "shoppingErrorGeneric": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+  "shoppingErrorNotMember": "Du hast keinen Zugriff auf diese Liste.",
+  "shoppingErrorNotFound": "Dieser Artikel existiert nicht mehr.",
 
   "recipesSubtitle": "Kochbar mit deinem Vorrat",
   "recipesMissing": "Fehlt:",

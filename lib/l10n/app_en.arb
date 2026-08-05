@@ -259,6 +259,18 @@
       "count": { "type": "int" }
     }
   },
+  "shoppingAddTitle": "Add to list",
+  "shoppingEditTitle": "Edit item",
+  "shoppingQuantityLabel": "Quantity",
+  "shoppingQuantityHint": "e.g. 2 × 1 l",
+  "shoppingAddButton": "Add",
+  "shoppingSaveButton": "Save",
+  "shoppingClearCheckedTooltip": "Clear bought items",
+  "shoppingDoneSection": "Bought",
+  "shoppingLoadError": "Couldn't load your shopping list.",
+  "shoppingErrorGeneric": "Something went wrong. Please try again.",
+  "shoppingErrorNotMember": "You don't have access to this list.",
+  "shoppingErrorNotFound": "This item no longer exists.",
 
   "recipesSubtitle": "Cookable with your stock",
   "recipesMissing": "Missing:",
