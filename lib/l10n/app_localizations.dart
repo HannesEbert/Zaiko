@@ -1825,6 +1825,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t reach the product database. Please try again.'**
   String get foodErrorGeneric;
+
+  /// No description provided for @recipesFilterAlmostComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Almost complete'**
+  String get recipesFilterAlmostComplete;
+
+  /// No description provided for @recipesFilterUnder30.
+  ///
+  /// In en, this message translates to:
+  /// **'Under 30 min'**
+  String get recipesFilterUnder30;
+
+  /// No description provided for @recipesMatchComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'All in stock'**
+  String get recipesMatchComplete;
+
+  /// How many of a recipe's ingredients are in stock
+  ///
+  /// In en, this message translates to:
+  /// **'{matched}/{total} ingredients'**
+  String recipesMatchCount(int matched, int total);
+
+  /// No description provided for @recipesUsesExpiring.
+  ///
+  /// In en, this message translates to:
+  /// **'Use up soon'**
+  String get recipesUsesExpiring;
+
+  /// No description provided for @recipesMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String recipesMinutes(int minutes);
+
+  /// No description provided for @recipesServings.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 serving} other{{count} servings}}'**
+  String recipesServings(int count);
+
+  /// No description provided for @recipesLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load recipes.'**
+  String get recipesLoadError;
+
+  /// No description provided for @recipesErrorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get recipesErrorGeneric;
+
+  /// No description provided for @recipesErrorNotMember.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re not a member of this household.'**
+  String get recipesErrorNotMember;
+
+  /// No description provided for @recipesErrorNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This recipe no longer exists.'**
+  String get recipesErrorNotFound;
+
+  /// No description provided for @recipesAddedToList.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Added 1 ingredient to the list} other{Added {count} ingredients to the list}}'**
+  String recipesAddedToList(int count);
+
+  /// No description provided for @recipesNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New recipe'**
+  String get recipesNewTitle;
+
+  /// No description provided for @recipesEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit recipe'**
+  String get recipesEditTitle;
+
+  /// No description provided for @recipesEditAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get recipesEditAction;
+
+  /// No description provided for @recipesDeleteAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get recipesDeleteAction;
+
+  /// No description provided for @recipesDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete recipe?'**
+  String get recipesDeleteTitle;
+
+  /// No description provided for @recipesDeleteMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'\"{title}\" will be removed for everyone in the household.'**
+  String recipesDeleteMessage(String title);
+
+  /// No description provided for @recipesIngredientsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredients'**
+  String get recipesIngredientsSection;
+
+  /// No description provided for @recipesIngredientsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No ingredients.'**
+  String get recipesIngredientsEmpty;
+
+  /// No description provided for @recipesStepsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparation'**
+  String get recipesStepsSection;
+
+  /// No description provided for @recipesStepsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No steps yet.'**
+  String get recipesStepsEmpty;
+
+  /// No description provided for @recipesInStock.
+  ///
+  /// In en, this message translates to:
+  /// **'In stock'**
+  String get recipesInStock;
+
+  /// No description provided for @recipesFormTitleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get recipesFormTitleLabel;
+
+  /// No description provided for @recipesFormTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Tomato pasta'**
+  String get recipesFormTitleHint;
+
+  /// No description provided for @recipesFormMinutesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Time (minutes)'**
+  String get recipesFormMinutesLabel;
+
+  /// No description provided for @recipesFormServingsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Servings'**
+  String get recipesFormServingsLabel;
+
+  /// No description provided for @recipesFormIngredientNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredient'**
+  String get recipesFormIngredientNameHint;
+
+  /// No description provided for @recipesFormAmountHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get recipesFormAmountHint;
+
+  /// No description provided for @recipesFormAddIngredient.
+  ///
+  /// In en, this message translates to:
+  /// **'Add ingredient'**
+  String get recipesFormAddIngredient;
+
+  /// No description provided for @recipesFormStepHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {number}'**
+  String recipesFormStepHint(int number);
+
+  /// No description provided for @recipesFormAddStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Add step'**
+  String get recipesFormAddStep;
+
+  /// No description provided for @recipesCreateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Create recipe'**
+  String get recipesCreateButton;
+
+  /// No description provided for @recipesSaveButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get recipesSaveButton;
 }
 
 class _AppLocalizationsDelegate

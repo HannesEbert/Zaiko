@@ -551,5 +551,72 @@
 
   "foodErrorNetwork": "Open Food Facts is temporarily unavailable. Please try again shortly.",
   "foodErrorRateLimited": "Too many requests. Please try again in a moment.",
-  "foodErrorGeneric": "Couldn't reach the product database. Please try again."
+  "foodErrorGeneric": "Couldn't reach the product database. Please try again.",
+
+  "recipesFilterAlmostComplete": "Almost complete",
+  "recipesFilterUnder30": "Under 30 min",
+  "recipesMatchComplete": "All in stock",
+  "recipesMatchCount": "{matched}/{total} ingredients",
+  "@recipesMatchCount": {
+    "description": "How many of a recipe's ingredients are in stock",
+    "placeholders": {
+      "matched": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "recipesUsesExpiring": "Use up soon",
+  "recipesMinutes": "{minutes} min",
+  "@recipesMinutes": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "recipesServings": "{count, plural, =1{1 serving} other{{count} servings}}",
+  "@recipesServings": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "recipesLoadError": "Couldn't load recipes.",
+  "recipesErrorGeneric": "Something went wrong. Please try again.",
+  "recipesErrorNotMember": "You're not a member of this household.",
+  "recipesErrorNotFound": "This recipe no longer exists.",
+  "recipesAddedToList": "{count, plural, =1{Added 1 ingredient to the list} other{Added {count} ingredients to the list}}",
+  "@recipesAddedToList": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "recipesNewTitle": "New recipe",
+  "recipesEditTitle": "Edit recipe",
+  "recipesEditAction": "Edit",
+  "recipesDeleteAction": "Delete",
+  "recipesDeleteTitle": "Delete recipe?",
+  "recipesDeleteMessage": "\"{title}\" will be removed for everyone in the household.",
+  "@recipesDeleteMessage": {
+    "placeholders": {
+      "title": { "type": "String" }
+    }
+  },
+  "recipesIngredientsSection": "Ingredients",
+  "recipesIngredientsEmpty": "No ingredients.",
+  "recipesStepsSection": "Preparation",
+  "recipesStepsEmpty": "No steps yet.",
+  "recipesInStock": "In stock",
+  "recipesFormTitleLabel": "Title",
+  "recipesFormTitleHint": "e.g. Tomato pasta",
+  "recipesFormMinutesLabel": "Time (minutes)",
+  "recipesFormServingsLabel": "Servings",
+  "recipesFormIngredientNameHint": "Ingredient",
+  "recipesFormAmountHint": "Amount",
+  "recipesFormAddIngredient": "Add ingredient",
+  "recipesFormStepHint": "Step {number}",
+  "@recipesFormStepHint": {
+    "placeholders": {
+      "number": { "type": "int" }
+    }
+  },
+  "recipesFormAddStep": "Add step",
+  "recipesCreateButton": "Create recipe",
+  "recipesSaveButton": "Save"
 }

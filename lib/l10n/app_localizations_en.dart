@@ -945,4 +945,130 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get foodErrorGeneric =>
       'Couldn\'t reach the product database. Please try again.';
+
+  @override
+  String get recipesFilterAlmostComplete => 'Almost complete';
+
+  @override
+  String get recipesFilterUnder30 => 'Under 30 min';
+
+  @override
+  String get recipesMatchComplete => 'All in stock';
+
+  @override
+  String recipesMatchCount(int matched, int total) {
+    return '$matched/$total ingredients';
+  }
+
+  @override
+  String get recipesUsesExpiring => 'Use up soon';
+
+  @override
+  String recipesMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String recipesServings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count servings',
+      one: '1 serving',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get recipesLoadError => 'Couldn\'t load recipes.';
+
+  @override
+  String get recipesErrorGeneric => 'Something went wrong. Please try again.';
+
+  @override
+  String get recipesErrorNotMember => 'You\'re not a member of this household.';
+
+  @override
+  String get recipesErrorNotFound => 'This recipe no longer exists.';
+
+  @override
+  String recipesAddedToList(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Added $count ingredients to the list',
+      one: 'Added 1 ingredient to the list',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get recipesNewTitle => 'New recipe';
+
+  @override
+  String get recipesEditTitle => 'Edit recipe';
+
+  @override
+  String get recipesEditAction => 'Edit';
+
+  @override
+  String get recipesDeleteAction => 'Delete';
+
+  @override
+  String get recipesDeleteTitle => 'Delete recipe?';
+
+  @override
+  String recipesDeleteMessage(String title) {
+    return '\"$title\" will be removed for everyone in the household.';
+  }
+
+  @override
+  String get recipesIngredientsSection => 'Ingredients';
+
+  @override
+  String get recipesIngredientsEmpty => 'No ingredients.';
+
+  @override
+  String get recipesStepsSection => 'Preparation';
+
+  @override
+  String get recipesStepsEmpty => 'No steps yet.';
+
+  @override
+  String get recipesInStock => 'In stock';
+
+  @override
+  String get recipesFormTitleLabel => 'Title';
+
+  @override
+  String get recipesFormTitleHint => 'e.g. Tomato pasta';
+
+  @override
+  String get recipesFormMinutesLabel => 'Time (minutes)';
+
+  @override
+  String get recipesFormServingsLabel => 'Servings';
+
+  @override
+  String get recipesFormIngredientNameHint => 'Ingredient';
+
+  @override
+  String get recipesFormAmountHint => 'Amount';
+
+  @override
+  String get recipesFormAddIngredient => 'Add ingredient';
+
+  @override
+  String recipesFormStepHint(int number) {
+    return 'Step $number';
+  }
+
+  @override
+  String get recipesFormAddStep => 'Add step';
+
+  @override
+  String get recipesCreateButton => 'Create recipe';
+
+  @override
+  String get recipesSaveButton => 'Save';
 }
