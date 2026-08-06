@@ -1,3 +1,5 @@
+import 'recipe_step.dart';
+
 /// The editable content of a recipe, collected by the create/edit form and
 /// handed to the [RecipeRepository].
 ///
@@ -20,8 +22,9 @@ class RecipeDraft {
   /// The ingredients in author order; empty is allowed.
   final List<RecipeIngredientDraft> ingredients;
 
-  /// The step-by-step instructions in order; empty is allowed.
-  final List<String> steps;
+  /// The step-by-step instructions in order; empty is allowed. Reuses
+  /// [RecipeStep] (it carries no persistence id) instead of a separate draft.
+  final List<RecipeStep> steps;
 }
 
 /// A single ingredient line in a [RecipeDraft].

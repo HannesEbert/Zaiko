@@ -18,7 +18,7 @@ mixin _$Recipe {
  String get id;@JsonKey(name: 'household_id') String get householdId; String get title;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;/// Total time in minutes; null when unspecified. Drives the "under 30 min"
 /// filter.
 @JsonKey(name: 'total_minutes') int? get totalMinutes; int? get servings;@JsonKey(name: 'image_url') String? get imageUrl;/// Ordered step-by-step instructions; empty until the author adds any.
- List<String> get steps;/// The recipe's ingredients, ordered by their `sort_order`.
+ List<RecipeStep> get steps;/// The recipe's ingredients, ordered by their `sort_order`.
 @JsonKey(name: 'recipe_ingredients') List<RecipeIngredient> get ingredients;/// The user who created the recipe; nulled out if their account is deleted.
 @JsonKey(name: 'created_by') String? get createdBy;@JsonKey(name: 'deleted_at') DateTime? get deletedAt;
 /// Create a copy of Recipe
@@ -53,7 +53,7 @@ abstract mixin class $RecipeCopyWith<$Res>  {
   factory $RecipeCopyWith(Recipe value, $Res Function(Recipe) _then) = _$RecipeCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'household_id') String householdId, String title,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt,@JsonKey(name: 'total_minutes') int? totalMinutes, int? servings,@JsonKey(name: 'image_url') String? imageUrl, List<String> steps,@JsonKey(name: 'recipe_ingredients') List<RecipeIngredient> ingredients,@JsonKey(name: 'created_by') String? createdBy,@JsonKey(name: 'deleted_at') DateTime? deletedAt
+ String id,@JsonKey(name: 'household_id') String householdId, String title,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt,@JsonKey(name: 'total_minutes') int? totalMinutes, int? servings,@JsonKey(name: 'image_url') String? imageUrl, List<RecipeStep> steps,@JsonKey(name: 'recipe_ingredients') List<RecipeIngredient> ingredients,@JsonKey(name: 'created_by') String? createdBy,@JsonKey(name: 'deleted_at') DateTime? deletedAt
 });
 
 
@@ -81,7 +81,7 @@ as DateTime,totalMinutes: freezed == totalMinutes ? _self.totalMinutes : totalMi
 as int?,servings: freezed == servings ? _self.servings : servings // ignore: cast_nullable_to_non_nullable
 as int?,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
 as String?,steps: null == steps ? _self.steps : steps // ignore: cast_nullable_to_non_nullable
-as List<String>,ingredients: null == ingredients ? _self.ingredients : ingredients // ignore: cast_nullable_to_non_nullable
+as List<RecipeStep>,ingredients: null == ingredients ? _self.ingredients : ingredients // ignore: cast_nullable_to_non_nullable
 as List<RecipeIngredient>,createdBy: freezed == createdBy ? _self.createdBy : createdBy // ignore: cast_nullable_to_non_nullable
 as String?,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
@@ -169,7 +169,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'household_id')  String householdId,  String title, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt, @JsonKey(name: 'total_minutes')  int? totalMinutes,  int? servings, @JsonKey(name: 'image_url')  String? imageUrl,  List<String> steps, @JsonKey(name: 'recipe_ingredients')  List<RecipeIngredient> ingredients, @JsonKey(name: 'created_by')  String? createdBy, @JsonKey(name: 'deleted_at')  DateTime? deletedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'household_id')  String householdId,  String title, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt, @JsonKey(name: 'total_minutes')  int? totalMinutes,  int? servings, @JsonKey(name: 'image_url')  String? imageUrl,  List<RecipeStep> steps, @JsonKey(name: 'recipe_ingredients')  List<RecipeIngredient> ingredients, @JsonKey(name: 'created_by')  String? createdBy, @JsonKey(name: 'deleted_at')  DateTime? deletedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Recipe() when $default != null:
 return $default(_that.id,_that.householdId,_that.title,_that.createdAt,_that.updatedAt,_that.totalMinutes,_that.servings,_that.imageUrl,_that.steps,_that.ingredients,_that.createdBy,_that.deletedAt);case _:
@@ -190,7 +190,7 @@ return $default(_that.id,_that.householdId,_that.title,_that.createdAt,_that.upd
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'household_id')  String householdId,  String title, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt, @JsonKey(name: 'total_minutes')  int? totalMinutes,  int? servings, @JsonKey(name: 'image_url')  String? imageUrl,  List<String> steps, @JsonKey(name: 'recipe_ingredients')  List<RecipeIngredient> ingredients, @JsonKey(name: 'created_by')  String? createdBy, @JsonKey(name: 'deleted_at')  DateTime? deletedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'household_id')  String householdId,  String title, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt, @JsonKey(name: 'total_minutes')  int? totalMinutes,  int? servings, @JsonKey(name: 'image_url')  String? imageUrl,  List<RecipeStep> steps, @JsonKey(name: 'recipe_ingredients')  List<RecipeIngredient> ingredients, @JsonKey(name: 'created_by')  String? createdBy, @JsonKey(name: 'deleted_at')  DateTime? deletedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Recipe():
 return $default(_that.id,_that.householdId,_that.title,_that.createdAt,_that.updatedAt,_that.totalMinutes,_that.servings,_that.imageUrl,_that.steps,_that.ingredients,_that.createdBy,_that.deletedAt);case _:
@@ -210,7 +210,7 @@ return $default(_that.id,_that.householdId,_that.title,_that.createdAt,_that.upd
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'household_id')  String householdId,  String title, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt, @JsonKey(name: 'total_minutes')  int? totalMinutes,  int? servings, @JsonKey(name: 'image_url')  String? imageUrl,  List<String> steps, @JsonKey(name: 'recipe_ingredients')  List<RecipeIngredient> ingredients, @JsonKey(name: 'created_by')  String? createdBy, @JsonKey(name: 'deleted_at')  DateTime? deletedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'household_id')  String householdId,  String title, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt, @JsonKey(name: 'total_minutes')  int? totalMinutes,  int? servings, @JsonKey(name: 'image_url')  String? imageUrl,  List<RecipeStep> steps, @JsonKey(name: 'recipe_ingredients')  List<RecipeIngredient> ingredients, @JsonKey(name: 'created_by')  String? createdBy, @JsonKey(name: 'deleted_at')  DateTime? deletedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Recipe() when $default != null:
 return $default(_that.id,_that.householdId,_that.title,_that.createdAt,_that.updatedAt,_that.totalMinutes,_that.servings,_that.imageUrl,_that.steps,_that.ingredients,_that.createdBy,_that.deletedAt);case _:
@@ -225,7 +225,7 @@ return $default(_that.id,_that.householdId,_that.title,_that.createdAt,_that.upd
 @JsonSerializable()
 
 class _Recipe implements Recipe {
-  const _Recipe({required this.id, @JsonKey(name: 'household_id') required this.householdId, required this.title, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt, @JsonKey(name: 'total_minutes') this.totalMinutes, this.servings, @JsonKey(name: 'image_url') this.imageUrl, final  List<String> steps = const <String>[], @JsonKey(name: 'recipe_ingredients') final  List<RecipeIngredient> ingredients = const <RecipeIngredient>[], @JsonKey(name: 'created_by') this.createdBy, @JsonKey(name: 'deleted_at') this.deletedAt}): _steps = steps,_ingredients = ingredients;
+  const _Recipe({required this.id, @JsonKey(name: 'household_id') required this.householdId, required this.title, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt, @JsonKey(name: 'total_minutes') this.totalMinutes, this.servings, @JsonKey(name: 'image_url') this.imageUrl, final  List<RecipeStep> steps = const <RecipeStep>[], @JsonKey(name: 'recipe_ingredients') final  List<RecipeIngredient> ingredients = const <RecipeIngredient>[], @JsonKey(name: 'created_by') this.createdBy, @JsonKey(name: 'deleted_at') this.deletedAt}): _steps = steps,_ingredients = ingredients;
   factory _Recipe.fromJson(Map<String, dynamic> json) => _$RecipeFromJson(json);
 
 @override final  String id;
@@ -239,9 +239,9 @@ class _Recipe implements Recipe {
 @override final  int? servings;
 @override@JsonKey(name: 'image_url') final  String? imageUrl;
 /// Ordered step-by-step instructions; empty until the author adds any.
- final  List<String> _steps;
+ final  List<RecipeStep> _steps;
 /// Ordered step-by-step instructions; empty until the author adds any.
-@override@JsonKey() List<String> get steps {
+@override@JsonKey() List<RecipeStep> get steps {
   if (_steps is EqualUnmodifiableListView) return _steps;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_steps);
@@ -293,7 +293,7 @@ abstract mixin class _$RecipeCopyWith<$Res> implements $RecipeCopyWith<$Res> {
   factory _$RecipeCopyWith(_Recipe value, $Res Function(_Recipe) _then) = __$RecipeCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'household_id') String householdId, String title,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt,@JsonKey(name: 'total_minutes') int? totalMinutes, int? servings,@JsonKey(name: 'image_url') String? imageUrl, List<String> steps,@JsonKey(name: 'recipe_ingredients') List<RecipeIngredient> ingredients,@JsonKey(name: 'created_by') String? createdBy,@JsonKey(name: 'deleted_at') DateTime? deletedAt
+ String id,@JsonKey(name: 'household_id') String householdId, String title,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt,@JsonKey(name: 'total_minutes') int? totalMinutes, int? servings,@JsonKey(name: 'image_url') String? imageUrl, List<RecipeStep> steps,@JsonKey(name: 'recipe_ingredients') List<RecipeIngredient> ingredients,@JsonKey(name: 'created_by') String? createdBy,@JsonKey(name: 'deleted_at') DateTime? deletedAt
 });
 
 
@@ -321,7 +321,7 @@ as DateTime,totalMinutes: freezed == totalMinutes ? _self.totalMinutes : totalMi
 as int?,servings: freezed == servings ? _self.servings : servings // ignore: cast_nullable_to_non_nullable
 as int?,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
 as String?,steps: null == steps ? _self._steps : steps // ignore: cast_nullable_to_non_nullable
-as List<String>,ingredients: null == ingredients ? _self._ingredients : ingredients // ignore: cast_nullable_to_non_nullable
+as List<RecipeStep>,ingredients: null == ingredients ? _self._ingredients : ingredients // ignore: cast_nullable_to_non_nullable
 as List<RecipeIngredient>,createdBy: freezed == createdBy ? _self.createdBy : createdBy // ignore: cast_nullable_to_non_nullable
 as String?,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,

@@ -16,8 +16,10 @@ _Recipe _$RecipeFromJson(Map<String, dynamic> json) => _Recipe(
   servings: (json['servings'] as num?)?.toInt(),
   imageUrl: json['image_url'] as String?,
   steps:
-      (json['steps'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-      const <String>[],
+      (json['steps'] as List<dynamic>?)
+          ?.map((e) => RecipeStep.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const <RecipeStep>[],
   ingredients:
       (json['recipe_ingredients'] as List<dynamic>?)
           ?.map((e) => RecipeIngredient.fromJson(e as Map<String, dynamic>))
