@@ -16,6 +16,9 @@ import '../../../household/domain/household_role.dart';
 import '../../../household/presentation/household_error_message.dart';
 import '../../../household/presentation/widgets/household_avatar.dart';
 import '../../../household/presentation/widgets/invite_sheet.dart';
+import '../../application/profile_providers.dart';
+import '../../domain/profile.dart';
+import '../widgets/profile_avatar.dart';
 
 /// Household management: the member roster, inviting new members, renaming the
 /// household (owner), removing members (owner) and leaving it.
@@ -75,6 +78,12 @@ class _HouseholdView extends ConsumerWidget {
     final colors = context.colors;
     final members = ref.watch(householdMembersProvider(household.id));
     final currentUserId = ref.watch(householdRepositoryProvider).currentUserId;
+    // Member display names and avatars, resolved by user id. Absent while it
+    // loads (or for members whose profile the caller may not read), in which
+    // case the row falls back to the generic avatar and role.
+    final profiles =
+        ref.watch(householdMemberProfilesProvider).value ??
+        const <String, Profile>{};
     final isOwner =
         members.value?.any(
           (m) => m.userId == currentUserId && m.role == HouseholdRole.owner,
@@ -112,6 +121,7 @@ class _HouseholdView extends ConsumerWidget {
                 _MemberRow(
                   role: member.role,
                   isSelf: member.userId == currentUserId,
+                  profile: profiles[member.userId],
                   canRemove: isOwner && member.userId != currentUserId,
                   onRemove: () => _showRemoveConfirm(
                     context,
@@ -286,16 +296,22 @@ class _HouseholdHeader extends StatelessWidget {
 }
 
 /// A single roster row: avatar, name/role, and (for owners) a remove action.
+///
+/// With a resolved [profile] it shows the member's real avatar and display name
+/// (the current user is marked "(You)"); without one it falls back to the
+/// generic avatar and role, so the roster still renders while profiles load.
 class _MemberRow extends StatelessWidget {
   const _MemberRow({
     required this.role,
     required this.isSelf,
+    required this.profile,
     required this.canRemove,
     required this.onRemove,
   });
 
   final HouseholdRole role;
   final bool isSelf;
+  final Profile? profile;
   final bool canRemove;
   final VoidCallback onRemove;
 
@@ -304,6 +320,19 @@ class _MemberRow extends StatelessWidget {
     final l10n = context.l10n;
     final colors = context.colors;
     final roleLabel = _roleLabel(l10n, role);
+    final memberProfile = profile;
+
+    final String primary;
+    final String? secondary;
+    if (memberProfile != null) {
+      primary = isSelf
+          ? '${memberProfile.displayName} (${l10n.householdYou})'
+          : memberProfile.displayName;
+      secondary = roleLabel;
+    } else {
+      primary = isSelf ? l10n.householdYou : roleLabel;
+      secondary = isSelf ? roleLabel : null;
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -312,19 +341,22 @@ class _MemberRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          HouseholdAvatar(accent: isSelf),
+          if (memberProfile != null)
+            ProfileAvatar(profile: memberProfile)
+          else
+            HouseholdAvatar(accent: isSelf),
           const SizedBox(width: AppSpacing.s3),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isSelf ? l10n.householdYou : roleLabel,
+                  primary,
                   style: AppTypography.body.copyWith(color: colors.textPrimary),
                 ),
-                if (isSelf)
+                if (secondary != null)
                   Text(
-                    roleLabel,
+                    secondary,
                     style: AppTypography.caption.copyWith(
                       color: colors.textSecondary,
                     ),

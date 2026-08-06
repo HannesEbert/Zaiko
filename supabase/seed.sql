@@ -33,6 +33,13 @@ insert into auth.identities (
 )
 on conflict do nothing;
 
+-- The on_auth_user_created trigger already created a profile for the dev user
+-- (display_name 'dev'); give it a friendlier name and a preset avatar so the
+-- local app shows real profile data.
+update public.profiles
+set display_name = 'Dev', avatar_preset = 'sprout'
+where id = '11111111-1111-1111-1111-111111111111';
+
 -- Sample household. The on_household_created trigger enrols the dev user as
 -- owner and seeds the default storage locations.
 insert into public.households (id, name, created_by) values

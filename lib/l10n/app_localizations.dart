@@ -482,29 +482,65 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get commonCancel;
 
-  /// No description provided for @profileManageAccountEmptyTitle.
+  /// No description provided for @commonSave.
   ///
   /// In en, this message translates to:
-  /// **'Manage your profile'**
-  String get profileManageAccountEmptyTitle;
+  /// **'Save'**
+  String get commonSave;
 
-  /// No description provided for @profileManageAccountEmptyMessage.
+  /// No description provided for @profileDisplayNameLabel.
   ///
   /// In en, this message translates to:
-  /// **'Editing your profile details will be available here.'**
-  String get profileManageAccountEmptyMessage;
+  /// **'Display name'**
+  String get profileDisplayNameLabel;
 
-  /// No description provided for @profilePersonalDataEmptyTitle.
+  /// No description provided for @profileDisplayNameRequired.
   ///
   /// In en, this message translates to:
-  /// **'Your personal data'**
-  String get profilePersonalDataEmptyTitle;
+  /// **'Please enter a display name'**
+  String get profileDisplayNameRequired;
 
-  /// No description provided for @profilePersonalDataEmptyMessage.
+  /// No description provided for @profileEmailLabel.
   ///
   /// In en, this message translates to:
-  /// **'Your stored personal information will be shown here.'**
-  String get profilePersonalDataEmptyMessage;
+  /// **'Email'**
+  String get profileEmailLabel;
+
+  /// No description provided for @profileEmailChangeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Changing your email and password will be available soon.'**
+  String get profileEmailChangeHint;
+
+  /// No description provided for @profileAvatarSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Avatar'**
+  String get profileAvatarSectionTitle;
+
+  /// No description provided for @profileAvatarDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Initial'**
+  String get profileAvatarDefault;
+
+  /// No description provided for @profileErrorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save your profile. Please try again.'**
+  String get profileErrorGeneric;
+
+  /// No description provided for @profileMemberSince.
+  ///
+  /// In en, this message translates to:
+  /// **'Member since'**
+  String get profileMemberSince;
+
+  /// No description provided for @profilePersonalDataNoHousehold.
+  ///
+  /// In en, this message translates to:
+  /// **'No household'**
+  String get profilePersonalDataNoHousehold;
 
   /// No description provided for @profileRemindersEmptyTitle.
   ///

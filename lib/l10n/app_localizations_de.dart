@@ -221,18 +221,36 @@ class AppLocalizationsDe extends AppLocalizations {
   String get commonCancel => 'Abbrechen';
 
   @override
-  String get profileManageAccountEmptyTitle => 'Profil verwalten';
+  String get commonSave => 'Speichern';
 
   @override
-  String get profileManageAccountEmptyMessage =>
-      'Hier kannst du künftig deine Profildaten bearbeiten.';
+  String get profileDisplayNameLabel => 'Anzeigename';
 
   @override
-  String get profilePersonalDataEmptyTitle => 'Deine persönlichen Daten';
+  String get profileDisplayNameRequired => 'Bitte einen Anzeigenamen eingeben';
 
   @override
-  String get profilePersonalDataEmptyMessage =>
-      'Deine gespeicherten persönlichen Informationen erscheinen hier.';
+  String get profileEmailLabel => 'E-Mail';
+
+  @override
+  String get profileEmailChangeHint =>
+      'Das Ändern von E-Mail und Passwort folgt bald.';
+
+  @override
+  String get profileAvatarSectionTitle => 'Avatar';
+
+  @override
+  String get profileAvatarDefault => 'Initiale';
+
+  @override
+  String get profileErrorGeneric =>
+      'Profil konnte nicht gespeichert werden. Bitte erneut versuchen.';
+
+  @override
+  String get profileMemberSince => 'Mitglied seit';
+
+  @override
+  String get profilePersonalDataNoHousehold => 'Kein Haushalt';
 
   @override
   String get profileRemindersEmptyTitle => 'MHD-Erinnerungen';

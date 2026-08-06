@@ -217,18 +217,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonCancel => 'Cancel';
 
   @override
-  String get profileManageAccountEmptyTitle => 'Manage your profile';
+  String get commonSave => 'Save';
 
   @override
-  String get profileManageAccountEmptyMessage =>
-      'Editing your profile details will be available here.';
+  String get profileDisplayNameLabel => 'Display name';
 
   @override
-  String get profilePersonalDataEmptyTitle => 'Your personal data';
+  String get profileDisplayNameRequired => 'Please enter a display name';
 
   @override
-  String get profilePersonalDataEmptyMessage =>
-      'Your stored personal information will be shown here.';
+  String get profileEmailLabel => 'Email';
+
+  @override
+  String get profileEmailChangeHint =>
+      'Changing your email and password will be available soon.';
+
+  @override
+  String get profileAvatarSectionTitle => 'Avatar';
+
+  @override
+  String get profileAvatarDefault => 'Initial';
+
+  @override
+  String get profileErrorGeneric =>
+      'Couldn\'t save your profile. Please try again.';
+
+  @override
+  String get profileMemberSince => 'Member since';
+
+  @override
+  String get profilePersonalDataNoHousehold => 'No household';
 
   @override
   String get profileRemindersEmptyTitle => 'Expiry reminders';
