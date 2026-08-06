@@ -357,5 +357,22 @@
   "recipesFormStepHint": "Schritt {number}",
   "recipesFormAddStep": "Schritt hinzufügen",
   "recipesCreateButton": "Rezept anlegen",
-  "recipesSaveButton": "Speichern"
+  "recipesSaveButton": "Speichern",
+  "recipesCookStart": "Kochen starten",
+  "recipesCookStep": "Schritt {current}/{total}",
+  "recipesCookNext": "Weiter",
+  "recipesCookFinish": "Fertig",
+  "recipesCookEmpty": "Dieses Rezept hat noch keine Schritte.",
+  "recipesCookTimerStart": "Timer starten",
+  "recipesCookTimerReset": "Zurücksetzen",
+  "recipesCookTimerDone": "Timer fertig",
+  "recipesCookTimerAddMinute": "+1 Min",
+  "recipesCookTimerRemoveMinute": "-1 Min",
+  "recipesCookTimerAddSecond": "+10 Sek",
+  "recipesCookTimerRemoveSecond": "-10 Sek",
+  "recipesCookTimerPause": "Pause",
+  "recipesCookTimerResume": "Fortsetzen",
+  "recipesFormStepTimerToggle": "Timer",
+  "recipesFormStepTimerMinutes": "Min",
+  "recipesFormStepTimerSeconds": "Sek"
 }

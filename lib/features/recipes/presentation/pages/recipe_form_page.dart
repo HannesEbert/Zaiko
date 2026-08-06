@@ -11,6 +11,7 @@ import '../../../auth/presentation/widgets/field_label.dart';
 import '../../application/recipes_providers.dart';
 import '../../domain/recipe.dart';
 import '../../domain/recipe_draft.dart';
+import '../../domain/recipe_step.dart';
 import '../recipe_error_message.dart';
 
 /// Create or edit a recipe. Passing an [recipeId] edits it; passing null
@@ -43,7 +44,7 @@ class _RecipeFormPageState extends ConsumerState<RecipeFormPage> {
   late final TextEditingController _minutesController;
   late final TextEditingController _servingsController;
   late final List<_IngredientField> _ingredients;
-  late final List<TextEditingController> _steps;
+  late final List<_StepField> _steps;
 
   bool get _isEdit => widget.recipeId != null;
 
@@ -68,8 +69,11 @@ class _RecipeFormPageState extends ConsumerState<RecipeFormPage> {
               ),
           ];
     _steps = recipe == null || recipe.steps.isEmpty
-        ? [TextEditingController()]
-        : [for (final step in recipe.steps) TextEditingController(text: step)];
+        ? [_StepField()]
+        : [
+            for (final step in recipe.steps)
+              _StepField(text: step.text, timerSeconds: step.timerSeconds),
+          ];
   }
 
   /// The recipe being edited, looked up in the already-loaded list (edit is only
@@ -92,8 +96,8 @@ class _RecipeFormPageState extends ConsumerState<RecipeFormPage> {
     for (final field in _ingredients) {
       field.dispose();
     }
-    for (final step in _steps) {
-      step.dispose();
+    for (final field in _steps) {
+      field.dispose();
     }
     super.dispose();
   }
@@ -177,11 +181,13 @@ class _RecipeFormPageState extends ConsumerState<RecipeFormPage> {
             const SizedBox(height: AppSpacing.s5),
             FieldLabel(l10n.recipesStepsSection),
             const SizedBox(height: AppSpacing.s2),
-            for (final (index, step) in _steps.indexed) ...[
+            for (final (index, field) in _steps.indexed) ...[
               _StepRow(
                 number: index + 1,
-                controller: step,
+                field: field,
                 enabled: !isBusy,
+                onToggleTimer: () =>
+                    setState(() => field.withTimer = !field.withTimer),
                 onRemove: _steps.length == 1
                     ? null
                     : () => setState(() => _steps.removeAt(index).dispose()),
@@ -192,7 +198,7 @@ class _RecipeFormPageState extends ConsumerState<RecipeFormPage> {
               label: l10n.recipesFormAddStep,
               onTap: isBusy
                   ? null
-                  : () => setState(() => _steps.add(TextEditingController())),
+                  : () => setState(() => _steps.add(_StepField())),
             ),
             const SizedBox(height: AppSpacing.s6),
             SizedBox(
@@ -226,8 +232,12 @@ class _RecipeFormPageState extends ConsumerState<RecipeFormPage> {
             ),
       ],
       steps: [
-        for (final step in _steps)
-          if (step.text.trim().isNotEmpty) step.text.trim(),
+        for (final field in _steps)
+          if (field.text.text.trim().isNotEmpty)
+            RecipeStep(
+              text: field.text.text.trim(),
+              timerSeconds: field.timerSeconds,
+            ),
       ],
     );
 
@@ -306,52 +316,156 @@ class _IngredientRow extends StatelessWidget {
   }
 }
 
+/// A step's text controller plus its optional-timer state (mirrors
+/// [_IngredientField]). [timerSeconds] is null unless the timer is on and a
+/// duration was entered.
+class _StepField {
+  _StepField({String? text, int? timerSeconds})
+    : text = TextEditingController(text: text ?? ''),
+      withTimer = timerSeconds != null,
+      minutes = TextEditingController(
+        text: timerSeconds == null ? '' : (timerSeconds ~/ 60).toString(),
+      ),
+      seconds = TextEditingController(
+        text: timerSeconds == null ? '' : (timerSeconds % 60).toString(),
+      );
+
+  final TextEditingController text;
+  bool withTimer;
+  final TextEditingController minutes;
+  final TextEditingController seconds;
+
+  /// The configured timer in seconds, or null when the timer is off or empty.
+  int? get timerSeconds {
+    if (!withTimer) return null;
+    final min = int.tryParse(minutes.text.trim()) ?? 0;
+    final sec = int.tryParse(seconds.text.trim()) ?? 0;
+    final total = min * 60 + sec;
+    return total > 0 ? total : null;
+  }
+
+  void dispose() {
+    text.dispose();
+    minutes.dispose();
+    seconds.dispose();
+  }
+}
+
 class _StepRow extends StatelessWidget {
   const _StepRow({
     required this.number,
-    required this.controller,
+    required this.field,
     required this.enabled,
+    required this.onToggleTimer,
     this.onRemove,
   });
 
   final int number;
-  final TextEditingController controller;
+  final _StepField field;
   final bool enabled;
+  final VoidCallback onToggleTimer;
   final VoidCallback? onRemove;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final colors = context.colors;
 
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: AppSpacing.s3),
+              child: Text(
+                '$number.',
+                style: AppTypography.bodyMedium.copyWith(
+                  color: colors.textSecondary,
+                  fontFeatures: AppTypography.tabularFigures,
+                ),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.s3),
+            Expanded(
+              child: TextField(
+                controller: field.text,
+                enabled: enabled,
+                minLines: 1,
+                maxLines: 4,
+                textCapitalization: TextCapitalization.sentences,
+                style: AppTypography.body.copyWith(color: colors.textPrimary),
+                decoration: InputDecoration(
+                  hintText: l10n.recipesFormStepHint(number),
+                ),
+              ),
+            ),
+            _RemoveButton(onTap: enabled ? onRemove : null),
+          ],
+        ),
         Padding(
-          padding: const EdgeInsets.only(top: AppSpacing.s3),
-          child: Text(
-            '$number.',
-            style: AppTypography.bodyMedium.copyWith(
-              color: colors.textSecondary,
-              fontFeatures: AppTypography.tabularFigures,
-            ),
+          padding: const EdgeInsets.only(left: AppSpacing.s6),
+          child: Row(
+            children: [
+              Switch.adaptive(
+                value: field.withTimer,
+                onChanged: enabled ? (_) => onToggleTimer() : null,
+              ),
+              const SizedBox(width: AppSpacing.s1),
+              Text(
+                l10n.recipesFormStepTimerToggle,
+                style: AppTypography.body.copyWith(color: colors.textSecondary),
+              ),
+              if (field.withTimer) ...[
+                const SizedBox(width: AppSpacing.s3),
+                SizedBox(
+                  width: 64,
+                  child: _TimerPartField(
+                    controller: field.minutes,
+                    hint: l10n.recipesFormStepTimerMinutes,
+                    enabled: enabled,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.s2),
+                SizedBox(
+                  width: 64,
+                  child: _TimerPartField(
+                    controller: field.seconds,
+                    hint: l10n.recipesFormStepTimerSeconds,
+                    enabled: enabled,
+                  ),
+                ),
+              ],
+            ],
           ),
         ),
-        const SizedBox(width: AppSpacing.s3),
-        Expanded(
-          child: TextField(
-            controller: controller,
-            enabled: enabled,
-            minLines: 1,
-            maxLines: 4,
-            textCapitalization: TextCapitalization.sentences,
-            style: AppTypography.body.copyWith(color: colors.textPrimary),
-            decoration: InputDecoration(
-              hintText: context.l10n.recipesFormStepHint(number),
-            ),
-          ),
-        ),
-        _RemoveButton(onTap: enabled ? onRemove : null),
       ],
+    );
+  }
+}
+
+/// A narrow digits-only field for a step timer's minutes or seconds.
+class _TimerPartField extends StatelessWidget {
+  const _TimerPartField({
+    required this.controller,
+    required this.hint,
+    required this.enabled,
+  });
+
+  final TextEditingController controller;
+  final String hint;
+  final bool enabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      enabled: enabled,
+      keyboardType: TextInputType.number,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      style: AppTypography.body.copyWith(color: context.colors.textPrimary),
+      decoration: InputDecoration(hintText: hint),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'recipe_ingredient.dart';
+import 'recipe_step.dart';
 
 part 'recipe.freezed.dart';
 part 'recipe.g.dart';
@@ -30,7 +31,7 @@ abstract class Recipe with _$Recipe {
     @JsonKey(name: 'image_url') String? imageUrl,
 
     /// Ordered step-by-step instructions; empty until the author adds any.
-    @Default(<String>[]) List<String> steps,
+    @Default(<RecipeStep>[]) List<RecipeStep> steps,
 
     /// The recipe's ingredients, ordered by their `sort_order`.
     @JsonKey(name: 'recipe_ingredients')

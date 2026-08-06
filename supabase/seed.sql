@@ -91,35 +91,35 @@ insert into public.recipes (
 ) values
   ('44444444-4444-4444-4444-000000000001',
    '22222222-2222-2222-2222-222222222222', 'Rührei', 10, 2,
-   array[
-     'Butter in einer Pfanne bei mittlerer Hitze schmelzen.',
-     'Eier mit Milch und einer Prise Salz verquirlen.',
-     'Masse in die Pfanne geben und unter Rühren stocken lassen.'
-   ],
+   jsonb_build_array(
+     jsonb_build_object('text', 'Butter in einer Pfanne bei mittlerer Hitze schmelzen.'),
+     jsonb_build_object('text', 'Eier mit Milch und einer Prise Salz verquirlen.'),
+     jsonb_build_object('text', 'Masse in die Pfanne geben und unter Rühren stocken lassen.')
+   ),
    '11111111-1111-1111-1111-111111111111'),
   ('44444444-4444-4444-4444-000000000002',
    '22222222-2222-2222-2222-222222222222', 'Apfelmus', 25, 4,
-   array[
-     'Äpfel schälen, entkernen und würfeln.',
-     'Mit etwas Wasser und Zucker weich köcheln.',
-     'Nach Belieben zerstampfen oder pürieren.'
-   ],
+   jsonb_build_array(
+     jsonb_build_object('text', 'Äpfel schälen, entkernen und würfeln.'),
+     jsonb_build_object('text', 'Mit etwas Wasser und Zucker weich köcheln.', 'timer_seconds', 600),
+     jsonb_build_object('text', 'Nach Belieben zerstampfen oder pürieren.')
+   ),
    '11111111-1111-1111-1111-111111111111'),
   ('44444444-4444-4444-4444-000000000003',
    '22222222-2222-2222-2222-222222222222', 'Bratapfel', 40, 4,
-   array[
-     'Äpfel entkernen und in eine Auflaufform setzen.',
-     'Mit Butter, Honig und Zimt füllen.',
-     'Bei 180 °C etwa 25 Minuten backen.'
-   ],
+   jsonb_build_array(
+     jsonb_build_object('text', 'Äpfel entkernen und in eine Auflaufform setzen.'),
+     jsonb_build_object('text', 'Mit Butter, Honig und Zimt füllen.'),
+     jsonb_build_object('text', 'Bei 180 °C etwa 25 Minuten backen.', 'timer_seconds', 1500)
+   ),
    '11111111-1111-1111-1111-111111111111'),
   ('44444444-4444-4444-4444-000000000004',
    '22222222-2222-2222-2222-222222222222', 'Milchreis', 45, 3,
-   array[
-     'Milch mit Reis aufkochen.',
-     'Bei kleiner Hitze quellen lassen, gelegentlich umrühren.',
-     'Mit Zucker und Zimt abschmecken.'
-   ],
+   jsonb_build_array(
+     jsonb_build_object('text', 'Milch mit Reis aufkochen.'),
+     jsonb_build_object('text', 'Bei kleiner Hitze quellen lassen, gelegentlich umrühren.', 'timer_seconds', 1800),
+     jsonb_build_object('text', 'Mit Zucker und Zimt abschmecken.')
+   ),
    '11111111-1111-1111-1111-111111111111')
 on conflict (id) do nothing;
 

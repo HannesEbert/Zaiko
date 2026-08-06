@@ -56,7 +56,7 @@ class SupabaseRecipeRepository implements RecipeRepository {
             'title': draft.title,
             'total_minutes': draft.totalMinutes,
             'servings': draft.servings,
-            'steps': draft.steps,
+            'steps': [for (final step in draft.steps) step.toJson()],
             'created_by': _client.auth.currentUser?.id,
           })
           .select('id')
@@ -81,7 +81,7 @@ class SupabaseRecipeRepository implements RecipeRepository {
             'title': draft.title,
             'total_minutes': draft.totalMinutes,
             'servings': draft.servings,
-            'steps': draft.steps,
+            'steps': [for (final step in draft.steps) step.toJson()],
           })
           .eq('id', id);
       // Replace the ingredient set wholesale — simpler than diffing, and the

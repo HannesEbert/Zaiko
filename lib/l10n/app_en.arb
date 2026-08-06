@@ -618,5 +618,29 @@
   },
   "recipesFormAddStep": "Add step",
   "recipesCreateButton": "Create recipe",
-  "recipesSaveButton": "Save"
+  "recipesSaveButton": "Save",
+  "recipesCookStart": "Start cooking",
+  "recipesCookStep": "Step {current}/{total}",
+  "@recipesCookStep": {
+    "description": "Progress counter in cook mode",
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "recipesCookNext": "Next",
+  "recipesCookFinish": "Done",
+  "recipesCookEmpty": "This recipe has no steps yet.",
+  "recipesCookTimerStart": "Start timer",
+  "recipesCookTimerReset": "Reset",
+  "recipesCookTimerDone": "Timer done",
+  "recipesCookTimerAddMinute": "+1 min",
+  "recipesCookTimerRemoveMinute": "-1 min",
+  "recipesCookTimerAddSecond": "+10 sec",
+  "recipesCookTimerRemoveSecond": "-10 sec",
+  "recipesCookTimerPause": "Pause",
+  "recipesCookTimerResume": "Resume",
+  "recipesFormStepTimerToggle": "Timer",
+  "recipesFormStepTimerMinutes": "Min",
+  "recipesFormStepTimerSeconds": "Sec"
 }
