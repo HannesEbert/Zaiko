@@ -17,3 +17,14 @@ String recipeMatchLabel(AppLocalizations l10n, RecipeMatch match) =>
     match.isComplete
     ? l10n.recipesMatchComplete
     : l10n.recipesMatchCount(match.matchedCount, match.totalCount);
+
+/// Formats a step-timer countdown as `MM:SS` (minutes are not capped at two
+/// digits for timers over an hour, e.g. `120:00`). Shared by the cook mode and
+/// the recipe detail badge.
+String formatTimerDuration(Duration duration) {
+  final minutes = duration.inMinutes;
+  final seconds = duration.inSeconds % 60;
+  final paddedMinutes = minutes.toString().padLeft(2, '0');
+  final paddedSeconds = seconds.toString().padLeft(2, '0');
+  return '$paddedMinutes:$paddedSeconds';
+}

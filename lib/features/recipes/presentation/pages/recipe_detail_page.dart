@@ -9,13 +9,16 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../shared/widgets/header_icon_button.dart';
 import '../../../../shared/widgets/page_header.dart';
 import '../../../../shared/widgets/section_label.dart';
+import '../../../../shared/widgets/zaiko_buttons.dart';
 import '../../../../shared/widgets/zaiko_card.dart';
 import '../../application/recipes_providers.dart';
 import '../../domain/recipe.dart';
 import '../../domain/recipe_ingredient.dart';
 import '../../domain/recipe_match.dart';
+import '../../domain/recipe_step.dart';
 import '../recipe_error_message.dart';
 import '../recipes_labels.dart';
+import 'cook_mode_page.dart';
 import 'recipe_form_page.dart';
 
 /// A single recipe: ingredients (with an in-stock indicator) and the
@@ -121,6 +124,14 @@ class _RecipeBody extends ConsumerWidget {
             ],
           ),
         ],
+        if (recipe.steps.isNotEmpty) ...[
+          const SizedBox(height: AppSpacing.s6),
+          ZaikoPrimaryButton(
+            label: l10n.recipesCookStart,
+            icon: Icons.local_fire_department_outlined,
+            onPressed: () => CookModePage.open(context, recipe: recipe),
+          ),
+        ],
         const SizedBox(height: AppSpacing.s6),
         SectionLabel(l10n.recipesIngredientsSection),
         const SizedBox(height: AppSpacing.s3),
@@ -146,7 +157,7 @@ class _RecipeBody extends ConsumerWidget {
           _EmptyLine(l10n.recipesStepsEmpty)
         else
           for (final (index, step) in recipe.steps.indexed) ...[
-            _StepRow(number: index + 1, text: step),
+            _StepRow(number: index + 1, step: step),
             if (index != recipe.steps.length - 1)
               const SizedBox(height: AppSpacing.s3),
           ],
@@ -237,14 +248,15 @@ class _IngredientRow extends StatelessWidget {
 }
 
 class _StepRow extends StatelessWidget {
-  const _StepRow({required this.number, required this.text});
+  const _StepRow({required this.number, required this.step});
 
   final int number;
-  final String text;
+  final RecipeStep step;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final timerSeconds = step.timerSeconds;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,10 +282,46 @@ class _StepRow extends StatelessWidget {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.only(top: 3),
-            child: Text(
-              text,
-              style: AppTypography.body.copyWith(color: colors.textPrimary),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  step.text,
+                  style: AppTypography.body.copyWith(color: colors.textPrimary),
+                ),
+                if (timerSeconds != null) ...[
+                  const SizedBox(height: AppSpacing.s1),
+                  _StepTimerBadge(seconds: timerSeconds),
+                ],
+              ],
             ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// A small "⏱ MM:SS" badge shown on a step that has a recipe-defined timer.
+class _StepTimerBadge extends StatelessWidget {
+  const _StepTimerBadge({required this.seconds});
+
+  final int seconds;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.timer_outlined, size: 14, color: colors.textSecondary),
+        const SizedBox(width: 4),
+        Text(
+          formatTimerDuration(Duration(seconds: seconds)),
+          style: AppTypography.caption.copyWith(
+            color: colors.textSecondary,
+            fontFeatures: AppTypography.tabularFigures,
           ),
         ),
       ],

@@ -1083,4 +1083,57 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get recipesSaveButton => 'Speichern';
+
+  @override
+  String get recipesCookStart => 'Kochen starten';
+
+  @override
+  String recipesCookStep(int current, int total) {
+    return 'Schritt $current/$total';
+  }
+
+  @override
+  String get recipesCookNext => 'Weiter';
+
+  @override
+  String get recipesCookFinish => 'Fertig';
+
+  @override
+  String get recipesCookEmpty => 'Dieses Rezept hat noch keine Schritte.';
+
+  @override
+  String get recipesCookTimerStart => 'Timer starten';
+
+  @override
+  String get recipesCookTimerReset => 'Zurücksetzen';
+
+  @override
+  String get recipesCookTimerDone => 'Timer fertig';
+
+  @override
+  String get recipesCookTimerAddMinute => '+1 Min';
+
+  @override
+  String get recipesCookTimerRemoveMinute => '-1 Min';
+
+  @override
+  String get recipesCookTimerAddSecond => '+10 Sek';
+
+  @override
+  String get recipesCookTimerRemoveSecond => '-10 Sek';
+
+  @override
+  String get recipesCookTimerPause => 'Pause';
+
+  @override
+  String get recipesCookTimerResume => 'Fortsetzen';
+
+  @override
+  String get recipesFormStepTimerToggle => 'Timer';
+
+  @override
+  String get recipesFormStepTimerMinutes => 'Min';
+
+  @override
+  String get recipesFormStepTimerSeconds => 'Sek';
 }

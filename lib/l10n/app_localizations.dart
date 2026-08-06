@@ -2029,6 +2029,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get recipesSaveButton;
+
+  /// No description provided for @recipesCookStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start cooking'**
+  String get recipesCookStart;
+
+  /// Progress counter in cook mode
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current}/{total}'**
+  String recipesCookStep(int current, int total);
+
+  /// No description provided for @recipesCookNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get recipesCookNext;
+
+  /// No description provided for @recipesCookFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get recipesCookFinish;
+
+  /// No description provided for @recipesCookEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'This recipe has no steps yet.'**
+  String get recipesCookEmpty;
+
+  /// No description provided for @recipesCookTimerStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start timer'**
+  String get recipesCookTimerStart;
+
+  /// No description provided for @recipesCookTimerReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get recipesCookTimerReset;
+
+  /// No description provided for @recipesCookTimerDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer done'**
+  String get recipesCookTimerDone;
+
+  /// No description provided for @recipesCookTimerAddMinute.
+  ///
+  /// In en, this message translates to:
+  /// **'+1 min'**
+  String get recipesCookTimerAddMinute;
+
+  /// No description provided for @recipesCookTimerRemoveMinute.
+  ///
+  /// In en, this message translates to:
+  /// **'-1 min'**
+  String get recipesCookTimerRemoveMinute;
+
+  /// No description provided for @recipesCookTimerAddSecond.
+  ///
+  /// In en, this message translates to:
+  /// **'+10 sec'**
+  String get recipesCookTimerAddSecond;
+
+  /// No description provided for @recipesCookTimerRemoveSecond.
+  ///
+  /// In en, this message translates to:
+  /// **'-10 sec'**
+  String get recipesCookTimerRemoveSecond;
+
+  /// No description provided for @recipesCookTimerPause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get recipesCookTimerPause;
+
+  /// No description provided for @recipesCookTimerResume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get recipesCookTimerResume;
+
+  /// No description provided for @recipesFormStepTimerToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer'**
+  String get recipesFormStepTimerToggle;
+
+  /// No description provided for @recipesFormStepTimerMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Min'**
+  String get recipesFormStepTimerMinutes;
+
+  /// No description provided for @recipesFormStepTimerSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Sec'**
+  String get recipesFormStepTimerSeconds;
 }
 
 class _AppLocalizationsDelegate
