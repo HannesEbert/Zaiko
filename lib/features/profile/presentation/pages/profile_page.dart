@@ -13,17 +13,23 @@ import '../../../../shared/widgets/zaiko_card.dart';
 import '../../../auth/application/auth_providers.dart';
 import '../../../household/application/households_providers.dart';
 import '../../../household/domain/household.dart';
+import '../../../household/domain/household_member.dart';
 import '../../../household/presentation/widgets/household_avatar.dart';
+import '../../application/profile_providers.dart';
+import '../../domain/profile.dart';
+import '../widgets/profile_avatar.dart';
 import 'household_link_page.dart';
+import 'personal_data_page.dart';
 import 'profile_edit_page.dart';
 import 'reminders_page.dart';
 import 'settings_page.dart';
 
 /// Profile tab: account, household and settings, plus sign-out.
 ///
-/// The account/household details are demo content; the rows navigate to the
-/// existing (placeholder) sub-pages. Sign-out flows through the auth
-/// repository, after which the router redirect returns the user to login.
+/// The account card shows the current user's real profile (name, email, avatar)
+/// and the household card the shared household; the settings rows are still
+/// placeholders. Sign-out flows through the auth repository, after which the
+/// router redirect returns the user to login.
 class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
 
@@ -62,6 +68,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             const SizedBox(height: AppSpacing.s4),
             _AccountCard(
               onTap: () => context.pushNamed(ProfileEditPage.routeName),
+            ),
+            const SizedBox(height: AppSpacing.s3),
+            CardList(
+              children: [
+                _SettingRow(
+                  icon: Icons.badge_outlined,
+                  label: l10n.profilePersonalData,
+                  onTap: () => context.pushNamed(PersonalDataPage.routeName),
+                ),
+              ],
             ),
             const SizedBox(height: AppSpacing.s5),
             SectionLabel(l10n.profileHouseholdSection),
@@ -151,38 +167,50 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   }
 }
 
-class _AccountCard extends StatelessWidget {
+class _AccountCard extends ConsumerWidget {
   const _AccountCard({required this.onTap});
 
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    final profile = ref.watch(myProfileProvider).value;
+    final email = ref.watch(currentUserEmailProvider).value;
+    // Fall back to the email's local part until the profile row loads, so the
+    // card never flashes placeholder identity.
+    final name = profile?.displayName ?? email?.split('@').first ?? '';
 
     return ZaikoCard(
       onTap: onTap,
       padding: const EdgeInsets.all(AppSpacing.s3 + 2),
       child: Row(
         children: [
-          const UserAvatar(initial: 'H', size: 52),
+          if (profile != null)
+            ProfileAvatar(profile: profile, size: 52)
+          else
+            UserAvatar(
+              initial: name.isEmpty ? '?' : name[0].toUpperCase(),
+              size: 52,
+            ),
           const SizedBox(width: AppSpacing.s3 + 2),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Hannes',
+                  name,
                   style: AppTypography.headline.copyWith(
                     color: colors.textPrimary,
                   ),
                 ),
-                Text(
-                  'hannes@beispiel.de',
-                  style: AppTypography.caption.copyWith(
-                    color: colors.textSecondary,
+                if (email != null)
+                  Text(
+                    email,
+                    style: AppTypography.caption.copyWith(
+                      color: colors.textSecondary,
+                    ),
                   ),
-                ),
               ],
             ),
           ),
@@ -257,8 +285,27 @@ class _HouseholdSummary extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
     final l10n = context.l10n;
-    final count =
-        ref.watch(householdMembersProvider(household.id)).value?.length ?? 0;
+    final roster =
+        ref.watch(householdMembersProvider(household.id)).value ??
+        const <HouseholdMember>[];
+    final profiles =
+        ref.watch(householdMemberProfilesProvider).value ??
+        const <String, Profile>{};
+    final currentUserId = ref.watch(householdRepositoryProvider).currentUserId;
+    final count = roster.length;
+
+    // Show the current user first (accent), then the next member.
+    final ordered = [
+      ...roster.where((m) => m.userId == currentUserId),
+      ...roster.where((m) => m.userId != currentUserId),
+    ];
+
+    Widget avatarFor(HouseholdMember member, {required bool accent}) {
+      final profile = profiles[member.userId];
+      return profile != null
+          ? ProfileAvatar(profile: profile, size: 30, borderColor: colors.card)
+          : HouseholdAvatar(accent: accent, size: 30, borderColor: colors.card);
+    }
 
     return Row(
       children: [
@@ -288,11 +335,18 @@ class _HouseholdSummary extends ConsumerWidget {
           height: 30,
           child: Stack(
             children: [
-              HouseholdAvatar(accent: true, size: 30, borderColor: colors.card),
-              if (count > 1)
+              if (ordered.isNotEmpty)
+                avatarFor(ordered.first, accent: true)
+              else
+                HouseholdAvatar(
+                  accent: true,
+                  size: 30,
+                  borderColor: colors.card,
+                ),
+              if (ordered.length > 1)
                 Positioned(
                   left: 22,
-                  child: HouseholdAvatar(size: 30, borderColor: colors.card),
+                  child: avatarFor(ordered[1], accent: false),
                 ),
             ],
           ),
@@ -370,7 +424,8 @@ class _SettingRow extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.s1 + 2),
               Icon(Icons.chevron_right, size: 16, color: colors.borderStrong),
-            ],
+            ] else if (onTap != null)
+              Icon(Icons.chevron_right, size: 16, color: colors.borderStrong),
           ],
         ),
       ),
