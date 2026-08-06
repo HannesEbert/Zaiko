@@ -6,24 +6,38 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../shared/widgets/status_pill.dart';
 import '../../../../shared/widgets/zaiko_card.dart';
-import '../recipes_demo_data.dart';
+import '../../domain/recipe_match.dart';
+import '../recipes_labels.dart';
 
-/// A recipe suggestion card: photo placeholder, title + meta, a match pill and
-/// — when ingredients are missing — the missing chips plus a "Zur Liste" link.
+/// A recipe suggestion card: photo placeholder, title + meta, a match pill,
+/// an "use up soon" badge when it covers expiring stock, and — when ingredients
+/// are missing — the missing chips plus a working "To list" action.
+///
+/// Tapping the card opens the recipe; tapping "To list" adds the missing
+/// ingredients to the shopping list via [onAddToList].
 class RecipeCard extends StatelessWidget {
-  const RecipeCard(this.recipe, {super.key});
+  const RecipeCard(
+    this.match, {
+    required this.onTap,
+    required this.onAddToList,
+    super.key,
+  });
 
-  final Recipe recipe;
+  final RecipeMatch match;
+  final VoidCallback onTap;
+  final VoidCallback onAddToList;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final colors = context.colors;
 
     return ZaikoCard(
+      onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _PhotoPlaceholder(),
+          const _PhotoPlaceholder(),
           Padding(
             padding: const EdgeInsets.all(AppSpacing.s3 + 2),
             child: Column(
@@ -37,14 +51,14 @@ class RecipeCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            recipe.title,
+                            match.recipe.title,
                             style: AppTypography.headline.copyWith(
                               color: colors.textPrimary,
                             ),
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            recipe.meta,
+                            recipeMetaLabel(l10n, match.recipe),
                             style: AppTypography.caption.copyWith(
                               color: colors.textSecondary,
                               fontFeatures: AppTypography.tabularFigures,
@@ -54,12 +68,30 @@ class RecipeCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: AppSpacing.s2),
-                    StatusPill(recipe.matchLabel, tone: recipe.matchTone),
+                    StatusPill(
+                      recipeMatchLabel(l10n, match),
+                      tone: match.isComplete
+                          ? StatusTone.success
+                          : StatusTone.warning,
+                    ),
                   ],
                 ),
-                if (recipe.missing.isNotEmpty) ...[
+                if (match.usesExpiring) ...[
                   const SizedBox(height: AppSpacing.s3),
-                  _MissingRow(missing: recipe.missing),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: StatusPill(
+                      l10n.recipesUsesExpiring,
+                      tone: StatusTone.error,
+                    ),
+                  ),
+                ],
+                if (match.missing.isNotEmpty) ...[
+                  const SizedBox(height: AppSpacing.s3),
+                  _MissingRow(
+                    missing: [for (final i in match.missing) i.name],
+                    onAddToList: onAddToList,
+                  ),
                 ],
               ],
             ),
@@ -71,9 +103,10 @@ class RecipeCard extends StatelessWidget {
 }
 
 class _MissingRow extends StatelessWidget {
-  const _MissingRow({required this.missing});
+  const _MissingRow({required this.missing, required this.onAddToList});
 
   final List<String> missing;
+  final VoidCallback onAddToList;
 
   @override
   Widget build(BuildContext context) {
@@ -96,11 +129,21 @@ class _MissingRow extends StatelessWidget {
           ),
         ),
         const SizedBox(width: AppSpacing.s2),
-        Text(
-          context.l10n.recipesAddToList,
-          style: AppTypography.caption.copyWith(
-            fontWeight: FontWeight.w500,
-            color: colors.accentText,
+        InkWell(
+          onTap: onAddToList,
+          borderRadius: BorderRadius.circular(AppRadius.sm),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.s1,
+              vertical: 2,
+            ),
+            child: Text(
+              context.l10n.recipesAddToList,
+              style: AppTypography.caption.copyWith(
+                fontWeight: FontWeight.w500,
+                color: colors.accentText,
+              ),
+            ),
           ),
         ),
       ],
@@ -109,6 +152,8 @@ class _MissingRow extends StatelessWidget {
 }
 
 class _PhotoPlaceholder extends StatelessWidget {
+  const _PhotoPlaceholder();
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;

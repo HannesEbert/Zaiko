@@ -22,6 +22,8 @@ import '../../features/profile/presentation/pages/profile_edit_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/profile/presentation/pages/reminders_page.dart';
 import '../../features/profile/presentation/pages/settings_page.dart';
+import '../../features/recipes/presentation/pages/recipe_detail_page.dart';
+import '../../features/recipes/presentation/pages/recipe_form_page.dart';
 import '../../features/recipes/presentation/pages/recipes_page.dart';
 import '../../features/shopping_list/presentation/pages/shopping_list_page.dart';
 import 'scaffold_with_nav_bar.dart';
@@ -201,6 +203,31 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path: RecipesPage.routePath,
                 name: RecipesPage.routeName,
                 builder: (context, state) => const RecipesPage(),
+                routes: [
+                  // Static `new` is registered before the `:recipeId` param so
+                  // it is matched first.
+                  GoRoute(
+                    path: RecipeFormPage.newRouteSegment,
+                    name: RecipeFormPage.newRouteName,
+                    builder: (context, state) => const RecipeFormPage(),
+                  ),
+                  GoRoute(
+                    path: RecipeDetailPage.routeSegment,
+                    name: RecipeDetailPage.routeName,
+                    builder: (context, state) => RecipeDetailPage(
+                      recipeId: state.pathParameters['recipeId']!,
+                    ),
+                    routes: [
+                      GoRoute(
+                        path: RecipeFormPage.editRouteSegment,
+                        name: RecipeFormPage.editRouteName,
+                        builder: (context, state) => RecipeFormPage(
+                          recipeId: state.pathParameters['recipeId'],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),
