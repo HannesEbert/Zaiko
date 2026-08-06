@@ -12,6 +12,7 @@ import 'package:zaiko/features/recipes/domain/recipe_draft.dart';
 import 'package:zaiko/features/recipes/domain/recipe_ingredient.dart';
 import 'package:zaiko/features/recipes/domain/recipe_match.dart';
 import 'package:zaiko/features/recipes/domain/recipe_repository.dart';
+import 'package:zaiko/features/recipes/domain/recipe_step.dart';
 import 'package:zaiko/features/shopping_list/application/shopping_providers.dart';
 
 import '../../household/fake_household_repository.dart';
@@ -181,7 +182,7 @@ void main() {
           const RecipeDraft(
             title: 'Pfannkuchen',
             ingredients: [RecipeIngredientDraft(name: 'Mehl')],
-            steps: ['Teig rühren'],
+            steps: [RecipeStep(text: 'Teig rühren')],
           ),
         );
 
