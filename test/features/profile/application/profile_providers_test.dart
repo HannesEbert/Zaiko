@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zaiko/features/auth/application/auth_providers.dart';
@@ -143,5 +144,77 @@ void main() {
     final map = await future;
     expect(map.keys, containsAll(<String>['user-1', 'user-2']));
     expect(map['user-2']?.displayName, 'Mara');
+  });
+
+  test('appLocale maps the stored profile locale to a Locale', () async {
+    profiles.profile = profile('user-1').copyWith(locale: 'de');
+    final container = makeContainer();
+    await container.read(myProfileProvider.future);
+
+    expect(container.read(appLocaleProvider), const Locale('de'));
+  });
+
+  test('appLocale is null when the profile has no locale', () async {
+    profiles.profile = profile('user-1');
+    final container = makeContainer();
+    await container.read(myProfileProvider.future);
+
+    expect(container.read(appLocaleProvider), isNull);
+  });
+
+  test('setLocale persists the language and refreshes myProfile', () async {
+    profiles.profile = profile('user-1');
+    final container = makeContainer();
+    container.listen(localeSettingControllerProvider, (_, _) {});
+
+    final ok = await container
+        .read(localeSettingControllerProvider.notifier)
+        .setLocale('en');
+
+    expect(ok, isTrue);
+    expect(profiles.localeCalls, 1);
+    expect(profiles.lastLocale, 'en');
+    final refreshed = await container.read(myProfileProvider.future);
+    expect(refreshed?.locale, 'en');
+  });
+
+  test('a failed setLocale surfaces as an error and returns false', () async {
+    profiles
+      ..profile = profile('user-1')
+      ..localeError = const ProfileFailure(
+        ProfileFailureReason.unknown,
+        'boom',
+      );
+    final container = makeContainer();
+    container.listen(localeSettingControllerProvider, (_, _) {});
+
+    final ok = await container
+        .read(localeSettingControllerProvider.notifier)
+        .setLocale('en');
+
+    expect(ok, isFalse);
+    expect(container.read(localeSettingControllerProvider).hasError, isTrue);
+  });
+
+  test('saving dietary preferences stores them and refreshes', () async {
+    profiles.profile = profile('user-1');
+    final container = makeContainer();
+    container.listen(dietaryPreferencesControllerProvider, (_, _) {});
+
+    final ok = await container
+        .read(dietaryPreferencesControllerProvider.notifier)
+        .save(
+          allergens: ['gluten'],
+          diets: ['vegan'],
+          dislikes: ['olives'],
+          note: 'no spice',
+        );
+
+    expect(ok, isTrue);
+    expect(profiles.dietaryCalls, 1);
+    expect(profiles.lastAllergens, ['gluten']);
+    final refreshed = await container.read(myProfileProvider.future);
+    expect(refreshed?.diets, ['vegan']);
+    expect(refreshed?.dietaryNote, 'no spice');
   });
 }

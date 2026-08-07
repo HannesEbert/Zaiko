@@ -38,6 +38,7 @@ void main() {
           authRepositoryProvider.overrideWithValue(auth),
           profileRepositoryProvider.overrideWithValue(profiles),
           householdRepositoryProvider.overrideWithValue(household),
+          appVersionProvider.overrideWith((ref) => '9.9.9'),
         ],
         child: MaterialApp(
           theme: AppTheme.light,
@@ -65,6 +66,17 @@ void main() {
 
     expect(find.text('Hannes'), findsOneWidget);
     expect(find.text('hannes@example.com'), findsOneWidget);
+  });
+
+  testWidgets('links to dietary preferences, privacy and help', (tester) async {
+    final auth = FakeAuthRepository(initialStatus: AuthStatus.authenticated);
+    addTearDown(auth.dispose);
+
+    await pumpProfilePage(tester, auth);
+
+    expect(find.text('Diet & preferences'), findsOneWidget);
+    expect(find.text('Privacy'), findsOneWidget);
+    expect(find.text('Help'), findsOneWidget);
   });
 
   testWidgets('confirming the sign-out dialog signs the user out', (
