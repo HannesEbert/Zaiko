@@ -217,4 +217,47 @@ void main() {
     expect(refreshed?.diets, ['vegan']);
     expect(refreshed?.dietaryNote, 'no spice');
   });
+
+  test('saving reminder settings stores them and refreshes', () async {
+    profiles.profile = profile('user-1');
+    final container = makeContainer();
+    container.listen(reminderSettingsControllerProvider, (_, _) {});
+
+    final ok = await container
+        .read(reminderSettingsControllerProvider.notifier)
+        .save(enabled: true, leadDays: 5, reminderTime: '08:30');
+
+    expect(ok, isTrue);
+    expect(profiles.reminderCalls, 1);
+    expect(profiles.lastRemindersEnabled, isTrue);
+    expect(profiles.lastReminderLeadDays, 5);
+    final refreshed = await container.read(myProfileProvider.future);
+    expect(refreshed?.remindersEnabled, isTrue);
+    expect(refreshed?.reminderLeadDays, 5);
+    expect(refreshed?.reminderTime, '08:30');
+  });
+
+  test(
+    'a failed reminder save surfaces as an error and returns false',
+    () async {
+      profiles
+        ..profile = profile('user-1')
+        ..reminderError = const ProfileFailure(
+          ProfileFailureReason.unknown,
+          'boom',
+        );
+      final container = makeContainer();
+      container.listen(reminderSettingsControllerProvider, (_, _) {});
+
+      final ok = await container
+          .read(reminderSettingsControllerProvider.notifier)
+          .save(enabled: true, leadDays: 3, reminderTime: '20:00');
+
+      expect(ok, isFalse);
+      expect(
+        container.read(reminderSettingsControllerProvider).hasError,
+        isTrue,
+      );
+    },
+  );
 }

@@ -440,6 +440,78 @@ abstract class _$LocaleSettingController extends $AsyncNotifier<void> {
   }
 }
 
+/// Persists the expiry-reminder settings, refreshing [myProfileProvider] on
+/// success.
+///
+/// The `invalidate` is the coupling that makes the reminder scheduler
+/// recompute: it watches [myProfileProvider], so a saved setting reschedules
+/// the notifications without this controller knowing the scheduler exists.
+
+@ProviderFor(ReminderSettingsController)
+final reminderSettingsControllerProvider =
+    ReminderSettingsControllerProvider._();
+
+/// Persists the expiry-reminder settings, refreshing [myProfileProvider] on
+/// success.
+///
+/// The `invalidate` is the coupling that makes the reminder scheduler
+/// recompute: it watches [myProfileProvider], so a saved setting reschedules
+/// the notifications without this controller knowing the scheduler exists.
+final class ReminderSettingsControllerProvider
+    extends $AsyncNotifierProvider<ReminderSettingsController, void> {
+  /// Persists the expiry-reminder settings, refreshing [myProfileProvider] on
+  /// success.
+  ///
+  /// The `invalidate` is the coupling that makes the reminder scheduler
+  /// recompute: it watches [myProfileProvider], so a saved setting reschedules
+  /// the notifications without this controller knowing the scheduler exists.
+  ReminderSettingsControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'reminderSettingsControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$reminderSettingsControllerHash();
+
+  @$internal
+  @override
+  ReminderSettingsController create() => ReminderSettingsController();
+}
+
+String _$reminderSettingsControllerHash() =>
+    r'604ca94745e533c666baf9014f5b29e3f5ec0072';
+
+/// Persists the expiry-reminder settings, refreshing [myProfileProvider] on
+/// success.
+///
+/// The `invalidate` is the coupling that makes the reminder scheduler
+/// recompute: it watches [myProfileProvider], so a saved setting reschedules
+/// the notifications without this controller knowing the scheduler exists.
+
+abstract class _$ReminderSettingsController extends $AsyncNotifier<void> {
+  FutureOr<void> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<void>, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, void>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
 /// Drives the dietary-preferences screen's save action with loading/error
 /// state, refreshing [myProfileProvider] on success.
 
