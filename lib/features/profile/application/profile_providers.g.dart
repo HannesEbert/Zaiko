@@ -217,6 +217,111 @@ final class HouseholdMemberProfilesProvider
 String _$householdMemberProfilesHash() =>
     r'11bced50fce22eea66e5241b2edfa9e9c72e074f';
 
+/// The app language derived from the current user's profile, or `null` to
+/// follow the system.
+///
+/// Feeds `MaterialApp.locale`: mapping the stored `'de'`/`'en'` code to a
+/// [Locale] (and anything else, including signed-out `null`, to `null`) means a
+/// saved-then-invalidated profile flips the UI language without any extra
+/// plumbing.
+
+@ProviderFor(appLocale)
+final appLocaleProvider = AppLocaleProvider._();
+
+/// The app language derived from the current user's profile, or `null` to
+/// follow the system.
+///
+/// Feeds `MaterialApp.locale`: mapping the stored `'de'`/`'en'` code to a
+/// [Locale] (and anything else, including signed-out `null`, to `null`) means a
+/// saved-then-invalidated profile flips the UI language without any extra
+/// plumbing.
+
+final class AppLocaleProvider
+    extends $FunctionalProvider<Locale?, Locale?, Locale?>
+    with $Provider<Locale?> {
+  /// The app language derived from the current user's profile, or `null` to
+  /// follow the system.
+  ///
+  /// Feeds `MaterialApp.locale`: mapping the stored `'de'`/`'en'` code to a
+  /// [Locale] (and anything else, including signed-out `null`, to `null`) means a
+  /// saved-then-invalidated profile flips the UI language without any extra
+  /// plumbing.
+  AppLocaleProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appLocaleProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appLocaleHash();
+
+  @$internal
+  @override
+  $ProviderElement<Locale?> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  Locale? create(Ref ref) {
+    return appLocale(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Locale? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Locale?>(value),
+    );
+  }
+}
+
+String _$appLocaleHash() => r'ad99f0f59770b245f252ff4a85b7cef5d3337ca2';
+
+/// The running app's version string (e.g. `0.1.0`), read from the platform
+/// bundle so the displayed version always matches the build.
+
+@ProviderFor(appVersion)
+final appVersionProvider = AppVersionProvider._();
+
+/// The running app's version string (e.g. `0.1.0`), read from the platform
+/// bundle so the displayed version always matches the build.
+
+final class AppVersionProvider
+    extends $FunctionalProvider<AsyncValue<String>, String, FutureOr<String>>
+    with $FutureModifier<String>, $FutureProvider<String> {
+  /// The running app's version string (e.g. `0.1.0`), read from the platform
+  /// bundle so the displayed version always matches the build.
+  AppVersionProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appVersionProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appVersionHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<String> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<String> create(Ref ref) {
+    return appVersion(ref);
+  }
+}
+
+String _$appVersionHash() => r'7ca3dad73568c03597e9a7fb2bce466db4fb4cfb';
+
 /// Drives the profile-edit screen's save action with loading/error state.
 ///
 /// A successful save invalidates [myProfileProvider] (and the member map) so the
@@ -263,6 +368,117 @@ String _$profileEditControllerHash() =>
 /// account card and overview refresh; the screen never navigates by hand.
 
 abstract class _$ProfileEditController extends $AsyncNotifier<void> {
+  FutureOr<void> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<void>, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, void>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Persists the app-language setting, refreshing [myProfileProvider] (and thus
+/// [appLocaleProvider]) so the UI switches language immediately on success.
+
+@ProviderFor(LocaleSettingController)
+final localeSettingControllerProvider = LocaleSettingControllerProvider._();
+
+/// Persists the app-language setting, refreshing [myProfileProvider] (and thus
+/// [appLocaleProvider]) so the UI switches language immediately on success.
+final class LocaleSettingControllerProvider
+    extends $AsyncNotifierProvider<LocaleSettingController, void> {
+  /// Persists the app-language setting, refreshing [myProfileProvider] (and thus
+  /// [appLocaleProvider]) so the UI switches language immediately on success.
+  LocaleSettingControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'localeSettingControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$localeSettingControllerHash();
+
+  @$internal
+  @override
+  LocaleSettingController create() => LocaleSettingController();
+}
+
+String _$localeSettingControllerHash() =>
+    r'eecc552ac411ec5dedb2b5e42f65f72e16cb433f';
+
+/// Persists the app-language setting, refreshing [myProfileProvider] (and thus
+/// [appLocaleProvider]) so the UI switches language immediately on success.
+
+abstract class _$LocaleSettingController extends $AsyncNotifier<void> {
+  FutureOr<void> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<void>, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, void>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Drives the dietary-preferences screen's save action with loading/error
+/// state, refreshing [myProfileProvider] on success.
+
+@ProviderFor(DietaryPreferencesController)
+final dietaryPreferencesControllerProvider =
+    DietaryPreferencesControllerProvider._();
+
+/// Drives the dietary-preferences screen's save action with loading/error
+/// state, refreshing [myProfileProvider] on success.
+final class DietaryPreferencesControllerProvider
+    extends $AsyncNotifierProvider<DietaryPreferencesController, void> {
+  /// Drives the dietary-preferences screen's save action with loading/error
+  /// state, refreshing [myProfileProvider] on success.
+  DietaryPreferencesControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'dietaryPreferencesControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$dietaryPreferencesControllerHash();
+
+  @$internal
+  @override
+  DietaryPreferencesController create() => DietaryPreferencesController();
+}
+
+String _$dietaryPreferencesControllerHash() =>
+    r'0a8807a56bcc1eec045c5ea7ee31750b65e7d7f7';
+
+/// Drives the dietary-preferences screen's save action with loading/error
+/// state, refreshing [myProfileProvider] on success.
+
+abstract class _$DietaryPreferencesController extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override

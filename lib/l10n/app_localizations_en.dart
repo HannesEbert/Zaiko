@@ -204,6 +204,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileHelp => 'Help';
 
   @override
+  String get profileDietary => 'Diet & preferences';
+
+  @override
+  String get profileInfoSection => 'Info';
+
+  @override
   String get profileSignOut => 'Sign out';
 
   @override
@@ -261,27 +267,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get profileHouseholdEmptyMessage =>
       'Link and manage the household you share here.';
-
-  @override
-  String get profileSettingsEmptyTitle => 'Settings';
-
-  @override
-  String get profileSettingsEmptyMessage =>
-      'App settings will be available here.';
-
-  @override
-  String get profilePrivacyEmptyTitle => 'Privacy';
-
-  @override
-  String get profilePrivacyEmptyMessage =>
-      'The privacy policy and data settings will be shown here.';
-
-  @override
-  String get profileHelpEmptyTitle => 'Help';
-
-  @override
-  String get profileHelpEmptyMessage =>
-      'Help and support will be available here.';
 
   @override
   String get loginTagline => '在庫 · Inventory';
@@ -493,13 +478,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingAppearance => 'Appearance';
 
   @override
-  String get settingAppearanceSystem => 'System';
+  String get settingAppearanceDark => 'Dark';
+
+  @override
+  String get settingAppearanceHint =>
+      'Zaiko is dark-only for now. A light theme and a toggle will come in a later update.';
 
   @override
   String get settingLanguage => 'Language';
 
   @override
+  String get settingLanguageSystem => 'System';
+
+  @override
   String get settingLanguageGerman => 'German';
+
+  @override
+  String get settingLanguageEnglish => 'English';
 
   @override
   String homeGreeting(String name) {
@@ -1142,4 +1137,180 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recipesFormStepTimerSeconds => 'Sec';
+
+  @override
+  String get dietarySubtitle =>
+      'Tell us what to keep out of your recipe suggestions. You can change this any time.';
+
+  @override
+  String get dietaryAllergensTitle => 'Allergens';
+
+  @override
+  String get dietaryDietsTitle => 'Diets';
+
+  @override
+  String get dietaryDislikesTitle => 'Dislikes';
+
+  @override
+  String get dietaryNoteLabel => 'Other dislikes';
+
+  @override
+  String get dietaryNoteHint => 'e.g. very spicy food';
+
+  @override
+  String get dietarySavedSnack => 'Preferences saved';
+
+  @override
+  String get dietaryAllergenGluten => 'Gluten';
+
+  @override
+  String get dietaryAllergenCrustaceans => 'Crustaceans';
+
+  @override
+  String get dietaryAllergenEggs => 'Eggs';
+
+  @override
+  String get dietaryAllergenFish => 'Fish';
+
+  @override
+  String get dietaryAllergenPeanuts => 'Peanuts';
+
+  @override
+  String get dietaryAllergenSoy => 'Soy';
+
+  @override
+  String get dietaryAllergenMilk => 'Milk';
+
+  @override
+  String get dietaryAllergenTreeNuts => 'Tree nuts';
+
+  @override
+  String get dietaryAllergenCelery => 'Celery';
+
+  @override
+  String get dietaryAllergenMustard => 'Mustard';
+
+  @override
+  String get dietaryAllergenSesame => 'Sesame';
+
+  @override
+  String get dietaryAllergenSulphites => 'Sulphites';
+
+  @override
+  String get dietaryAllergenLupin => 'Lupin';
+
+  @override
+  String get dietaryAllergenMolluscs => 'Molluscs';
+
+  @override
+  String get dietaryDietVegetarian => 'Vegetarian';
+
+  @override
+  String get dietaryDietVegan => 'Vegan';
+
+  @override
+  String get dietaryDietPescetarian => 'Pescetarian';
+
+  @override
+  String get dietaryDietHalal => 'Halal';
+
+  @override
+  String get dietaryDietKosher => 'Kosher';
+
+  @override
+  String get dietaryDietGlutenFree => 'Gluten-free';
+
+  @override
+  String get dietaryDietLactoseFree => 'Lactose-free';
+
+  @override
+  String get dietaryDietLowCarb => 'Low-carb';
+
+  @override
+  String get dietaryDislikeCoriander => 'Coriander';
+
+  @override
+  String get dietaryDislikeOlives => 'Olives';
+
+  @override
+  String get dietaryDislikeMushrooms => 'Mushrooms';
+
+  @override
+  String get dietaryDislikeOffal => 'Offal';
+
+  @override
+  String get dietaryDislikeBlueCheese => 'Blue cheese';
+
+  @override
+  String get privacyDisclaimer =>
+      'This is a portfolio project. The text below explains how the app handles your data but is not a legally reviewed privacy policy.';
+
+  @override
+  String get privacyDataTitle => 'What we store';
+
+  @override
+  String get privacyDataBody =>
+      'Your account email, your display name and chosen avatar, and the household data you create: inventory items, shopping lists, recipes and your dietary preferences.';
+
+  @override
+  String get privacyStorageTitle => 'Where it\'s stored';
+
+  @override
+  String get privacyStorageBody =>
+      'Your data lives in a Supabase backend (authentication and Postgres database). Access is protected by row-level security so only you and the members of your household can read it.';
+
+  @override
+  String get privacyConsentTitle => 'Your consent';
+
+  @override
+  String get privacyConsentBody =>
+      'You agree to this handling when you create an account. You can withdraw consent by deleting your account, which removes your profile and household data.';
+
+  @override
+  String get privacyRightsTitle => 'Your rights & contact';
+
+  @override
+  String get privacyRightsBody =>
+      'You can view and edit your personal data in the app. For any request about your data, reach out via the contact option on the help screen.';
+
+  @override
+  String get helpFaqAddQ => 'How do I add an item?';
+
+  @override
+  String get helpFaqAddA =>
+      'On the inventory tab, tap the add button. You can scan a barcode, search the Open Food Facts database, or enter a product manually.';
+
+  @override
+  String get helpFaqExpiryQ => 'How do expiry reminders work?';
+
+  @override
+  String get helpFaqExpiryA =>
+      'Items nearing their best-before date are highlighted across the app. Scheduled notifications before expiry are coming in a later update.';
+
+  @override
+  String get helpFaqHouseholdQ => 'How do I share with my household?';
+
+  @override
+  String get helpFaqHouseholdA =>
+      'Open the household screen from your profile and invite members with a code. Everyone in the household shares the same inventory, shopping list and recipes.';
+
+  @override
+  String get helpFaqOfflineQ => 'Does Zaiko work offline?';
+
+  @override
+  String get helpFaqOfflineA =>
+      'Not yet. Zaiko currently needs an internet connection to sync with the backend. Offline support is planned.';
+
+  @override
+  String get helpContactTitle => 'Still need help?';
+
+  @override
+  String get helpContactBody => 'Send us a message and we\'ll get back to you.';
+
+  @override
+  String get helpContactButton => 'Email us';
+
+  @override
+  String get helpContactError =>
+      'Couldn\'t open your mail app. Please email us at support@zaiko.app.';
 }

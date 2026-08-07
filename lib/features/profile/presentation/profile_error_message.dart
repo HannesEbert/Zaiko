@@ -18,14 +18,20 @@ String profileErrorMessage(AppLocalizations l10n, Object? error) {
   };
 }
 
-/// Shows a snackbar with the localized message for the profile-edit
-/// controller's last failure — the shared handler for a save that returned
-/// `false`.
-void showProfileErrorSnackBar(BuildContext context, WidgetRef ref) {
-  final error = ref.read(profileEditControllerProvider).error;
+/// Shows a snackbar with the localized message for a failed profile operation —
+/// the shared handler for a save that returned `false`.
+///
+/// Pass the failing controller's [error]; it defaults to the profile-edit
+/// controller's last error so existing callers stay unchanged.
+void showProfileErrorSnackBar(
+  BuildContext context,
+  WidgetRef ref, {
+  Object? error,
+}) {
+  final failure = error ?? ref.read(profileEditControllerProvider).error;
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
     ..showSnackBar(
-      SnackBar(content: Text(profileErrorMessage(context.l10n, error))),
+      SnackBar(content: Text(profileErrorMessage(context.l10n, failure))),
     );
 }

@@ -61,6 +61,39 @@ class SupabaseProfileRepository implements ProfileRepository {
   }
 
   @override
+  Future<void> updateMyLocale(String? locale) async {
+    final uid = _requireUserId();
+    try {
+      await _client.from('profiles').update({'locale': locale}).eq('id', uid);
+    } on PostgrestException catch (e) {
+      throw _mapError(e);
+    }
+  }
+
+  @override
+  Future<void> updateMyDietaryPreferences({
+    required List<String> allergens,
+    required List<String> diets,
+    required List<String> dislikes,
+    String? note,
+  }) async {
+    final uid = _requireUserId();
+    try {
+      await _client
+          .from('profiles')
+          .update({
+            'allergens': allergens,
+            'diets': diets,
+            'dislikes': dislikes,
+            'dietary_note': note,
+          })
+          .eq('id', uid);
+    } on PostgrestException catch (e) {
+      throw _mapError(e);
+    }
+  }
+
+  @override
   Future<List<Profile>> loadProfiles(Iterable<String> userIds) async {
     final ids = userIds.toList();
     if (ids.isEmpty) return const [];
