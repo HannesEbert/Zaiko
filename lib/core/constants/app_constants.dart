@@ -2,6 +2,9 @@
 abstract final class AppConstants {
   static const String appName = 'Zaiko';
 
+  /// Support address shown on the help screen (mailto contact).
+  static const String supportEmail = 'support@zaiko.app';
+
   /// How many days before its best-before date an item counts as "expiring
   /// soon". Fixed for now; made per-user configurable in Phase 5 (see #37).
   static const int expiryWarningDays = 3;

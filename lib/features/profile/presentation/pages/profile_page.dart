@@ -8,6 +8,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../shared/widgets/card_list.dart';
 import '../../../../shared/widgets/section_label.dart';
+import '../../../../shared/widgets/setting_row.dart';
 import '../../../../shared/widgets/user_avatar.dart';
 import '../../../../shared/widgets/zaiko_card.dart';
 import '../../../auth/application/auth_providers.dart';
@@ -18,18 +19,22 @@ import '../../../household/presentation/widgets/household_avatar.dart';
 import '../../application/profile_providers.dart';
 import '../../domain/profile.dart';
 import '../widgets/profile_avatar.dart';
+import 'dietary_preferences_page.dart';
+import 'help_page.dart';
 import 'household_link_page.dart';
 import 'personal_data_page.dart';
+import 'privacy_page.dart';
 import 'profile_edit_page.dart';
 import 'reminders_page.dart';
 import 'settings_page.dart';
 
-/// Profile tab: account, household and settings, plus sign-out.
+/// Profile tab: account, household, settings and info, plus sign-out.
 ///
 /// The account card shows the current user's real profile (name, email, avatar)
-/// and the household card the shared household; the settings rows are still
-/// placeholders. Sign-out flows through the auth repository, after which the
-/// router redirect returns the user to login.
+/// and the household card the shared household; the rows below link to personal
+/// data, dietary preferences, settings, privacy and help. Sign-out flows through
+/// the auth repository, after which the router redirect returns the user to
+/// login.
 class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
 
@@ -47,6 +52,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final colors = context.colors;
+    final locale = ref.watch(myProfileProvider).value?.locale;
+    final version = ref.watch(appVersionProvider).value ?? '';
 
     return Scaffold(
       body: SafeArea(
@@ -72,10 +79,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             const SizedBox(height: AppSpacing.s3),
             CardList(
               children: [
-                _SettingRow(
+                SettingRow(
                   icon: Icons.badge_outlined,
                   label: l10n.profilePersonalData,
                   onTap: () => context.pushNamed(PersonalDataPage.routeName),
+                ),
+                SettingRow(
+                  icon: Icons.restaurant_outlined,
+                  label: l10n.profileDietary,
+                  onTap: () =>
+                      context.pushNamed(DietaryPreferencesPage.routeName),
                 ),
               ],
             ),
@@ -90,7 +103,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             const SizedBox(height: AppSpacing.s2),
             CardList(
               children: [
-                _SettingRow(
+                SettingRow(
                   icon: Icons.notifications_outlined,
                   label: l10n.settingNotifications,
                   trailing: Switch.adaptive(
@@ -99,23 +112,41 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         setState(() => _notificationsEnabled = value),
                   ),
                 ),
-                _SettingRow(
+                SettingRow(
                   icon: Icons.schedule_outlined,
                   label: l10n.settingReminder,
                   value: l10n.settingReminderValue,
                   onTap: () => context.pushNamed(RemindersPage.routeName),
                 ),
-                _SettingRow(
+                // Appearance is fixed to dark for now: informational, not
+                // tappable (no dead toggle).
+                SettingRow(
                   icon: Icons.dark_mode_outlined,
                   label: l10n.settingAppearance,
-                  value: l10n.settingAppearanceSystem,
-                  onTap: () => context.pushNamed(SettingsPage.routeName),
+                  value: l10n.settingAppearanceDark,
                 ),
-                _SettingRow(
+                SettingRow(
                   icon: Icons.language_outlined,
                   label: l10n.settingLanguage,
-                  value: l10n.settingLanguageGerman,
+                  value: SettingsPage.languageLabel(l10n, locale),
                   onTap: () => context.pushNamed(SettingsPage.routeName),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.s5),
+            SectionLabel(l10n.profileInfoSection),
+            const SizedBox(height: AppSpacing.s2),
+            CardList(
+              children: [
+                SettingRow(
+                  icon: Icons.privacy_tip_outlined,
+                  label: l10n.profilePrivacy,
+                  onTap: () => context.pushNamed(PrivacyPage.routeName),
+                ),
+                SettingRow(
+                  icon: Icons.help_outline,
+                  label: l10n.profileHelp,
+                  onTap: () => context.pushNamed(HelpPage.routeName),
                 ),
               ],
             ),
@@ -126,7 +157,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             const SizedBox(height: AppSpacing.s3 + 2),
             Center(
               child: Text(
-                l10n.profileVersion('0.1.0'),
+                l10n.profileVersion(version),
                 style: AppTypography.caption.copyWith(
                   fontSize: 12,
                   color: colors.textTertiary,
@@ -370,63 +401,6 @@ class _HouseholdCardMessage extends StatelessWidget {
         text,
         style: AppTypography.bodyMedium.copyWith(
           color: context.colors.textSecondary,
-        ),
-      ),
-    );
-  }
-}
-
-class _SettingRow extends StatelessWidget {
-  const _SettingRow({
-    required this.icon,
-    required this.label,
-    this.value,
-    this.trailing,
-    this.onTap,
-  });
-
-  final IconData icon;
-  final String label;
-  final String? value;
-  final Widget? trailing;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.s3 + 2,
-          vertical: AppSpacing.s3,
-        ),
-        child: Row(
-          children: [
-            Icon(icon, size: 19, color: colors.textStrong),
-            const SizedBox(width: AppSpacing.s3),
-            Expanded(
-              child: Text(
-                label,
-                style: AppTypography.body.copyWith(color: colors.textPrimary),
-              ),
-            ),
-            if (trailing != null)
-              trailing!
-            else if (value != null) ...[
-              Text(
-                value!,
-                style: AppTypography.caption.copyWith(
-                  fontSize: 14,
-                  color: colors.textSecondary,
-                ),
-              ),
-              const SizedBox(width: AppSpacing.s1 + 2),
-              Icon(Icons.chevron_right, size: 16, color: colors.borderStrong),
-            ] else if (onTap != null)
-              Icon(Icons.chevron_right, size: 16, color: colors.borderStrong),
-          ],
         ),
       ),
     );

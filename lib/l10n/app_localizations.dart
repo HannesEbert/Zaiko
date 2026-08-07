@@ -458,6 +458,18 @@ abstract class AppLocalizations {
   /// **'Help'**
   String get profileHelp;
 
+  /// No description provided for @profileDietary.
+  ///
+  /// In en, this message translates to:
+  /// **'Diet & preferences'**
+  String get profileDietary;
+
+  /// No description provided for @profileInfoSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get profileInfoSection;
+
   /// No description provided for @profileSignOut.
   ///
   /// In en, this message translates to:
@@ -565,42 +577,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Link and manage the household you share here.'**
   String get profileHouseholdEmptyMessage;
-
-  /// No description provided for @profileSettingsEmptyTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Settings'**
-  String get profileSettingsEmptyTitle;
-
-  /// No description provided for @profileSettingsEmptyMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'App settings will be available here.'**
-  String get profileSettingsEmptyMessage;
-
-  /// No description provided for @profilePrivacyEmptyTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Privacy'**
-  String get profilePrivacyEmptyTitle;
-
-  /// No description provided for @profilePrivacyEmptyMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'The privacy policy and data settings will be shown here.'**
-  String get profilePrivacyEmptyMessage;
-
-  /// No description provided for @profileHelpEmptyTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Help'**
-  String get profileHelpEmptyTitle;
-
-  /// No description provided for @profileHelpEmptyMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'Help and support will be available here.'**
-  String get profileHelpEmptyMessage;
 
   /// No description provided for @loginTagline.
   ///
@@ -992,11 +968,17 @@ abstract class AppLocalizations {
   /// **'Appearance'**
   String get settingAppearance;
 
-  /// No description provided for @settingAppearanceSystem.
+  /// No description provided for @settingAppearanceDark.
   ///
   /// In en, this message translates to:
-  /// **'System'**
-  String get settingAppearanceSystem;
+  /// **'Dark'**
+  String get settingAppearanceDark;
+
+  /// No description provided for @settingAppearanceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Zaiko is dark-only for now. A light theme and a toggle will come in a later update.'**
+  String get settingAppearanceHint;
 
   /// No description provided for @settingLanguage.
   ///
@@ -1004,11 +986,23 @@ abstract class AppLocalizations {
   /// **'Language'**
   String get settingLanguage;
 
+  /// No description provided for @settingLanguageSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get settingLanguageSystem;
+
   /// No description provided for @settingLanguageGerman.
   ///
   /// In en, this message translates to:
   /// **'German'**
   String get settingLanguageGerman;
+
+  /// No description provided for @settingLanguageEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get settingLanguageEnglish;
 
   /// No description provided for @homeGreeting.
   ///
@@ -2167,6 +2161,336 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sec'**
   String get recipesFormStepTimerSeconds;
+
+  /// No description provided for @dietarySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us what to keep out of your recipe suggestions. You can change this any time.'**
+  String get dietarySubtitle;
+
+  /// No description provided for @dietaryAllergensTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Allergens'**
+  String get dietaryAllergensTitle;
+
+  /// No description provided for @dietaryDietsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Diets'**
+  String get dietaryDietsTitle;
+
+  /// No description provided for @dietaryDislikesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dislikes'**
+  String get dietaryDislikesTitle;
+
+  /// No description provided for @dietaryNoteLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Other dislikes'**
+  String get dietaryNoteLabel;
+
+  /// No description provided for @dietaryNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. very spicy food'**
+  String get dietaryNoteHint;
+
+  /// No description provided for @dietarySavedSnack.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences saved'**
+  String get dietarySavedSnack;
+
+  /// No description provided for @dietaryAllergenGluten.
+  ///
+  /// In en, this message translates to:
+  /// **'Gluten'**
+  String get dietaryAllergenGluten;
+
+  /// No description provided for @dietaryAllergenCrustaceans.
+  ///
+  /// In en, this message translates to:
+  /// **'Crustaceans'**
+  String get dietaryAllergenCrustaceans;
+
+  /// No description provided for @dietaryAllergenEggs.
+  ///
+  /// In en, this message translates to:
+  /// **'Eggs'**
+  String get dietaryAllergenEggs;
+
+  /// No description provided for @dietaryAllergenFish.
+  ///
+  /// In en, this message translates to:
+  /// **'Fish'**
+  String get dietaryAllergenFish;
+
+  /// No description provided for @dietaryAllergenPeanuts.
+  ///
+  /// In en, this message translates to:
+  /// **'Peanuts'**
+  String get dietaryAllergenPeanuts;
+
+  /// No description provided for @dietaryAllergenSoy.
+  ///
+  /// In en, this message translates to:
+  /// **'Soy'**
+  String get dietaryAllergenSoy;
+
+  /// No description provided for @dietaryAllergenMilk.
+  ///
+  /// In en, this message translates to:
+  /// **'Milk'**
+  String get dietaryAllergenMilk;
+
+  /// No description provided for @dietaryAllergenTreeNuts.
+  ///
+  /// In en, this message translates to:
+  /// **'Tree nuts'**
+  String get dietaryAllergenTreeNuts;
+
+  /// No description provided for @dietaryAllergenCelery.
+  ///
+  /// In en, this message translates to:
+  /// **'Celery'**
+  String get dietaryAllergenCelery;
+
+  /// No description provided for @dietaryAllergenMustard.
+  ///
+  /// In en, this message translates to:
+  /// **'Mustard'**
+  String get dietaryAllergenMustard;
+
+  /// No description provided for @dietaryAllergenSesame.
+  ///
+  /// In en, this message translates to:
+  /// **'Sesame'**
+  String get dietaryAllergenSesame;
+
+  /// No description provided for @dietaryAllergenSulphites.
+  ///
+  /// In en, this message translates to:
+  /// **'Sulphites'**
+  String get dietaryAllergenSulphites;
+
+  /// No description provided for @dietaryAllergenLupin.
+  ///
+  /// In en, this message translates to:
+  /// **'Lupin'**
+  String get dietaryAllergenLupin;
+
+  /// No description provided for @dietaryAllergenMolluscs.
+  ///
+  /// In en, this message translates to:
+  /// **'Molluscs'**
+  String get dietaryAllergenMolluscs;
+
+  /// No description provided for @dietaryDietVegetarian.
+  ///
+  /// In en, this message translates to:
+  /// **'Vegetarian'**
+  String get dietaryDietVegetarian;
+
+  /// No description provided for @dietaryDietVegan.
+  ///
+  /// In en, this message translates to:
+  /// **'Vegan'**
+  String get dietaryDietVegan;
+
+  /// No description provided for @dietaryDietPescetarian.
+  ///
+  /// In en, this message translates to:
+  /// **'Pescetarian'**
+  String get dietaryDietPescetarian;
+
+  /// No description provided for @dietaryDietHalal.
+  ///
+  /// In en, this message translates to:
+  /// **'Halal'**
+  String get dietaryDietHalal;
+
+  /// No description provided for @dietaryDietKosher.
+  ///
+  /// In en, this message translates to:
+  /// **'Kosher'**
+  String get dietaryDietKosher;
+
+  /// No description provided for @dietaryDietGlutenFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Gluten-free'**
+  String get dietaryDietGlutenFree;
+
+  /// No description provided for @dietaryDietLactoseFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Lactose-free'**
+  String get dietaryDietLactoseFree;
+
+  /// No description provided for @dietaryDietLowCarb.
+  ///
+  /// In en, this message translates to:
+  /// **'Low-carb'**
+  String get dietaryDietLowCarb;
+
+  /// No description provided for @dietaryDislikeCoriander.
+  ///
+  /// In en, this message translates to:
+  /// **'Coriander'**
+  String get dietaryDislikeCoriander;
+
+  /// No description provided for @dietaryDislikeOlives.
+  ///
+  /// In en, this message translates to:
+  /// **'Olives'**
+  String get dietaryDislikeOlives;
+
+  /// No description provided for @dietaryDislikeMushrooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Mushrooms'**
+  String get dietaryDislikeMushrooms;
+
+  /// No description provided for @dietaryDislikeOffal.
+  ///
+  /// In en, this message translates to:
+  /// **'Offal'**
+  String get dietaryDislikeOffal;
+
+  /// No description provided for @dietaryDislikeBlueCheese.
+  ///
+  /// In en, this message translates to:
+  /// **'Blue cheese'**
+  String get dietaryDislikeBlueCheese;
+
+  /// No description provided for @privacyDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a portfolio project. The text below explains how the app handles your data but is not a legally reviewed privacy policy.'**
+  String get privacyDisclaimer;
+
+  /// No description provided for @privacyDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What we store'**
+  String get privacyDataTitle;
+
+  /// No description provided for @privacyDataBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account email, your display name and chosen avatar, and the household data you create: inventory items, shopping lists, recipes and your dietary preferences.'**
+  String get privacyDataBody;
+
+  /// No description provided for @privacyStorageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Where it\'s stored'**
+  String get privacyStorageTitle;
+
+  /// No description provided for @privacyStorageBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data lives in a Supabase backend (authentication and Postgres database). Access is protected by row-level security so only you and the members of your household can read it.'**
+  String get privacyStorageBody;
+
+  /// No description provided for @privacyConsentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your consent'**
+  String get privacyConsentTitle;
+
+  /// No description provided for @privacyConsentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You agree to this handling when you create an account. You can withdraw consent by deleting your account, which removes your profile and household data.'**
+  String get privacyConsentBody;
+
+  /// No description provided for @privacyRightsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your rights & contact'**
+  String get privacyRightsTitle;
+
+  /// No description provided for @privacyRightsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You can view and edit your personal data in the app. For any request about your data, reach out via the contact option on the help screen.'**
+  String get privacyRightsBody;
+
+  /// No description provided for @helpFaqAddQ.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I add an item?'**
+  String get helpFaqAddQ;
+
+  /// No description provided for @helpFaqAddA.
+  ///
+  /// In en, this message translates to:
+  /// **'On the inventory tab, tap the add button. You can scan a barcode, search the Open Food Facts database, or enter a product manually.'**
+  String get helpFaqAddA;
+
+  /// No description provided for @helpFaqExpiryQ.
+  ///
+  /// In en, this message translates to:
+  /// **'How do expiry reminders work?'**
+  String get helpFaqExpiryQ;
+
+  /// No description provided for @helpFaqExpiryA.
+  ///
+  /// In en, this message translates to:
+  /// **'Items nearing their best-before date are highlighted across the app. Scheduled notifications before expiry are coming in a later update.'**
+  String get helpFaqExpiryA;
+
+  /// No description provided for @helpFaqHouseholdQ.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I share with my household?'**
+  String get helpFaqHouseholdQ;
+
+  /// No description provided for @helpFaqHouseholdA.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the household screen from your profile and invite members with a code. Everyone in the household shares the same inventory, shopping list and recipes.'**
+  String get helpFaqHouseholdA;
+
+  /// No description provided for @helpFaqOfflineQ.
+  ///
+  /// In en, this message translates to:
+  /// **'Does Zaiko work offline?'**
+  String get helpFaqOfflineQ;
+
+  /// No description provided for @helpFaqOfflineA.
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet. Zaiko currently needs an internet connection to sync with the backend. Offline support is planned.'**
+  String get helpFaqOfflineA;
+
+  /// No description provided for @helpContactTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Still need help?'**
+  String get helpContactTitle;
+
+  /// No description provided for @helpContactBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Send us a message and we\'ll get back to you.'**
+  String get helpContactBody;
+
+  /// No description provided for @helpContactButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Email us'**
+  String get helpContactButton;
+
+  /// No description provided for @helpContactError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open your mail app. Please email us at support@zaiko.app.'**
+  String get helpContactError;
 }
 
 class _AppLocalizationsDelegate

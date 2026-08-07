@@ -14,6 +14,7 @@ import '../../features/household/presentation/pages/join_household_page.dart';
 import '../../features/household/presentation/pages/onboarding_page.dart';
 import '../../features/inventory/presentation/pages/inventory_page.dart';
 import '../../features/inventory/presentation/pages/location_detail_page.dart';
+import '../../features/profile/presentation/pages/dietary_preferences_page.dart';
 import '../../features/profile/presentation/pages/help_page.dart';
 import '../../features/profile/presentation/pages/household_link_page.dart';
 import '../../features/profile/presentation/pages/personal_data_page.dart';
@@ -247,6 +248,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path: PersonalDataPage.routeSegment,
                     name: PersonalDataPage.routeName,
                     builder: (context, state) => const PersonalDataPage(),
+                  ),
+                  GoRoute(
+                    path: DietaryPreferencesPage.routeSegment,
+                    name: DietaryPreferencesPage.routeName,
+                    builder: (context, state) => const DietaryPreferencesPage(),
                   ),
                   GoRoute(
                     path: RemindersPage.routeSegment,
