@@ -14,6 +14,10 @@ part 'profile.g.dart';
 /// system. [allergens], [diets] and [dislikes] hold stable app-side preference
 /// keys the user ticked, and [dietaryNote] is a free-text addition to the
 /// dislikes.
+///
+/// [remindersEnabled], [reminderLeadDays] and [reminderTime] configure the
+/// per-user local expiry reminders: whether they fire, how many days before a
+/// best-before date to warn, and the daily `'HH:mm'` time-of-day for the digest.
 @freezed
 abstract class Profile with _$Profile {
   const factory Profile({
@@ -26,6 +30,9 @@ abstract class Profile with _$Profile {
     @Default(<String>[]) List<String> diets,
     @Default(<String>[]) List<String> dislikes,
     @JsonKey(name: 'dietary_note') String? dietaryNote,
+    @JsonKey(name: 'reminders_enabled') @Default(false) bool remindersEnabled,
+    @JsonKey(name: 'reminder_lead_days') @Default(3) int reminderLeadDays,
+    @JsonKey(name: 'reminder_time') @Default('20:00') String reminderTime,
   }) = _Profile;
 
   factory Profile.fromJson(Map<String, dynamic> json) =>

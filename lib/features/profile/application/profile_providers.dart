@@ -139,6 +139,43 @@ class LocaleSettingController extends _$LocaleSettingController {
   }
 }
 
+/// Persists the expiry-reminder settings, refreshing [myProfileProvider] on
+/// success.
+///
+/// The `invalidate` is the coupling that makes the reminder scheduler
+/// recompute: it watches [myProfileProvider], so a saved setting reschedules
+/// the notifications without this controller knowing the scheduler exists.
+@riverpod
+class ReminderSettingsController extends _$ReminderSettingsController {
+  @override
+  FutureOr<void> build() {}
+
+  /// Saves whether reminders are [enabled], the [leadDays] warning window and
+  /// the daily [reminderTime] (`'HH:mm'`). Returns whether it succeeded.
+  Future<bool> save({
+    required bool enabled,
+    required int leadDays,
+    required String reminderTime,
+  }) async {
+    state = const AsyncLoading();
+    try {
+      await ref
+          .read(profileRepositoryProvider)
+          .updateMyReminderSettings(
+            enabled: enabled,
+            leadDays: leadDays,
+            reminderTime: reminderTime,
+          );
+      ref.invalidate(myProfileProvider);
+      state = const AsyncData(null);
+      return true;
+    } on ProfileFailure catch (e, st) {
+      state = AsyncError(e, st);
+      return false;
+    }
+  }
+}
+
 /// Drives the dietary-preferences screen's save action with loading/error
 /// state, refreshing [myProfileProvider] on success.
 @riverpod

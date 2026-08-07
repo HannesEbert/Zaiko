@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/l10n/l10n_extension.dart';
+import '../../../../core/notifications/notification_providers.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../../../shared/widgets/app_switch.dart';
 import '../../../../shared/widgets/card_list.dart';
 import '../../../../shared/widgets/section_label.dart';
 import '../../../../shared/widgets/setting_row.dart';
@@ -46,13 +48,36 @@ class ProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
-  bool _notificationsEnabled = true;
+  /// Quick-toggles reminders from the profile list: persists the new state
+  /// (reusing the saved lead time and time) and, when turning them on, asks for
+  /// notification permission. Fine-tuning stays on the [RemindersPage].
+  Future<void> _toggleReminders(bool value, Profile profile) async {
+    final ok = await ref
+        .read(reminderSettingsControllerProvider.notifier)
+        .save(
+          enabled: value,
+          leadDays: profile.reminderLeadDays,
+          reminderTime: profile.reminderTime,
+        );
+    if (!ok || !value) return;
+    final granted = await ref
+        .read(notificationServiceProvider)
+        .requestPermission();
+    if (!granted && mounted) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(content: Text(context.l10n.remindersPermissionDenied)),
+        );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final colors = context.colors;
-    final locale = ref.watch(myProfileProvider).value?.locale;
+    final profile = ref.watch(myProfileProvider).value;
+    final locale = profile?.locale;
     final version = ref.watch(appVersionProvider).value ?? '';
 
     return Scaffold(
@@ -106,16 +131,19 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 SettingRow(
                   icon: Icons.notifications_outlined,
                   label: l10n.settingNotifications,
-                  trailing: Switch.adaptive(
-                    value: _notificationsEnabled,
-                    onChanged: (value) =>
-                        setState(() => _notificationsEnabled = value),
+                  trailing: AppSwitch(
+                    value: profile?.remindersEnabled ?? false,
+                    onChanged: profile == null
+                        ? null
+                        : (value) => _toggleReminders(value, profile),
                   ),
                 ),
                 SettingRow(
                   icon: Icons.schedule_outlined,
                   label: l10n.settingReminder,
-                  value: l10n.settingReminderValue,
+                  value: (profile?.remindersEnabled ?? false)
+                      ? l10n.remindersLeadDaysValue(profile!.reminderLeadDays)
+                      : l10n.settingReminderOff,
                   onTap: () => context.pushNamed(RemindersPage.routeName),
                 ),
                 // Appearance is fixed to dark for now: informational, not

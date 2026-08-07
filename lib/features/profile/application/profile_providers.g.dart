@@ -279,7 +279,7 @@ final class AppLocaleProvider
   }
 }
 
-String _$appLocaleHash() => r'ad99f0f59770b245f252ff4a85b7cef5d3337ca2';
+String _$appLocaleHash() => r'9e2c86bf4e87865b6123bb73c027837bb024324f';
 
 /// The running app's version string (e.g. `0.1.0`), read from the platform
 /// bundle so the displayed version always matches the build.
@@ -423,6 +423,78 @@ String _$localeSettingControllerHash() =>
 /// [appLocaleProvider]) so the UI switches language immediately on success.
 
 abstract class _$LocaleSettingController extends $AsyncNotifier<void> {
+  FutureOr<void> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<void>, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, void>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Persists the expiry-reminder settings, refreshing [myProfileProvider] on
+/// success.
+///
+/// The `invalidate` is the coupling that makes the reminder scheduler
+/// recompute: it watches [myProfileProvider], so a saved setting reschedules
+/// the notifications without this controller knowing the scheduler exists.
+
+@ProviderFor(ReminderSettingsController)
+final reminderSettingsControllerProvider =
+    ReminderSettingsControllerProvider._();
+
+/// Persists the expiry-reminder settings, refreshing [myProfileProvider] on
+/// success.
+///
+/// The `invalidate` is the coupling that makes the reminder scheduler
+/// recompute: it watches [myProfileProvider], so a saved setting reschedules
+/// the notifications without this controller knowing the scheduler exists.
+final class ReminderSettingsControllerProvider
+    extends $AsyncNotifierProvider<ReminderSettingsController, void> {
+  /// Persists the expiry-reminder settings, refreshing [myProfileProvider] on
+  /// success.
+  ///
+  /// The `invalidate` is the coupling that makes the reminder scheduler
+  /// recompute: it watches [myProfileProvider], so a saved setting reschedules
+  /// the notifications without this controller knowing the scheduler exists.
+  ReminderSettingsControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'reminderSettingsControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$reminderSettingsControllerHash();
+
+  @$internal
+  @override
+  ReminderSettingsController create() => ReminderSettingsController();
+}
+
+String _$reminderSettingsControllerHash() =>
+    r'604ca94745e533c666baf9014f5b29e3f5ec0072';
+
+/// Persists the expiry-reminder settings, refreshing [myProfileProvider] on
+/// success.
+///
+/// The `invalidate` is the coupling that makes the reminder scheduler
+/// recompute: it watches [myProfileProvider], so a saved setting reschedules
+/// the notifications without this controller knowing the scheduler exists.
+
+abstract class _$ReminderSettingsController extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override

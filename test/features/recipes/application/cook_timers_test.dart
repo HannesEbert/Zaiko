@@ -1,7 +1,14 @@
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:zaiko/core/notifications/notification_ids.dart';
+import 'package:zaiko/core/notifications/notification_providers.dart';
 import 'package:zaiko/features/recipes/application/cook_timers.dart';
+
+import '../../../core/notifications/fake_notification_service.dart';
+
+const _title = 'Timer done';
+const _body = 'Your step timer has finished.';
 
 void main() {
   // Binding so the expiry alert's HapticFeedback/SystemSound platform calls are
@@ -13,9 +20,16 @@ void main() {
 
   // A ProviderContainer with a standing subscription: `read` alone wouldn't
   // keep the autoDispose provider alive, so a running timer would be torn down
-  // between operations.
-  ProviderContainer makeContainer() {
-    final container = ProviderContainer();
+  // between operations. The notification service is faked so scheduling never
+  // touches a platform channel.
+  ProviderContainer makeContainer([FakeNotificationService? notifications]) {
+    final container = ProviderContainer(
+      overrides: [
+        notificationServiceProvider.overrideWithValue(
+          notifications ?? FakeNotificationService(),
+        ),
+      ],
+    );
     container.listen(cookTimersProvider, (_, _) {});
     return container;
   }
@@ -92,7 +106,7 @@ void main() {
       final container = makeContainer();
       final controller = container.read(cookTimersProvider.notifier);
 
-      controller.start(0);
+      controller.start(0, notifTitle: _title, notifBody: _body);
 
       expect(timerAt(container, 0)!.status, CookTimerStatus.running);
       expect(timerAt(container, 0)!.remaining, const Duration(minutes: 5));
@@ -106,7 +120,7 @@ void main() {
       final container = makeContainer();
       final controller = container.read(cookTimersProvider.notifier);
 
-      controller.start(0);
+      controller.start(0, notifTitle: _title, notifBody: _body);
       async.elapse(const Duration(minutes: 2));
       expect(timerAt(container, 0)!.remaining, const Duration(minutes: 3));
       expect(timerAt(container, 0)!.status, CookTimerStatus.running);
@@ -124,7 +138,7 @@ void main() {
       final container = makeContainer();
       final controller = container.read(cookTimersProvider.notifier);
 
-      controller.start(0);
+      controller.start(0, notifTitle: _title, notifBody: _body);
       async.elapse(const Duration(minutes: 1));
       expect(timerAt(container, 0)!.remaining, const Duration(minutes: 4));
 
@@ -141,7 +155,7 @@ void main() {
       final container = makeContainer();
       final controller = container.read(cookTimersProvider.notifier);
 
-      controller.start(0);
+      controller.start(0, notifTitle: _title, notifBody: _body);
       async.elapse(const Duration(seconds: 30));
       expect(
         timerAt(container, 0)!.remaining,
@@ -159,7 +173,7 @@ void main() {
       );
 
       // Resuming keeps counting from where it stopped.
-      controller.start(0);
+      controller.start(0, notifTitle: _title, notifBody: _body);
       expect(timerAt(container, 0)!.status, CookTimerStatus.running);
       async.elapse(const Duration(seconds: 30));
       expect(timerAt(container, 0)!.remaining, const Duration(minutes: 4));
@@ -173,7 +187,7 @@ void main() {
       final container = makeContainer();
       final controller = container.read(cookTimersProvider.notifier);
 
-      controller.start(0);
+      controller.start(0, notifTitle: _title, notifBody: _body);
       async.elapse(const Duration(minutes: 1));
       controller.reset(0);
 
@@ -181,6 +195,68 @@ void main() {
       expect(timerAt(container, 0)!.remaining, const Duration(minutes: 5));
 
       container.dispose();
+    });
+  });
+
+  test('start schedules a cook-timer notification for the step', () {
+    fakeAsync((async) {
+      final service = FakeNotificationService();
+      final container = makeContainer(service);
+      final controller = container.read(cookTimersProvider.notifier);
+
+      controller.start(1, notifTitle: _title, notifBody: _body);
+
+      expect(service.scheduled, hasLength(1));
+      final n = service.scheduled.single;
+      expect(n.id, NotificationIds.cookTimerBase + 1);
+      expect(n.title, _title);
+      expect(n.body, _body);
+
+      container.dispose();
+    });
+  });
+
+  test('pause cancels the scheduled cook-timer notification', () {
+    fakeAsync((async) {
+      final service = FakeNotificationService();
+      final container = makeContainer(service);
+      final controller = container.read(cookTimersProvider.notifier);
+
+      controller.start(0, notifTitle: _title, notifBody: _body);
+      controller.pause(0);
+
+      expect(service.cancelled, contains(NotificationIds.cookTimerBase));
+
+      container.dispose();
+    });
+  });
+
+  test('finishing in the foreground cancels the backup notification', () {
+    fakeAsync((async) {
+      final service = FakeNotificationService();
+      final container = makeContainer(service);
+      final controller = container.read(cookTimersProvider.notifier);
+
+      controller.start(0, notifTitle: _title, notifBody: _body);
+      async.elapse(const Duration(minutes: 5));
+
+      expect(timerAt(container, 0)!.status, CookTimerStatus.finished);
+      expect(service.cancelled, contains(NotificationIds.cookTimerBase));
+
+      container.dispose();
+    });
+  });
+
+  test('leaving cook mode cancels a running timer notification', () {
+    fakeAsync((async) {
+      final service = FakeNotificationService();
+      final container = makeContainer(service);
+      final controller = container.read(cookTimersProvider.notifier);
+
+      controller.start(0, notifTitle: _title, notifBody: _body);
+      container.dispose();
+
+      expect(service.cancelled, contains(NotificationIds.cookTimerBase));
     });
   });
 }

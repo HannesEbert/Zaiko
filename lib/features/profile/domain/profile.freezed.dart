@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Profile {
 
- String get id;@JsonKey(name: 'display_name') String get displayName;@JsonKey(name: 'avatar_preset') String? get avatarPreset;@JsonKey(name: 'created_at') DateTime get createdAt; String? get locale; List<String> get allergens; List<String> get diets; List<String> get dislikes;@JsonKey(name: 'dietary_note') String? get dietaryNote;
+ String get id;@JsonKey(name: 'display_name') String get displayName;@JsonKey(name: 'avatar_preset') String? get avatarPreset;@JsonKey(name: 'created_at') DateTime get createdAt; String? get locale; List<String> get allergens; List<String> get diets; List<String> get dislikes;@JsonKey(name: 'dietary_note') String? get dietaryNote;@JsonKey(name: 'reminders_enabled') bool get remindersEnabled;@JsonKey(name: 'reminder_lead_days') int get reminderLeadDays;@JsonKey(name: 'reminder_time') String get reminderTime;
 /// Create a copy of Profile
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ProfileCopyWith<Profile> get copyWith => _$ProfileCopyWithImpl<Profile>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Profile&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.avatarPreset, avatarPreset) || other.avatarPreset == avatarPreset)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.locale, locale) || other.locale == locale)&&const DeepCollectionEquality().equals(other.allergens, allergens)&&const DeepCollectionEquality().equals(other.diets, diets)&&const DeepCollectionEquality().equals(other.dislikes, dislikes)&&(identical(other.dietaryNote, dietaryNote) || other.dietaryNote == dietaryNote));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Profile&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.avatarPreset, avatarPreset) || other.avatarPreset == avatarPreset)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.locale, locale) || other.locale == locale)&&const DeepCollectionEquality().equals(other.allergens, allergens)&&const DeepCollectionEquality().equals(other.diets, diets)&&const DeepCollectionEquality().equals(other.dislikes, dislikes)&&(identical(other.dietaryNote, dietaryNote) || other.dietaryNote == dietaryNote)&&(identical(other.remindersEnabled, remindersEnabled) || other.remindersEnabled == remindersEnabled)&&(identical(other.reminderLeadDays, reminderLeadDays) || other.reminderLeadDays == reminderLeadDays)&&(identical(other.reminderTime, reminderTime) || other.reminderTime == reminderTime));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,displayName,avatarPreset,createdAt,locale,const DeepCollectionEquality().hash(allergens),const DeepCollectionEquality().hash(diets),const DeepCollectionEquality().hash(dislikes),dietaryNote);
+int get hashCode => Object.hash(runtimeType,id,displayName,avatarPreset,createdAt,locale,const DeepCollectionEquality().hash(allergens),const DeepCollectionEquality().hash(diets),const DeepCollectionEquality().hash(dislikes),dietaryNote,remindersEnabled,reminderLeadDays,reminderTime);
 
 @override
 String toString() {
-  return 'Profile(id: $id, displayName: $displayName, avatarPreset: $avatarPreset, createdAt: $createdAt, locale: $locale, allergens: $allergens, diets: $diets, dislikes: $dislikes, dietaryNote: $dietaryNote)';
+  return 'Profile(id: $id, displayName: $displayName, avatarPreset: $avatarPreset, createdAt: $createdAt, locale: $locale, allergens: $allergens, diets: $diets, dislikes: $dislikes, dietaryNote: $dietaryNote, remindersEnabled: $remindersEnabled, reminderLeadDays: $reminderLeadDays, reminderTime: $reminderTime)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ProfileCopyWith<$Res>  {
   factory $ProfileCopyWith(Profile value, $Res Function(Profile) _then) = _$ProfileCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'avatar_preset') String? avatarPreset,@JsonKey(name: 'created_at') DateTime createdAt, String? locale, List<String> allergens, List<String> diets, List<String> dislikes,@JsonKey(name: 'dietary_note') String? dietaryNote
+ String id,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'avatar_preset') String? avatarPreset,@JsonKey(name: 'created_at') DateTime createdAt, String? locale, List<String> allergens, List<String> diets, List<String> dislikes,@JsonKey(name: 'dietary_note') String? dietaryNote,@JsonKey(name: 'reminders_enabled') bool remindersEnabled,@JsonKey(name: 'reminder_lead_days') int reminderLeadDays,@JsonKey(name: 'reminder_time') String reminderTime
 });
 
 
@@ -65,7 +65,7 @@ class _$ProfileCopyWithImpl<$Res>
 
 /// Create a copy of Profile
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? displayName = null,Object? avatarPreset = freezed,Object? createdAt = null,Object? locale = freezed,Object? allergens = null,Object? diets = null,Object? dislikes = null,Object? dietaryNote = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? displayName = null,Object? avatarPreset = freezed,Object? createdAt = null,Object? locale = freezed,Object? allergens = null,Object? diets = null,Object? dislikes = null,Object? dietaryNote = freezed,Object? remindersEnabled = null,Object? reminderLeadDays = null,Object? reminderTime = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
@@ -76,7 +76,10 @@ as String?,allergens: null == allergens ? _self.allergens : allergens // ignore:
 as List<String>,diets: null == diets ? _self.diets : diets // ignore: cast_nullable_to_non_nullable
 as List<String>,dislikes: null == dislikes ? _self.dislikes : dislikes // ignore: cast_nullable_to_non_nullable
 as List<String>,dietaryNote: freezed == dietaryNote ? _self.dietaryNote : dietaryNote // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,remindersEnabled: null == remindersEnabled ? _self.remindersEnabled : remindersEnabled // ignore: cast_nullable_to_non_nullable
+as bool,reminderLeadDays: null == reminderLeadDays ? _self.reminderLeadDays : reminderLeadDays // ignore: cast_nullable_to_non_nullable
+as int,reminderTime: null == reminderTime ? _self.reminderTime : reminderTime // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -161,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'avatar_preset')  String? avatarPreset, @JsonKey(name: 'created_at')  DateTime createdAt,  String? locale,  List<String> allergens,  List<String> diets,  List<String> dislikes, @JsonKey(name: 'dietary_note')  String? dietaryNote)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'avatar_preset')  String? avatarPreset, @JsonKey(name: 'created_at')  DateTime createdAt,  String? locale,  List<String> allergens,  List<String> diets,  List<String> dislikes, @JsonKey(name: 'dietary_note')  String? dietaryNote, @JsonKey(name: 'reminders_enabled')  bool remindersEnabled, @JsonKey(name: 'reminder_lead_days')  int reminderLeadDays, @JsonKey(name: 'reminder_time')  String reminderTime)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Profile() when $default != null:
-return $default(_that.id,_that.displayName,_that.avatarPreset,_that.createdAt,_that.locale,_that.allergens,_that.diets,_that.dislikes,_that.dietaryNote);case _:
+return $default(_that.id,_that.displayName,_that.avatarPreset,_that.createdAt,_that.locale,_that.allergens,_that.diets,_that.dislikes,_that.dietaryNote,_that.remindersEnabled,_that.reminderLeadDays,_that.reminderTime);case _:
   return orElse();
 
 }
@@ -182,10 +185,10 @@ return $default(_that.id,_that.displayName,_that.avatarPreset,_that.createdAt,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'avatar_preset')  String? avatarPreset, @JsonKey(name: 'created_at')  DateTime createdAt,  String? locale,  List<String> allergens,  List<String> diets,  List<String> dislikes, @JsonKey(name: 'dietary_note')  String? dietaryNote)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'avatar_preset')  String? avatarPreset, @JsonKey(name: 'created_at')  DateTime createdAt,  String? locale,  List<String> allergens,  List<String> diets,  List<String> dislikes, @JsonKey(name: 'dietary_note')  String? dietaryNote, @JsonKey(name: 'reminders_enabled')  bool remindersEnabled, @JsonKey(name: 'reminder_lead_days')  int reminderLeadDays, @JsonKey(name: 'reminder_time')  String reminderTime)  $default,) {final _that = this;
 switch (_that) {
 case _Profile():
-return $default(_that.id,_that.displayName,_that.avatarPreset,_that.createdAt,_that.locale,_that.allergens,_that.diets,_that.dislikes,_that.dietaryNote);case _:
+return $default(_that.id,_that.displayName,_that.avatarPreset,_that.createdAt,_that.locale,_that.allergens,_that.diets,_that.dislikes,_that.dietaryNote,_that.remindersEnabled,_that.reminderLeadDays,_that.reminderTime);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +205,10 @@ return $default(_that.id,_that.displayName,_that.avatarPreset,_that.createdAt,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'avatar_preset')  String? avatarPreset, @JsonKey(name: 'created_at')  DateTime createdAt,  String? locale,  List<String> allergens,  List<String> diets,  List<String> dislikes, @JsonKey(name: 'dietary_note')  String? dietaryNote)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'display_name')  String displayName, @JsonKey(name: 'avatar_preset')  String? avatarPreset, @JsonKey(name: 'created_at')  DateTime createdAt,  String? locale,  List<String> allergens,  List<String> diets,  List<String> dislikes, @JsonKey(name: 'dietary_note')  String? dietaryNote, @JsonKey(name: 'reminders_enabled')  bool remindersEnabled, @JsonKey(name: 'reminder_lead_days')  int reminderLeadDays, @JsonKey(name: 'reminder_time')  String reminderTime)?  $default,) {final _that = this;
 switch (_that) {
 case _Profile() when $default != null:
-return $default(_that.id,_that.displayName,_that.avatarPreset,_that.createdAt,_that.locale,_that.allergens,_that.diets,_that.dislikes,_that.dietaryNote);case _:
+return $default(_that.id,_that.displayName,_that.avatarPreset,_that.createdAt,_that.locale,_that.allergens,_that.diets,_that.dislikes,_that.dietaryNote,_that.remindersEnabled,_that.reminderLeadDays,_that.reminderTime);case _:
   return null;
 
 }
@@ -217,7 +220,7 @@ return $default(_that.id,_that.displayName,_that.avatarPreset,_that.createdAt,_t
 @JsonSerializable()
 
 class _Profile implements Profile {
-  const _Profile({required this.id, @JsonKey(name: 'display_name') required this.displayName, @JsonKey(name: 'avatar_preset') this.avatarPreset, @JsonKey(name: 'created_at') required this.createdAt, this.locale, final  List<String> allergens = const <String>[], final  List<String> diets = const <String>[], final  List<String> dislikes = const <String>[], @JsonKey(name: 'dietary_note') this.dietaryNote}): _allergens = allergens,_diets = diets,_dislikes = dislikes;
+  const _Profile({required this.id, @JsonKey(name: 'display_name') required this.displayName, @JsonKey(name: 'avatar_preset') this.avatarPreset, @JsonKey(name: 'created_at') required this.createdAt, this.locale, final  List<String> allergens = const <String>[], final  List<String> diets = const <String>[], final  List<String> dislikes = const <String>[], @JsonKey(name: 'dietary_note') this.dietaryNote, @JsonKey(name: 'reminders_enabled') this.remindersEnabled = false, @JsonKey(name: 'reminder_lead_days') this.reminderLeadDays = 3, @JsonKey(name: 'reminder_time') this.reminderTime = '20:00'}): _allergens = allergens,_diets = diets,_dislikes = dislikes;
   factory _Profile.fromJson(Map<String, dynamic> json) => _$ProfileFromJson(json);
 
 @override final  String id;
@@ -247,6 +250,9 @@ class _Profile implements Profile {
 }
 
 @override@JsonKey(name: 'dietary_note') final  String? dietaryNote;
+@override@JsonKey(name: 'reminders_enabled') final  bool remindersEnabled;
+@override@JsonKey(name: 'reminder_lead_days') final  int reminderLeadDays;
+@override@JsonKey(name: 'reminder_time') final  String reminderTime;
 
 /// Create a copy of Profile
 /// with the given fields replaced by the non-null parameter values.
@@ -261,16 +267,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Profile&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.avatarPreset, avatarPreset) || other.avatarPreset == avatarPreset)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.locale, locale) || other.locale == locale)&&const DeepCollectionEquality().equals(other._allergens, _allergens)&&const DeepCollectionEquality().equals(other._diets, _diets)&&const DeepCollectionEquality().equals(other._dislikes, _dislikes)&&(identical(other.dietaryNote, dietaryNote) || other.dietaryNote == dietaryNote));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Profile&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.avatarPreset, avatarPreset) || other.avatarPreset == avatarPreset)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.locale, locale) || other.locale == locale)&&const DeepCollectionEquality().equals(other._allergens, _allergens)&&const DeepCollectionEquality().equals(other._diets, _diets)&&const DeepCollectionEquality().equals(other._dislikes, _dislikes)&&(identical(other.dietaryNote, dietaryNote) || other.dietaryNote == dietaryNote)&&(identical(other.remindersEnabled, remindersEnabled) || other.remindersEnabled == remindersEnabled)&&(identical(other.reminderLeadDays, reminderLeadDays) || other.reminderLeadDays == reminderLeadDays)&&(identical(other.reminderTime, reminderTime) || other.reminderTime == reminderTime));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,displayName,avatarPreset,createdAt,locale,const DeepCollectionEquality().hash(_allergens),const DeepCollectionEquality().hash(_diets),const DeepCollectionEquality().hash(_dislikes),dietaryNote);
+int get hashCode => Object.hash(runtimeType,id,displayName,avatarPreset,createdAt,locale,const DeepCollectionEquality().hash(_allergens),const DeepCollectionEquality().hash(_diets),const DeepCollectionEquality().hash(_dislikes),dietaryNote,remindersEnabled,reminderLeadDays,reminderTime);
 
 @override
 String toString() {
-  return 'Profile(id: $id, displayName: $displayName, avatarPreset: $avatarPreset, createdAt: $createdAt, locale: $locale, allergens: $allergens, diets: $diets, dislikes: $dislikes, dietaryNote: $dietaryNote)';
+  return 'Profile(id: $id, displayName: $displayName, avatarPreset: $avatarPreset, createdAt: $createdAt, locale: $locale, allergens: $allergens, diets: $diets, dislikes: $dislikes, dietaryNote: $dietaryNote, remindersEnabled: $remindersEnabled, reminderLeadDays: $reminderLeadDays, reminderTime: $reminderTime)';
 }
 
 
@@ -281,7 +287,7 @@ abstract mixin class _$ProfileCopyWith<$Res> implements $ProfileCopyWith<$Res> {
   factory _$ProfileCopyWith(_Profile value, $Res Function(_Profile) _then) = __$ProfileCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'avatar_preset') String? avatarPreset,@JsonKey(name: 'created_at') DateTime createdAt, String? locale, List<String> allergens, List<String> diets, List<String> dislikes,@JsonKey(name: 'dietary_note') String? dietaryNote
+ String id,@JsonKey(name: 'display_name') String displayName,@JsonKey(name: 'avatar_preset') String? avatarPreset,@JsonKey(name: 'created_at') DateTime createdAt, String? locale, List<String> allergens, List<String> diets, List<String> dislikes,@JsonKey(name: 'dietary_note') String? dietaryNote,@JsonKey(name: 'reminders_enabled') bool remindersEnabled,@JsonKey(name: 'reminder_lead_days') int reminderLeadDays,@JsonKey(name: 'reminder_time') String reminderTime
 });
 
 
@@ -298,7 +304,7 @@ class __$ProfileCopyWithImpl<$Res>
 
 /// Create a copy of Profile
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? displayName = null,Object? avatarPreset = freezed,Object? createdAt = null,Object? locale = freezed,Object? allergens = null,Object? diets = null,Object? dislikes = null,Object? dietaryNote = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? displayName = null,Object? avatarPreset = freezed,Object? createdAt = null,Object? locale = freezed,Object? allergens = null,Object? diets = null,Object? dislikes = null,Object? dietaryNote = freezed,Object? remindersEnabled = null,Object? reminderLeadDays = null,Object? reminderTime = null,}) {
   return _then(_Profile(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
@@ -309,7 +315,10 @@ as String?,allergens: null == allergens ? _self._allergens : allergens // ignore
 as List<String>,diets: null == diets ? _self._diets : diets // ignore: cast_nullable_to_non_nullable
 as List<String>,dislikes: null == dislikes ? _self._dislikes : dislikes // ignore: cast_nullable_to_non_nullable
 as List<String>,dietaryNote: freezed == dietaryNote ? _self.dietaryNote : dietaryNote // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,remindersEnabled: null == remindersEnabled ? _self.remindersEnabled : remindersEnabled // ignore: cast_nullable_to_non_nullable
+as bool,reminderLeadDays: null == reminderLeadDays ? _self.reminderLeadDays : reminderLeadDays // ignore: cast_nullable_to_non_nullable
+as int,reminderTime: null == reminderTime ? _self.reminderTime : reminderTime // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

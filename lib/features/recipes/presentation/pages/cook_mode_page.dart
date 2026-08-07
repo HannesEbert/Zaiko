@@ -334,7 +334,11 @@ class _StepTimer extends ConsumerWidget {
             const SizedBox(height: AppSpacing.s4),
             _TimerActions(
               status: timer.status,
-              onStart: () => controller.start(stepIndex),
+              onStart: () => controller.start(
+                stepIndex,
+                notifTitle: l10n.recipesCookTimerDone,
+                notifBody: l10n.recipesCookTimerNotificationBody,
+              ),
               onPause: () => controller.pause(stepIndex),
               onReset: () => controller.reset(stepIndex),
             ),

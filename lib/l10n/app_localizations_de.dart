@@ -259,11 +259,49 @@ class AppLocalizationsDe extends AppLocalizations {
   String get profilePersonalDataNoHousehold => 'Kein Haushalt';
 
   @override
-  String get profileRemindersEmptyTitle => 'MHD-Erinnerungen';
+  String remindersNotificationTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Artikel laufen bald ab',
+      one: '1 Artikel läuft bald ab',
+    );
+    return '$_temp0';
+  }
 
   @override
-  String get profileRemindersEmptyMessage =>
-      'Lege fest, wann du vor dem Ablauf deiner Lebensmittel erinnert werden möchtest.';
+  String get remindersSubtitle =>
+      'Erhalte täglich eine Erinnerung, bevor deine Lebensmittel ablaufen. Erinnerungen gelten nur auf diesem Gerät.';
+
+  @override
+  String get remindersEnableLabel => 'MHD-Erinnerungen';
+
+  @override
+  String get remindersLeadDaysLabel => 'Vorwarnzeit';
+
+  @override
+  String remindersLeadDaysValue(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days Tage vorher',
+      one: '1 Tag vorher',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get remindersTimeLabel => 'Uhrzeit';
+
+  @override
+  String get remindersSavedSnack => 'Erinnerungen gespeichert';
+
+  @override
+  String get remindersPermissionDenied =>
+      'Benachrichtigungen sind deaktiviert. Aktiviere sie in den Systemeinstellungen.';
+
+  @override
+  String get commonDone => 'Fertig';
 
   @override
   String get profileHouseholdEmptyTitle => 'Dein Haushalt';
@@ -478,7 +516,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingReminder => 'Erinnerung vor Ablauf';
 
   @override
-  String get settingReminderValue => '3 Tage vorher';
+  String get settingReminderOff => 'Aus';
 
   @override
   String get settingAppearance => 'Darstellung';
@@ -1123,6 +1161,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get recipesCookTimerDone => 'Timer fertig';
+
+  @override
+  String get recipesCookTimerNotificationBody =>
+      'Dein Schritt-Timer ist abgelaufen.';
 
   @override
   String get recipesCookTimerAddMinute => '+1 Min';

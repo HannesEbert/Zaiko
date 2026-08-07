@@ -255,11 +255,49 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profilePersonalDataNoHousehold => 'No household';
 
   @override
-  String get profileRemindersEmptyTitle => 'Expiry reminders';
+  String remindersNotificationTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items are expiring soon',
+      one: '1 item is expiring soon',
+    );
+    return '$_temp0';
+  }
 
   @override
-  String get profileRemindersEmptyMessage =>
-      'Choose when to be reminded before your food expires.';
+  String get remindersSubtitle =>
+      'Get a daily reminder before your food expires. Reminders live on this device.';
+
+  @override
+  String get remindersEnableLabel => 'Expiry reminders';
+
+  @override
+  String get remindersLeadDaysLabel => 'Warn me before';
+
+  @override
+  String remindersLeadDaysValue(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days before',
+      one: '1 day before',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get remindersTimeLabel => 'Reminder time';
+
+  @override
+  String get remindersSavedSnack => 'Reminders saved';
+
+  @override
+  String get remindersPermissionDenied =>
+      'Notifications are turned off. Enable them in system settings.';
+
+  @override
+  String get commonDone => 'Done';
 
   @override
   String get profileHouseholdEmptyTitle => 'Your household';
@@ -472,7 +510,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingReminder => 'Reminder before expiry';
 
   @override
-  String get settingReminderValue => '3 days before';
+  String get settingReminderOff => 'Off';
 
   @override
   String get settingAppearance => 'Appearance';
@@ -1110,6 +1148,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recipesCookTimerDone => 'Timer done';
+
+  @override
+  String get recipesCookTimerNotificationBody =>
+      'Your step timer has finished.';
 
   @override
   String get recipesCookTimerAddMinute => '+1 min';

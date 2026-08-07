@@ -192,8 +192,27 @@
   "profileMemberSince": "Member since",
   "profilePersonalDataNoHousehold": "No household",
 
-  "profileRemindersEmptyTitle": "Expiry reminders",
-  "profileRemindersEmptyMessage": "Choose when to be reminded before your food expires.",
+  "remindersNotificationTitle": "{count, plural, =1{1 item is expiring soon} other{{count} items are expiring soon}}",
+  "@remindersNotificationTitle": {
+    "description": "Local notification title for the daily expiry reminder, counting items within the lead window",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "remindersSubtitle": "Get a daily reminder before your food expires. Reminders live on this device.",
+  "remindersEnableLabel": "Expiry reminders",
+  "remindersLeadDaysLabel": "Warn me before",
+  "remindersLeadDaysValue": "{days, plural, =1{1 day before} other{{days} days before}}",
+  "@remindersLeadDaysValue": {
+    "description": "Lead-time value: how many days before a best-before date to warn",
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "remindersTimeLabel": "Reminder time",
+  "remindersSavedSnack": "Reminders saved",
+  "remindersPermissionDenied": "Notifications are turned off. Enable them in system settings.",
+  "commonDone": "Done",
   "profileHouseholdEmptyTitle": "Your household",
   "profileHouseholdEmptyMessage": "Link and manage the household you share here.",
 
@@ -297,7 +316,7 @@
   },
   "settingNotifications": "Notifications",
   "settingReminder": "Reminder before expiry",
-  "settingReminderValue": "3 days before",
+  "settingReminderOff": "Off",
   "settingAppearance": "Appearance",
   "settingAppearanceDark": "Dark",
   "settingAppearanceHint": "Zaiko is dark-only for now. A light theme and a toggle will come in a later update.",
@@ -640,6 +659,7 @@
   "recipesCookTimerStart": "Start timer",
   "recipesCookTimerReset": "Reset",
   "recipesCookTimerDone": "Timer done",
+  "recipesCookTimerNotificationBody": "Your step timer has finished.",
   "recipesCookTimerAddMinute": "+1 min",
   "recipesCookTimerRemoveMinute": "-1 min",
   "recipesCookTimerAddSecond": "+10 sec",
