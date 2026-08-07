@@ -51,6 +51,21 @@ abstract interface class ProfileRepository {
     String? avatarPreset,
   });
 
+  /// Updates the current user's app-language preference. A `null` [locale]
+  /// clears it, reverting to following the system language. Throws
+  /// [ProfileFailure] on failure.
+  Future<void> updateMyLocale(String? locale);
+
+  /// Updates the current user's dietary preferences: the ticked [allergens],
+  /// [diets] and [dislikes] keys plus an optional free-text [note]. Throws
+  /// [ProfileFailure] on failure.
+  Future<void> updateMyDietaryPreferences({
+    required List<String> allergens,
+    required List<String> diets,
+    required List<String> dislikes,
+    String? note,
+  });
+
   /// Loads the profiles for [userIds] (typically the caller's household
   /// members), so names and avatars resolve wherever a user id appears. Ids the
   /// caller may not read are simply absent from the result.

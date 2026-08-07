@@ -27,13 +27,22 @@ class FakeProfileRepository implements ProfileRepository {
   int loadCalls = 0;
   int updateCalls = 0;
   int loadProfilesCalls = 0;
+  int localeCalls = 0;
+  int dietaryCalls = 0;
 
   String? lastDisplayName;
   String? lastAvatarPreset;
+  String? lastLocale;
+  List<String>? lastAllergens;
+  List<String>? lastDiets;
+  List<String>? lastDislikes;
+  String? lastNote;
 
   ProfileFailure? loadError;
   ProfileFailure? updateError;
   ProfileFailure? loadProfilesError;
+  ProfileFailure? localeError;
+  ProfileFailure? dietaryError;
 
   @override
   Future<Profile> loadMyProfile() async {
@@ -66,6 +75,41 @@ class FakeProfileRepository implements ProfileRepository {
                   createdAt: DateTime.utc(2026),
                 ))
             .copyWith(displayName: displayName, avatarPreset: avatarPreset);
+  }
+
+  @override
+  Future<void> updateMyLocale(String? locale) async {
+    localeCalls++;
+    lastLocale = locale;
+    final error = localeError;
+    if (error != null) throw error;
+    final current = profile;
+    if (current != null) profile = current.copyWith(locale: locale);
+  }
+
+  @override
+  Future<void> updateMyDietaryPreferences({
+    required List<String> allergens,
+    required List<String> diets,
+    required List<String> dislikes,
+    String? note,
+  }) async {
+    dietaryCalls++;
+    lastAllergens = allergens;
+    lastDiets = diets;
+    lastDislikes = dislikes;
+    lastNote = note;
+    final error = dietaryError;
+    if (error != null) throw error;
+    final current = profile;
+    if (current != null) {
+      profile = current.copyWith(
+        allergens: allergens,
+        diets: diets,
+        dislikes: dislikes,
+        dietaryNote: note,
+      );
+    }
   }
 
   @override

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart' show Locale;
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../auth/application/auth_providers.dart';
@@ -56,6 +58,31 @@ Future<Map<String, Profile>> householdMemberProfiles(Ref ref) async {
   return {for (final profile in profiles) profile.id: profile};
 }
 
+/// The app language derived from the current user's profile, or `null` to
+/// follow the system.
+///
+/// Feeds `MaterialApp.locale`: mapping the stored `'de'`/`'en'` code to a
+/// [Locale] (and anything else, including signed-out `null`, to `null`) means a
+/// saved-then-invalidated profile flips the UI language without any extra
+/// plumbing.
+@riverpod
+Locale? appLocale(Ref ref) {
+  final code = ref.watch(myProfileProvider).value?.locale;
+  return switch (code) {
+    'de' => const Locale('de'),
+    'en' => const Locale('en'),
+    _ => null,
+  };
+}
+
+/// The running app's version string (e.g. `0.1.0`), read from the platform
+/// bundle so the displayed version always matches the build.
+@riverpod
+Future<String> appVersion(Ref ref) async {
+  final info = await PackageInfo.fromPlatform();
+  return info.version;
+}
+
 /// Drives the profile-edit screen's save action with loading/error state.
 ///
 /// A successful save invalidates [myProfileProvider] (and the member map) so the
@@ -80,6 +107,64 @@ class ProfileEditController extends _$ProfileEditController {
           );
       ref.invalidate(myProfileProvider);
       ref.invalidate(householdMemberProfilesProvider);
+      state = const AsyncData(null);
+      return true;
+    } on ProfileFailure catch (e, st) {
+      state = AsyncError(e, st);
+      return false;
+    }
+  }
+}
+
+/// Persists the app-language setting, refreshing [myProfileProvider] (and thus
+/// [appLocaleProvider]) so the UI switches language immediately on success.
+@riverpod
+class LocaleSettingController extends _$LocaleSettingController {
+  @override
+  FutureOr<void> build() {}
+
+  /// Saves the language [locale] (`null` follows the system). Returns whether
+  /// it succeeded.
+  Future<bool> setLocale(String? locale) async {
+    state = const AsyncLoading();
+    try {
+      await ref.read(profileRepositoryProvider).updateMyLocale(locale);
+      ref.invalidate(myProfileProvider);
+      state = const AsyncData(null);
+      return true;
+    } on ProfileFailure catch (e, st) {
+      state = AsyncError(e, st);
+      return false;
+    }
+  }
+}
+
+/// Drives the dietary-preferences screen's save action with loading/error
+/// state, refreshing [myProfileProvider] on success.
+@riverpod
+class DietaryPreferencesController extends _$DietaryPreferencesController {
+  @override
+  FutureOr<void> build() {}
+
+  /// Saves the ticked preference keys and free-text [note]. Returns whether it
+  /// succeeded.
+  Future<bool> save({
+    required List<String> allergens,
+    required List<String> diets,
+    required List<String> dislikes,
+    required String? note,
+  }) async {
+    state = const AsyncLoading();
+    try {
+      await ref
+          .read(profileRepositoryProvider)
+          .updateMyDietaryPreferences(
+            allergens: allergens,
+            diets: diets,
+            dislikes: dislikes,
+            note: note,
+          );
+      ref.invalidate(myProfileProvider);
       state = const AsyncData(null);
       return true;
     } on ProfileFailure catch (e, st) {
