@@ -255,13 +255,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profilePersonalDataNoHousehold => 'No household';
 
   @override
-  String get profileRemindersEmptyTitle => 'Expiry reminders';
-
-  @override
-  String get profileRemindersEmptyMessage =>
-      'Choose when to be reminded before your food expires.';
-
-  @override
   String remindersNotificationTitle(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -271,6 +264,40 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get remindersSubtitle =>
+      'Get a daily reminder before your food expires. Reminders live on this device.';
+
+  @override
+  String get remindersEnableLabel => 'Expiry reminders';
+
+  @override
+  String get remindersLeadDaysLabel => 'Warn me before';
+
+  @override
+  String remindersLeadDaysValue(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days before',
+      one: '1 day before',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get remindersTimeLabel => 'Reminder time';
+
+  @override
+  String get remindersSavedSnack => 'Reminders saved';
+
+  @override
+  String get remindersPermissionDenied =>
+      'Notifications are turned off. Enable them in system settings.';
+
+  @override
+  String get commonDone => 'Done';
 
   @override
   String get profileHouseholdEmptyTitle => 'Your household';

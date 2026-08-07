@@ -192,8 +192,6 @@
   "profileMemberSince": "Member since",
   "profilePersonalDataNoHousehold": "No household",
 
-  "profileRemindersEmptyTitle": "Expiry reminders",
-  "profileRemindersEmptyMessage": "Choose when to be reminded before your food expires.",
   "remindersNotificationTitle": "{count, plural, =1{1 item is expiring soon} other{{count} items are expiring soon}}",
   "@remindersNotificationTitle": {
     "description": "Local notification title for the daily expiry reminder, counting items within the lead window",
@@ -201,6 +199,20 @@
       "count": { "type": "int" }
     }
   },
+  "remindersSubtitle": "Get a daily reminder before your food expires. Reminders live on this device.",
+  "remindersEnableLabel": "Expiry reminders",
+  "remindersLeadDaysLabel": "Warn me before",
+  "remindersLeadDaysValue": "{days, plural, =1{1 day before} other{{days} days before}}",
+  "@remindersLeadDaysValue": {
+    "description": "Lead-time value: how many days before a best-before date to warn",
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "remindersTimeLabel": "Reminder time",
+  "remindersSavedSnack": "Reminders saved",
+  "remindersPermissionDenied": "Notifications are turned off. Enable them in system settings.",
+  "commonDone": "Done",
   "profileHouseholdEmptyTitle": "Your household",
   "profileHouseholdEmptyMessage": "Link and manage the household you share here.",
 

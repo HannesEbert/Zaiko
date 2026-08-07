@@ -554,23 +554,59 @@ abstract class AppLocalizations {
   /// **'No household'**
   String get profilePersonalDataNoHousehold;
 
-  /// No description provided for @profileRemindersEmptyTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Expiry reminders'**
-  String get profileRemindersEmptyTitle;
-
-  /// No description provided for @profileRemindersEmptyMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose when to be reminded before your food expires.'**
-  String get profileRemindersEmptyMessage;
-
   /// Local notification title for the daily expiry reminder, counting items within the lead window
   ///
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 item is expiring soon} other{{count} items are expiring soon}}'**
   String remindersNotificationTitle(int count);
+
+  /// No description provided for @remindersSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Get a daily reminder before your food expires. Reminders live on this device.'**
+  String get remindersSubtitle;
+
+  /// No description provided for @remindersEnableLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiry reminders'**
+  String get remindersEnableLabel;
+
+  /// No description provided for @remindersLeadDaysLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Warn me before'**
+  String get remindersLeadDaysLabel;
+
+  /// Lead-time value: how many days before a best-before date to warn
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{1 day before} other{{days} days before}}'**
+  String remindersLeadDaysValue(int days);
+
+  /// No description provided for @remindersTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder time'**
+  String get remindersTimeLabel;
+
+  /// No description provided for @remindersSavedSnack.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders saved'**
+  String get remindersSavedSnack;
+
+  /// No description provided for @remindersPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are turned off. Enable them in system settings.'**
+  String get remindersPermissionDenied;
+
+  /// No description provided for @commonDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get commonDone;
 
   /// No description provided for @profileHouseholdEmptyTitle.
   ///

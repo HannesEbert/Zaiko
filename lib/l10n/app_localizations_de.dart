@@ -259,13 +259,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get profilePersonalDataNoHousehold => 'Kein Haushalt';
 
   @override
-  String get profileRemindersEmptyTitle => 'MHD-Erinnerungen';
-
-  @override
-  String get profileRemindersEmptyMessage =>
-      'Lege fest, wann du vor dem Ablauf deiner Lebensmittel erinnert werden möchtest.';
-
-  @override
   String remindersNotificationTitle(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -275,6 +268,40 @@ class AppLocalizationsDe extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get remindersSubtitle =>
+      'Erhalte täglich eine Erinnerung, bevor deine Lebensmittel ablaufen. Erinnerungen gelten nur auf diesem Gerät.';
+
+  @override
+  String get remindersEnableLabel => 'MHD-Erinnerungen';
+
+  @override
+  String get remindersLeadDaysLabel => 'Vorwarnzeit';
+
+  @override
+  String remindersLeadDaysValue(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days Tage vorher',
+      one: '1 Tag vorher',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get remindersTimeLabel => 'Uhrzeit';
+
+  @override
+  String get remindersSavedSnack => 'Erinnerungen gespeichert';
+
+  @override
+  String get remindersPermissionDenied =>
+      'Benachrichtigungen sind deaktiviert. Aktiviere sie in den Systemeinstellungen.';
+
+  @override
+  String get commonDone => 'Fertig';
 
   @override
   String get profileHouseholdEmptyTitle => 'Dein Haushalt';
