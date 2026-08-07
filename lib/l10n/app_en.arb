@@ -194,6 +194,13 @@
 
   "profileRemindersEmptyTitle": "Expiry reminders",
   "profileRemindersEmptyMessage": "Choose when to be reminded before your food expires.",
+  "remindersNotificationTitle": "{count, plural, =1{1 item is expiring soon} other{{count} items are expiring soon}}",
+  "@remindersNotificationTitle": {
+    "description": "Local notification title for the daily expiry reminder, counting items within the lead window",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "profileHouseholdEmptyTitle": "Your household",
   "profileHouseholdEmptyMessage": "Link and manage the household you share here.",
 

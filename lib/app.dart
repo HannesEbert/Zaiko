@@ -5,6 +5,7 @@ import 'core/constants/app_constants.dart';
 import 'core/notifications/notification_providers.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'features/inventory/application/reminder_scheduler.dart';
 import 'features/profile/application/profile_providers.dart';
 import 'l10n/app_localizations.dart';
 
@@ -26,6 +27,10 @@ class _ZaikoAppState extends ConsumerState<ZaikoApp> {
     // Initialise the plugin and local time zone early so scheduling is ready
     // before the user opts in. Permission is requested only on first enable.
     ref.read(notificationServiceProvider).init();
+    // Activate the expiry-reminder scheduler. It is kept alive and watches the
+    // profile and inventory itself, so reading it once is enough to keep it
+    // rescheduling for the app's lifetime.
+    ref.read(reminderSchedulerProvider);
   }
 
   @override

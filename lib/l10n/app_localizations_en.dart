@@ -262,6 +262,17 @@ class AppLocalizationsEn extends AppLocalizations {
       'Choose when to be reminded before your food expires.';
 
   @override
+  String remindersNotificationTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items are expiring soon',
+      one: '1 item is expiring soon',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get profileHouseholdEmptyTitle => 'Your household';
 
   @override

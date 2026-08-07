@@ -566,6 +566,12 @@ abstract class AppLocalizations {
   /// **'Choose when to be reminded before your food expires.'**
   String get profileRemindersEmptyMessage;
 
+  /// Local notification title for the daily expiry reminder, counting items within the lead window
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 item is expiring soon} other{{count} items are expiring soon}}'**
+  String remindersNotificationTitle(int count);
+
   /// No description provided for @profileHouseholdEmptyTitle.
   ///
   /// In en, this message translates to:

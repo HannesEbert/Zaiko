@@ -266,6 +266,17 @@ class AppLocalizationsDe extends AppLocalizations {
       'Lege fest, wann du vor dem Ablauf deiner Lebensmittel erinnert werden möchtest.';
 
   @override
+  String remindersNotificationTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Artikel laufen bald ab',
+      one: '1 Artikel läuft bald ab',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get profileHouseholdEmptyTitle => 'Dein Haushalt';
 
   @override

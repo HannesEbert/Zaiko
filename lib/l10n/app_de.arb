@@ -90,6 +90,7 @@
 
   "profileRemindersEmptyTitle": "MHD-Erinnerungen",
   "profileRemindersEmptyMessage": "Lege fest, wann du vor dem Ablauf deiner Lebensmittel erinnert werden möchtest.",
+  "remindersNotificationTitle": "{count, plural, =1{1 Artikel läuft bald ab} other{{count} Artikel laufen bald ab}}",
   "profileHouseholdEmptyTitle": "Dein Haushalt",
   "profileHouseholdEmptyMessage": "Hier verknüpfst und verwaltest du deinen gemeinsamen Haushalt.",
 
