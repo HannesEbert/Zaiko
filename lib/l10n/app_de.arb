@@ -379,6 +379,7 @@
   "recipesCookTimerStart": "Timer starten",
   "recipesCookTimerReset": "Zurücksetzen",
   "recipesCookTimerDone": "Timer fertig",
+  "recipesCookTimerNotificationBody": "Dein Schritt-Timer ist abgelaufen.",
   "recipesCookTimerAddMinute": "+1 Min",
   "recipesCookTimerRemoveMinute": "-1 Min",
   "recipesCookTimerAddSecond": "+10 Sek",

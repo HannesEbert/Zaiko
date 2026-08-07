@@ -1150,6 +1150,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recipesCookTimerDone => 'Timer done';
 
   @override
+  String get recipesCookTimerNotificationBody =>
+      'Your step timer has finished.';
+
+  @override
   String get recipesCookTimerAddMinute => '+1 min';
 
   @override

@@ -62,7 +62,7 @@ final class CookTimersProvider
   }
 }
 
-String _$cookTimersHash() => r'fbd04db68205002d4d293e347ca671e5950f9ac5';
+String _$cookTimersHash() => r'af9b2482e027a222c98a69e1c5d7f2f16b1a5db9';
 
 /// Holds one manually started countdown per cook-mode step, keyed by step
 /// index. Timers are [seed]ed from the recipe's per-step durations; steps the

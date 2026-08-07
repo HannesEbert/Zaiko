@@ -659,6 +659,7 @@
   "recipesCookTimerStart": "Start timer",
   "recipesCookTimerReset": "Reset",
   "recipesCookTimerDone": "Timer done",
+  "recipesCookTimerNotificationBody": "Your step timer has finished.",
   "recipesCookTimerAddMinute": "+1 min",
   "recipesCookTimerRemoveMinute": "-1 min",
   "recipesCookTimerAddSecond": "+10 sec",

@@ -2150,6 +2150,12 @@ abstract class AppLocalizations {
   /// **'Timer done'**
   String get recipesCookTimerDone;
 
+  /// No description provided for @recipesCookTimerNotificationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your step timer has finished.'**
+  String get recipesCookTimerNotificationBody;
+
   /// No description provided for @recipesCookTimerAddMinute.
   ///
   /// In en, this message translates to:
