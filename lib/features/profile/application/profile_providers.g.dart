@@ -279,7 +279,7 @@ final class AppLocaleProvider
   }
 }
 
-String _$appLocaleHash() => r'ad99f0f59770b245f252ff4a85b7cef5d3337ca2';
+String _$appLocaleHash() => r'9e2c86bf4e87865b6123bb73c027837bb024324f';
 
 /// The running app's version string (e.g. `0.1.0`), read from the platform
 /// bundle so the displayed version always matches the build.

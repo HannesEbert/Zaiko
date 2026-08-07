@@ -29,6 +29,7 @@ class FakeProfileRepository implements ProfileRepository {
   int loadProfilesCalls = 0;
   int localeCalls = 0;
   int dietaryCalls = 0;
+  int reminderCalls = 0;
 
   String? lastDisplayName;
   String? lastAvatarPreset;
@@ -37,12 +38,16 @@ class FakeProfileRepository implements ProfileRepository {
   List<String>? lastDiets;
   List<String>? lastDislikes;
   String? lastNote;
+  bool? lastRemindersEnabled;
+  int? lastReminderLeadDays;
+  String? lastReminderTime;
 
   ProfileFailure? loadError;
   ProfileFailure? updateError;
   ProfileFailure? loadProfilesError;
   ProfileFailure? localeError;
   ProfileFailure? dietaryError;
+  ProfileFailure? reminderError;
 
   @override
   Future<Profile> loadMyProfile() async {
@@ -108,6 +113,28 @@ class FakeProfileRepository implements ProfileRepository {
         diets: diets,
         dislikes: dislikes,
         dietaryNote: note,
+      );
+    }
+  }
+
+  @override
+  Future<void> updateMyReminderSettings({
+    required bool enabled,
+    required int leadDays,
+    required String reminderTime,
+  }) async {
+    reminderCalls++;
+    lastRemindersEnabled = enabled;
+    lastReminderLeadDays = leadDays;
+    lastReminderTime = reminderTime;
+    final error = reminderError;
+    if (error != null) throw error;
+    final current = profile;
+    if (current != null) {
+      profile = current.copyWith(
+        remindersEnabled: enabled,
+        reminderLeadDays: leadDays,
+        reminderTime: reminderTime,
       );
     }
   }

@@ -66,6 +66,15 @@ abstract interface class ProfileRepository {
     String? note,
   });
 
+  /// Updates the current user's expiry-reminder settings: whether reminders are
+  /// [enabled], the [leadDays] warning window and the daily [reminderTime]
+  /// (`'HH:mm'`). Throws [ProfileFailure] on failure.
+  Future<void> updateMyReminderSettings({
+    required bool enabled,
+    required int leadDays,
+    required String reminderTime,
+  });
+
   /// Loads the profiles for [userIds] (typically the caller's household
   /// members), so names and avatars resolve wherever a user id appears. Ids the
   /// caller may not read are simply absent from the result.

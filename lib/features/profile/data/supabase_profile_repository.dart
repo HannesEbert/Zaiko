@@ -94,6 +94,27 @@ class SupabaseProfileRepository implements ProfileRepository {
   }
 
   @override
+  Future<void> updateMyReminderSettings({
+    required bool enabled,
+    required int leadDays,
+    required String reminderTime,
+  }) async {
+    final uid = _requireUserId();
+    try {
+      await _client
+          .from('profiles')
+          .update({
+            'reminders_enabled': enabled,
+            'reminder_lead_days': leadDays,
+            'reminder_time': reminderTime,
+          })
+          .eq('id', uid);
+    } on PostgrestException catch (e) {
+      throw _mapError(e);
+    }
+  }
+
+  @override
   Future<List<Profile>> loadProfiles(Iterable<String> userIds) async {
     final ids = userIds.toList();
     if (ids.isEmpty) return const [];

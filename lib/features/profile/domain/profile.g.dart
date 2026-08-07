@@ -22,6 +22,9 @@ _Profile _$ProfileFromJson(Map<String, dynamic> json) => _Profile(
       (json['dislikes'] as List<dynamic>?)?.map((e) => e as String).toList() ??
       const <String>[],
   dietaryNote: json['dietary_note'] as String?,
+  remindersEnabled: json['reminders_enabled'] as bool? ?? false,
+  reminderLeadDays: (json['reminder_lead_days'] as num?)?.toInt() ?? 3,
+  reminderTime: json['reminder_time'] as String? ?? '20:00',
 );
 
 Map<String, dynamic> _$ProfileToJson(_Profile instance) => <String, dynamic>{
@@ -34,4 +37,7 @@ Map<String, dynamic> _$ProfileToJson(_Profile instance) => <String, dynamic>{
   'diets': instance.diets,
   'dislikes': instance.dislikes,
   'dietary_note': instance.dietaryNote,
+  'reminders_enabled': instance.remindersEnabled,
+  'reminder_lead_days': instance.reminderLeadDays,
+  'reminder_time': instance.reminderTime,
 };
