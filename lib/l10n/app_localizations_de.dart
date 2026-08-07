@@ -516,7 +516,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingReminder => 'Erinnerung vor Ablauf';
 
   @override
-  String get settingReminderValue => '3 Tage vorher';
+  String get settingReminderOff => 'Aus';
 
   @override
   String get settingAppearance => 'Darstellung';

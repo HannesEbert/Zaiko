@@ -316,7 +316,7 @@
   },
   "settingNotifications": "Notifications",
   "settingReminder": "Reminder before expiry",
-  "settingReminderValue": "3 days before",
+  "settingReminderOff": "Off",
   "settingAppearance": "Appearance",
   "settingAppearanceDark": "Dark",
   "settingAppearanceHint": "Zaiko is dark-only for now. A light theme and a toggle will come in a later update.",

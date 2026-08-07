@@ -169,7 +169,7 @@
   "profileVersion": "Zaiko {version}",
   "settingNotifications": "Benachrichtigungen",
   "settingReminder": "Erinnerung vor Ablauf",
-  "settingReminderValue": "3 Tage vorher",
+  "settingReminderOff": "Aus",
   "settingAppearance": "Darstellung",
   "settingAppearanceDark": "Dunkel",
   "settingAppearanceHint": "Zaiko ist vorerst nur dunkel. Ein helles Design und ein Umschalter folgen in einem späteren Update.",

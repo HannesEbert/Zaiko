@@ -998,11 +998,11 @@ abstract class AppLocalizations {
   /// **'Reminder before expiry'**
   String get settingReminder;
 
-  /// No description provided for @settingReminderValue.
+  /// No description provided for @settingReminderOff.
   ///
   /// In en, this message translates to:
-  /// **'3 days before'**
-  String get settingReminderValue;
+  /// **'Off'**
+  String get settingReminderOff;
 
   /// No description provided for @settingAppearance.
   ///
